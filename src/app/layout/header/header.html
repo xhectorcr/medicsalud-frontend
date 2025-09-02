@@ -1,0 +1,70 @@
+<header class="clinic-header">
+  <div class="header-container">
+    <!-- Logo -->
+    <div class="logo-section">
+      <div class="logo">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="40" height="40" rx="8" fill="#2563eb"/>
+          <path d="M20 8v24M12 16h16" stroke="white" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <div class="logo-text">
+          <h1>MedicSalud</h1>
+          <span>Centro Médico</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="main-nav">
+      <ul>
+        <li><a href="#inicio">Inicio</a></li>
+        <li><a href="#servicios">Servicios</a></li>
+        <li><a href="#especialistas">Especialistas</a></li>
+        <li><a href="#citas">Citas</a></li>
+        <li><a href="#contacto">Contacto</a></li>
+      </ul>
+    </nav>
+
+    <!-- Right Section -->
+    <div class="right-section">
+      <!-- Auth Buttons -->
+      <div class="auth-buttons">
+        <button class="btn btn-outline" (click)="onLogin()">
+          Iniciar Sesión
+        </button>
+        <button class="btn btn-primary" (click)="onRegister()">
+          Registrarse
+        </button>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <button class="mobile-menu-btn" (click)="toggleMobileMenu()">
+        <span [class.active]="isMenuOpen"></span>
+        <span [class.active]="isMenuOpen"></span>
+        <span [class.active]="isMenuOpen"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" [class.open]="isMenuOpen">
+    <nav class="mobile-nav">
+      <ul>
+        <li><a href="#inicio">Inicio</a></li>
+        <li><a href="#servicios">Servicios</a></li>
+        <li><a href="#especialistas">Especialistas</a></li>
+        <li><a href="#citas">Citas</a></li>
+        <li><a href="#contacto">Contacto</a></li>
+      </ul>
+    </nav>
+
+    <div class="mobile-auth">
+      <button class="btn btn-outline" (click)="onLogin()">
+        Iniciar Sesión
+      </button>
+      <button class="btn btn-primary" (click)="onRegister()">
+        Registrarse
+      </button>
+    </div>
+  </div>
+</header>
