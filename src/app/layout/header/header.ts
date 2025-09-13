@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -8,14 +9,14 @@ import { Component } from '@angular/core';
 export class HeaderComponent {
   isMenuOpen: boolean = false;
 
+  constructor(private router: Router) {}
+
   onLogin() {
-    console.log('Redirigir a login');
-    // Aquí implementarías la redirección al login
+    this.router.navigate(['/auth/login']);
   }
 
   onRegister() {
-    console.log('Redirigir a registro');
-    // Aquí implementarías la redirección al registro
+    this.router.navigate(['/auth/register']);
   }
 
   toggleMobileMenu() {

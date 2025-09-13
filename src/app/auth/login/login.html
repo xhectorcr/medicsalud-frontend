@@ -1,0 +1,34 @@
+<div class="login-page">
+	<div class="login-card">
+		<div class="login-header">
+			<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<rect width="40" height="40" rx="8" fill="#2563eb"/>
+				<path d="M20 8v24M12 16h16" stroke="white" stroke-width="3" stroke-linecap="round"/>
+			</svg>
+			<h2>Iniciar Sesión</h2>
+			<p>Accede a tu cuenta de MedicSalud</p>
+		</div>
+		<form class="login-form">
+			<div class="form-group">
+				<label for="email">Correo electrónico</label>
+				<input id="email" type="email" class="form-input" placeholder="usuario@correo.com" required>
+			</div>
+			<div class="form-group">
+				<label for="password">Contraseña</label>
+				<input id="password" type="password" class="form-input" placeholder="••••••••" required>
+			</div>
+			<div class="form-options">
+				<label class="checkbox-container">
+					<input type="checkbox" class="checkbox">
+					<span class="checkmark"></span>
+					Recordarme
+				</label>
+				<a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
+			</div>
+			<button type="submit" class="btn btn-primary login-btn">Iniciar Sesión</button>
+		</form>
+		<div class="register-link">
+			¿No tienes cuenta? <a href="/auth/register">Regístrate</a>
+		</div>
+	</div>
+</div>
