@@ -1,4 +1,4 @@
-
+<app-header/>
 <div class="register-page">
 	<div class="register-card">
 		<div class="register-header">
@@ -9,27 +9,53 @@
 			<h2>Crear Cuenta</h2>
 			<p>Regístrate en MedicSalud</p>
 		</div>
-		<form class="register-form">
-			<div class="form-group">
-				<label for="name">Nombre completo</label>
-				<input id="name" type="text" class="form-input" placeholder="Tu nombre" required>
+		<!-- Mensaje de error -->
+		<div *ngIf="hasError" class="error-message">
+			{{ errorMessage }}
+		</div>
+		<!-- Indicador de carga -->
+		<div *ngIf="loading" class="loading-message">
+			Registrando...
+		</div>
+		<form class="register-form" (ngSubmit)="onSubmit()">
+			<div class="form-row">
+				<div class="form-group">
+					<label for="firstName">Nombres</label>
+					<input id="firstName" type="text" class="form-input" placeholder="Tus nombres" [(ngModel)]="firstName" name="firstName" required>
+				</div>
+				<div class="form-group">
+					<label for="lastName">Apellidos</label>
+					<input id="lastName" type="text" class="form-input" placeholder="Tus apellidos" [(ngModel)]="lastName" name="lastName" required>
+				</div>
+			</div>
+			<div class="form-row">
+				<div class="form-group">
+					<label for="birthdate">Fecha de nacimiento</label>
+					<input id="birthdate" type="date" class="form-input" [(ngModel)]="birthdate" name="birthdate" required>
+				</div>
+				<div class="form-group">
+					<label for="phone">Número de celular</label>
+					<input id="phone" type="tel" class="form-input" placeholder="+51 999 999 999" [(ngModel)]="phone" name="phone" required>
+				</div>
 			</div>
 			<div class="form-group">
 				<label for="email">Correo electrónico</label>
-				<input id="email" type="email" class="form-input" placeholder="usuario@correo.com" required>
+				<input id="email" type="email" class="form-input" placeholder="usuario@correo.com" [(ngModel)]="email" name="email" required>
 			</div>
-			<div class="form-group">
-				<label for="password">Contraseña</label>
-				<input id="password" type="password" class="form-input" placeholder="••••••••" required>
+			<div class="form-row">
+				<div class="form-group">
+					<label for="password">Contraseña</label>
+					<input id="password" type="password" class="form-input" placeholder="••••••••" [(ngModel)]="password" name="password" required>
+				</div>
+				<div class="form-group">
+					<label for="confirm">Confirmar</label>
+					<input id="confirm" type="password" class="form-input" placeholder="••••••••" [(ngModel)]="confirmPassword" name="confirmPassword" required>
+				</div>
 			</div>
-			<div class="form-group">
-				<label for="confirm">Confirmar contraseña</label>
-				<input id="confirm" type="password" class="form-input" placeholder="Repite tu contraseña" required>
-			</div>
-			<button type="submit" class="btn btn-primary register-btn">Registrarse</button>
+			<button type="submit" class="btn btn-primary">Registrarse</button>
 		</form>
 		<div class="login-link">
-			¿Ya tienes cuenta? <a href="/auth/login">Inicia sesión</a>
+			¿Ya tienes cuenta? <a [routerLink]="['/auth/login']">Inicia sesión</a>
 		</div>
 	</div>
-</div>
+</div> 
