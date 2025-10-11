@@ -4,3 +4,34 @@
     padding: 0;
     box-sizing: border-box;
 }
+
+:root {
+
+    /* Neutros */
+    --color-bg: #e8f5ff; /* blue-50 */
+    --color-surface: #d5ebff; /* blue-100 */
+    --color-border: #b3d8ff; /* blue-200 // Inicio(Degrade)*/
+
+    /* Paleta principal */
+    --color-surface-variant: #85bcff; /* blue-300 // SubTitulos // Final(Degrade - Fondo)*/
+    --color-accent: #5692ff; /* blue-400 */
+    --color-primary: #2f67ff; /* blue-500 // Titulos*/ 
+    --color-primary-600: #0c36ff; /* blue-600 // Final(Degrade - Botom)*/
+    --color-primary-700: #002aff; /* blue-700 */
+    --color-muted: #062acd; /* blue-800 */
+    --color-dark: #102d9f; /* blue-900 */
+
+    /* Colores semánticos adicionales */
+    --color-danger: #ef4444;
+    --color-danger-100: #fee2e2;
+    --color-danger-200: #fecaca;
+    --color-success: #10b981;
+
+
+    --color-text: #000000;
+    --color-text-white: #ffffff;
+    --color-footer: #1f2937;
+    --color-prueba: red;
+}
+
+

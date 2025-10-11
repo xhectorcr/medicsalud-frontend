@@ -1,7 +1,7 @@
 
 .clinic-footer {
-  background: #1f2937;
-  color: #d1d5db;
+  background: var(--color-footer);
+  color: color-mix(in srgb, var(--color-surface) 80%, var(--color-muted) 20%);
   margin-top: auto;
   
   .footer-container {
@@ -29,7 +29,7 @@
 
   .footer-column {
     h3 {
-      color: #ffffff;
+      color: var(--color-text-white);
       font-size: 1.125rem;
       font-weight: 600;
       margin-bottom: 1.25rem;
@@ -49,7 +49,7 @@
         }
         
         a {
-          color: #9ca3af;
+                color: var(--color-text-white);
           text-decoration: none;
           font-size: 0.925rem;
           font-weight: 400;
@@ -57,7 +57,7 @@
           transition: color 0.3s ease;
           
           &:hover {
-            color: #2563eb;
+                  color: var(--color-primary);
           }
         }
       }
@@ -66,7 +66,7 @@
 
   .contact-column {
     p {
-      color: #9ca3af;
+      color: var(--color-text-white);
       font-size: 0.925rem;
       line-height: 1.6;
       margin-bottom: 1.5rem;
@@ -74,8 +74,8 @@
 
     .contact-btn {
       background: transparent;
-      color: #2563eb;
-      border: 2px solid #2563eb;
+            color: var(--color-text-white);
+        border: 2px solid var(--color-text-white);
       border-radius: 25px;
       padding: 0.75rem 1.5rem;
       font-weight: 500;
@@ -84,8 +84,8 @@
       transition: all 0.3s ease;
       
       &:hover {
-        background: #2563eb;
-        color: white;
+        background: var(--color-primary);
+        color: var(--color-text-white);
         transform: translateY(-1px);
         box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
       }
@@ -94,7 +94,7 @@
 
   .footer-bottom {
     padding-top: 2rem;
-    border-top: 1px solid #374151;
+  border-top: 1px solid var(--color-text-white);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -107,7 +107,7 @@
 
     .footer-copyright {
       p {
-        color: #9ca3af;
+  color: var(--color-text-white);
         font-size: 0.875rem;
         margin: 0;
       }
@@ -122,8 +122,8 @@
         height: 40px;
         border-radius: 50%;
         background: transparent;
-        border: 1px solid #4b5563;
-        color: #9ca3af;
+  border: 1px solid var(--color-text-white);
+  color: var(--color-text-white);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -131,8 +131,8 @@
         transition: all 0.3s ease;
         
         &:hover {
-          background: #2563eb;
-          border-color: #2563eb;
+          background: var(--color-primary);
+          border-color: var(--color-primary);
           color: white;
           transform: translateY(-2px);
           box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);

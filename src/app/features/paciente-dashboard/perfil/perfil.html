@@ -1,0 +1,56 @@
+<div class="layout-grid">
+  <aside class="sidebar-col">
+    <app-sidebarpaciente></app-sidebarpaciente>
+  </aside>
+
+  <main class="content-col">
+    <div class="container">
+      <div class="form-card">
+        <h1 class="form-title">Información Personal</h1>
+        <p class="form-subtitle">Actualiza tu información personal aquí.</p>
+        
+        <form (ngSubmit)="onSubmit()">
+          <div class="form-group">
+            <label for="email" class="form-label">Correo Electrónico</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="form-input"
+              [(ngModel)]="formData.email"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="phone" class="form-label">Número de Teléfono</label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              class="form-input"
+              [(ngModel)]="formData.phone"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="address" class="form-label">Dirección</label>
+            <textarea
+              id="address"
+              name="address"
+              class="form-textarea"
+              rows="4"
+              [(ngModel)]="formData.address"
+              required
+            ></textarea>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn-primary">Guardar Cambios</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+</div>

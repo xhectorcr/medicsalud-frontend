@@ -92,7 +92,7 @@ section {
   h2 {
     font-size: 2.5rem;
     font-weight: 700;
-    color: #1f2937;
+  color: var(--color-text);
     text-align: center;
     margin-bottom: 1rem;
 
@@ -103,7 +103,7 @@ section {
 
   > .section-container > p {
     font-size: 1.125rem;
-    color: #6b7280;
+  color: var(--color-text);
     text-align: center;
     max-width: 600px;
     margin: 0 auto 3rem;
@@ -129,20 +129,20 @@ section {
     .stat-item {
       text-align: center;
       padding: 2rem 1rem;
-      background: #f8fafc;
+  background: var(--color-bg);
       border-radius: 1rem;
-      border: 1px solid #e5e7eb;
+  border: 1px solid var(--color-border);
 
       .stat-number {
         font-size: 2.5rem;
         font-weight: 700;
-        color: #2563eb;
+  color: var(--color-primary);
         margin-bottom: 0.5rem;
       }
 
       .stat-label {
         font-size: 1rem;
-        color: #6b7280;
+  color: var(--color-muted);
         font-weight: 500;
       }
     }
@@ -151,7 +151,7 @@ section {
 
 // Services Section
 .services-section {
-  background: #f8fafc;
+  background: var(--color-bg);
 
   .services-grid {
     display: grid;
@@ -166,19 +166,19 @@ section {
       background: white;
       padding: 2rem;
       border-radius: 1rem;
-      border: 1px solid #e5e7eb;
+  border: 1px solid var(--color-border);
       transition: all 0.3s ease;
 
       &:hover {
         transform: translateY(-3px);
         box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-        border-color: #2563eb;
+  border-color: var(--color-primary);
       }
 
       h3 {
         font-size: 1.5rem;
         font-weight: 600;
-        color: #1f2937;
+  color: var(--color-text);
         margin-bottom: 1rem;
       }
 
@@ -223,13 +223,13 @@ section {
 
         strong {
           display: block;
-          color: #1f2937;
+          color: var(--color-text);
           font-weight: 600;
           margin-bottom: 0.5rem;
         }
 
         p {
-          color: #6b7280;
+          color: var(--color-text);
           margin: 0;
           line-height: 1.5;
 
@@ -243,15 +243,15 @@ section {
     .location-map {
       .map-placeholder {
         height: 300px;
-        background: #f3f4f6;
-        border: 2px dashed #d1d5db;
+  background: color-mix(in srgb, var(--color-surface) 88%, var(--color-bg) 12%);
+  border: 2px dashed color-mix(in srgb, var(--color-border) 80%, var(--color-bg) 20%);
         border-radius: 1rem;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         text-align: center;
-        color: #6b7280;
+  color: var(--color-muted);
 
         p {
           font-size: 1.125rem;

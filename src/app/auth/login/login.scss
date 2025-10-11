@@ -3,12 +3,12 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	background: linear-gradient(120deg, #f8fafc 0%, #e0e7ef 100%);
+	background: linear-gradient(120deg, var(--color-bg) 0%, var(--color-surface-variant) 100%);
 	padding: 1rem;
 }
 
 .login-card {
-	background: #fff;
+	background: var(--color-text-white);
 	border-radius: 1.5rem;
 	box-shadow: 0 8px 32px rgba(37, 99, 235, 0.08);
 	padding: 2.5rem 2rem 2rem 2rem;
@@ -33,12 +33,12 @@
 	h2 {
 		font-size: 1.5rem;
 		font-weight: 700;
-		color: #2563eb;
+		color: var(--color-text);
 		margin: 0;
 	}
 
 	p {
-		color: #6b7280;
+		color: var(--color-text);
 		font-size: 1rem;
 		margin: 0;
 	}
@@ -58,21 +58,21 @@
 
 	label {
 		font-weight: 500;
-		color: #374151;
+		color: var(--color-text);
 		font-size: 0.98rem;
 	}
 
 	.form-input {
 		padding: 0.75rem 1rem;
 		border-radius: 0.75rem;
-		border: 1.5px solid #e5e7eb;
+	border: 1.5px solid var(--color-border);
 		font-size: 1rem;
 		outline: none;
 		transition: all 0.2s;
-		background: #fff;
+	background: var(--color-br);
 
 		&:focus {
-			border-color: #2563eb;
+			border-color: var(--color-primary);
 			box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 		}
 	}
@@ -95,8 +95,8 @@
 		height: 0;
 
 		&:checked + .role-label {
-			border-color: #2563eb;
-			background: #eff6ff;
+			border-color: var(--color-primary);
+			background: var(--color-bg);
 		}
 	}
 
@@ -106,15 +106,15 @@
 		align-items: center;
 		gap: 0.5rem;
 		padding: 1rem 0.5rem;
-		border: 2px solid #e5e7eb;
+		border: 2px solid var(--color-border);
 		border-radius: 0.75rem;
 		cursor: pointer;
 		transition: all 0.2s;
 		background: #fff;
 
 		&:hover {
-			border-color: #2563eb;
-			background: #f8fafc;
+			border-color: var(--color-primary);
+			background: var(--color-bg);
 		}
 	}
 }
@@ -130,7 +130,7 @@
 .role-name {
 	font-size: 0.875rem;
 	font-weight: 500;
-	color: #374151;
+		color: var(--color-text);
 	text-align: center;
 }
 
@@ -139,14 +139,14 @@
 	margin-top: -0.5rem;
 
 	a {
-		color: #2563eb;
+		color: var(--color-primary);
 		text-decoration: none;
 		font-weight: 500;
 		font-size: 0.95rem;
 		transition: color 0.2s;
 
 		&:hover {
-			color: #1d4ed8;
+			color: var(--color-primary-700);
 		}
 	}
 }
@@ -162,7 +162,7 @@
 	width: 100%;
 
 	&.btn-primary {
-		background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+		background: linear-gradient(135deg, var(--color-border) 0%, var(--color-primary-600) 100%);
 		color: white;
 		box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
 		margin-top: 0.5rem;
@@ -182,10 +182,10 @@
 	margin-top: 1.5rem;
 	text-align: center;
 	font-size: 0.98rem;
-	color: #6b7280;
+	color: var(--color-text);
 
 	a {
-		color: #2563eb;
+		color: var(--color-primary);
 		text-decoration: none;
 		font-weight: 500;
 
