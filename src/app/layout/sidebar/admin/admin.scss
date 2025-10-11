@@ -1,0 +1,152 @@
+.sidebar-paciente {
+  width: 260px;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--color-primary) 12%, var(--color-surface) 88%), var(--color-surface) 100%);
+  border-radius: 0; /* quitar bordes redondeados para cubrir todo el área */
+  padding: 1rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* ocupar toda la altura */
+  position: fixed; /* quedar quieta en pantalla */
+  top: 0;
+  left: 0;
+  overflow: auto;
+  z-index: 40;
+  border: none; /* quitar borde claro para que no haya margen blanco */
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.sidebar-title {
+  margin: 1rem;
+  align-items: center;
+  color: var(--color-text);
+  font-size: 1.15rem;
+  font-weight: 700;
+  text-align: left;
+}
+
+.hamburger {
+  display: none;
+  background: transparent;
+  border: none;
+  padding: 6px;
+  cursor: pointer;
+}
+
+.hamburger-line {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: var(--color-primary);
+  margin: 3px 0;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+  flex: 1;
+}
+
+.sidebar-footer {
+  display: flex;
+  flex-direction: column;
+  padding-top: 0.75rem;
+  border-top: 1px solid color-mix(in srgb, var(--color-primary) 12%, transparent 88%);
+  margin-top: auto;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 0.6rem;
+  text-decoration: none;
+  color: var(--color-text);
+  font-weight: 600;
+  transition: background 0.15s, transform 0.12s;
+}
+
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.6);
+  transform: translateY(-2px);
+}
+
+.nav-item.active {
+  background: linear-gradient(135deg, var(--color-border) 0%, var(--color-primary-600) 100%);
+  color: #ffffff;
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.25);
+}
+
+.nav-icon {
+  display: inline-flex;
+  width: 28px;
+  height: 28px;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.nav-text {
+  display: inline-block;
+}
+
+@media (max-width: 768px) {
+  .sidebar-paciente { 
+    width: 100%;
+    left: 0;
+    right: 0;
+    height: auto;
+    max-height: none;
+    border-radius: 0;
+    top: 0;
+    padding: 0.75rem 1rem;
+  }
+  
+  .hamburger { 
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .sidebar-header { 
+    justify-content: space-between;
+    margin-bottom: 0;
+  }
+
+  .sidebar-nav { 
+    display: none;
+    margin-top: 1rem;
+  }
+  
+  .sidebar-nav.open { 
+    display: flex;
+  }
+
+  .sidebar-footer {
+    display: none;
+    padding-top: 0;
+    border-top: none;
+    margin-top: 0;
+  }
+
+  .sidebar-footer .nav-item {
+    margin-top: 0.25rem;
+  }
+
+  /* Incluir perfil en el menú hamburguesa en mobile */
+  .sidebar-nav.open ~ .sidebar-footer {
+    display: flex;
+  }
+}

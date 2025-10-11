@@ -1,11 +1,21 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'app-admin',
-  imports: [],
+  selector: 'app-sidebaradmin',
+  standalone: true,
+  imports: [CommonModule, RouterModule],
   templateUrl: './admin.html',
-  styleUrl: './admin.scss'
+  styleUrls: ['./admin.scss']
 })
-export class Admin {
+export class Sidebaradmin {
+
+  menuOpen: boolean = false;
+
+  toggleMenu(): void {
+    this.menuOpen = !this.menuOpen;
+  }
 
 }
+
