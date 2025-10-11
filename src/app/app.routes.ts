@@ -8,14 +8,22 @@ import { Pacienteperfil } from './features/paciente-dashboard/perfil/perfil';
 import { Sidebarpaciente } from './layout/sidebar/paciente/paciente';
 import { Sidebarmedicos } from './layout/sidebar/medicos/medicos';
 import { Sidebaradmin } from './layout/sidebar/admin/admin';
+import { Medicoscitas } from './features/medico-dashboard/citas/citas';
+import { Pacientecitas } from './features/paciente-dashboard/citas/citas';
+import { Pacienterecetas } from './features/paciente-dashboard/recetas/recetas';
 
 export const routes: Routes = [
 	{ path: '', component: HomeComponent },
 	{ path: 'auth/login', component: Login },
 	{ path: 'auth/register', component: Register },
 	{ path: 'paciente/medicos', component: Pacientemedico },
+	{ path: 'paciente/citas', component: Pacientecitas },
+	{ path: 'paciente/recetas', component: Pacienterecetas },
 	{ path: 'paciente/perfil', component: Pacienteperfil },
+	{ path: 'medicos/citas', component: Medicoscitas },
+
 	{ path: 'sidebar', component: Sidebarpaciente  },
 	{ path: 'sidebarmedicos', component: Sidebarmedicos  },
-	{ path: 'sidebaradmin', component: Sidebaradmin } 
+	{ path: 'sidebaradmin', component: Sidebaradmin }
+
 ];

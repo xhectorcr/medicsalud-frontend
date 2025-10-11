@@ -5,6 +5,37 @@
     box-sizing: border-box;
 }
 
+/* Layout global: sidebar fijo + content con margen en desktop, apila en mobile */
+.layout-grid {
+    display: block;
+}
+
+.sidebar-col {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 260px;
+    height: 100vh;
+    z-index: 40;
+}
+
+.content-col {
+    margin-left: 260px; /* espacio para la sidebar fija */
+    min-height: 100vh;
+}
+
+@media (max-width: 992px) {
+    .sidebar-col {
+        position: relative;
+        width: 100%;
+        height: auto;
+    }
+
+    .content-col {
+        margin-left: 0;
+    }
+}
+
 :root {
 
     /* Neutros */

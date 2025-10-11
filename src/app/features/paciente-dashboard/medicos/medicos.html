@@ -13,14 +13,17 @@
 
       <div class="search-wrapper">
         <div class="search-box">
-          <svg class="search-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <path d="M9 17A8 8 0 1 0 9 1a8 8 0 0 0 0 16zM18 18l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <svg class="search-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path d="M19 19l-4.35-4.35" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            <circle cx="9" cy="9" r="5.5" stroke="currentColor" stroke-width="1.6"/>
           </svg>
           <input 
-            type="text" 
+            type="search" 
             class="search-input"
             placeholder="Buscar médico por nombre o especialidad"
             [(ngModel)]="searchTerm"
+            name="searchTerm"
+            aria-label="Buscar médicos"
           />
         </div>
       </div>

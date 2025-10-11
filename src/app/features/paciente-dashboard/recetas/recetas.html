@@ -1,1 +1,47 @@
-<p>recetas works!</p>
+<div class="layout-grid">
+  <aside class="sidebar-col">
+    <app-sidebarpaciente></app-sidebarpaciente>
+  </aside>
+
+  <main class="content-col">
+    <div class="container">
+      <div class="header">
+        <h1 class="title">Mis Recetas</h1>
+        <button class="btn-nueva-receta" (click)="nuevaReceta()">
+          <span class="icon">+</span>
+          Nueva Receta
+        </button>
+      </div>
+
+      <div class="table-container">
+        <table class="recetas-table">
+          <thead>
+            <tr>
+              <th>MEDICAMENTO</th>
+              <th>DOSIS</th>
+              <th>FECHA</th>
+              <th>MÉDICO</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let receta of recetas; let last = last" [class.last-row]="last">
+              <td class="medicamento">{{ receta.medicamento }}</td>
+              <td class="dosis">{{ receta.dosis }}</td>
+              <td class="fecha">{{ receta.fecha }}</td>
+              <td class="medico">{{ receta.medico }}</td>
+              <td class="actions">
+                <button class="btn-ver" (click)="verReceta(receta)">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>

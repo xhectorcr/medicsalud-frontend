@@ -1,1 +1,64 @@
-<p>citas works!</p>
+<div class="layout-grid">
+  <aside class="sidebar-col">
+    <app-sidebarpaciente></app-sidebarpaciente>
+  </aside>
+
+  <main class="content-col">
+    <div class="container">
+      <div class="card">
+        <!-- Header -->
+        <div class="header">
+          <h1 class="title">Mis Citas</h1>
+          <p class="subtitle">Consulta y gestiona tus citas médicas.</p>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs-container">
+          <nav class="tabs">
+            <button
+              *ngFor="let tab of tabs"
+              (click)="setActiveTab(tab.id)"
+              class="tab"
+              [class.tab--active]="activeTab === tab.id"
+            >
+              {{ tab.label }}
+            </button>
+          </nav>
+        </div>
+
+        <!-- Appointments List -->
+        <div class="content">
+          <div *ngIf="filteredAppointments.length === 0" class="empty-state">
+            <p>No hay citas en esta categoría</p>
+          </div>
+
+          <div *ngIf="filteredAppointments.length > 0" class="appointments-list">
+            <div
+              *ngFor="let appointment of filteredAppointments"
+              class="appointment-card"
+            >
+              <div class="appointment-info">
+                <img
+                  [src]="appointment.image"
+                  [alt]="appointment.doctor"
+                  class="avatar"
+                />
+                <div class="doctor-info">
+                  <h3 class="doctor-name">{{ appointment.doctor }}</h3>
+                  <p class="specialty">{{ appointment.specialty }}</p>
+                </div>
+              </div>
+
+              <div class="appointment-details">
+                <p class="date">{{ appointment.date }}</p>
+                <span class="status-badge" [attr.data-status]="appointment.status">
+                  {{ getStatusLabel(appointment.status) }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

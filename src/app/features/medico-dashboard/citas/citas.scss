@@ -1,0 +1,152 @@
+.citas-container {
+  padding: 24px;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+}
+
+.citas-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 24px;
+  margin-top: 0;
+}
+
+.citas-table {
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.table-header {
+  display: grid;
+  grid-template-columns: 2fr 1.5fr 1fr 1.5fr 2.5fr;
+  gap: 16px;
+  padding: 16px 24px;
+  background-color: #fafafa;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.header-cell {
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.table-body {
+  .table-row {
+    display: grid;
+    grid-template-columns: 2fr 1.5fr 1fr 1.5fr 2.5fr;
+    gap: 16px;
+    padding: 20px 24px;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: #fafafa;
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+
+.body-cell {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #333;
+
+  &.patient {
+    font-weight: 500;
+  }
+
+  &.date,
+  &.time {
+    color: #666;
+  }
+
+  &.reason {
+    color: #555;
+  }
+
+  &.actions {
+    gap: 8px;
+  }
+}
+
+.btn {
+  padding: 6px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  outline: none;
+
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
+.btn-accept {
+  background-color: #00b8e6;
+  color: white;
+
+  &:hover {
+    background-color: #00a0cc;
+  }
+}
+
+.btn-reject {
+  background-color: #e0e0e0;
+  color: #666;
+
+  &:hover {
+    background-color: #d0d0d0;
+  }
+}
+
+.btn-reschedule {
+  background-color: #e0e0e0;
+  color: #666;
+
+  &:hover {
+    background-color: #d0d0d0;
+  }
+}
+
+@media (max-width: 768px) {
+  .table-header,
+  .table-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .header-cell {
+    display: none;
+  }
+
+  .body-cell {
+    padding: 4px 0;
+
+    &::before {
+      content: attr(data-label);
+      font-weight: 600;
+      margin-right: 8px;
+      color: #666;
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    &.actions {
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+  }
+}

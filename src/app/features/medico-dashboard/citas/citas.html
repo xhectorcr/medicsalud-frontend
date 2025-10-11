@@ -1,0 +1,27 @@
+<div class="citas-container">
+  <h2 class="citas-title">Citas Pendientes</h2>
+  
+  <div class="citas-table">
+    <div class="table-header">
+      <div class="header-cell patient">PACIENTE</div>
+      <div class="header-cell date">FECHA</div>
+      <div class="header-cell time">HORA</div>
+      <div class="header-cell reason">MOTIVO</div>
+      <div class="header-cell actions">ACCIONES</div>
+    </div>
+    
+    <div class="table-body">
+      <div class="table-row" *ngFor="let cita of citas">
+        <div class="body-cell patient">{{ cita.paciente }}</div>
+        <div class="body-cell date">{{ cita.fecha }}</div>
+        <div class="body-cell time">{{ cita.hora }}</div>
+        <div class="body-cell reason">{{ cita.motivo }}</div>
+        <div class="body-cell actions">
+          <button class="btn btn-accept" (click)="aceptarCita(cita)">Aceptar</button>
+          <button class="btn btn-reject" (click)="rechazarCita(cita)">Rechazar</button>
+          <button class="btn btn-reschedule" (click)="reprogramarCita(cita)">Reprogramar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
