@@ -1,0 +1,21 @@
+<app-header></app-header>
+
+<section class="specialties-section">
+  <div class="container">
+    <h2 class="section-title">Nuestros Servicios</h2>
+    <p class="section-subtitle">
+      En Clínica Especialistas, ofrecemos una amplia gama de servicios médicos con un enfoque en la
+      atención personalizada y de alta calidad. Nuestro equipo está aquí para cuidar de ti y tu familia.
+    </p>
+
+    <div class="specialties-grid">
+      <div *ngFor="let specialty of specialties" class="specialty-card">
+        <div class="icon-container">
+          <i [class]="specialty.icon"></i>
+        </div>
+        <h3 class="card-title">{{ specialty.name }}</h3>
+        <p class="card-description">{{ specialty.description }}</p>
+      </div>
+    </div>
+  </div>
+</section>

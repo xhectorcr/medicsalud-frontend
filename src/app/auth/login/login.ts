@@ -14,7 +14,7 @@ import { HeaderComponent } from "../../layout/header/header";
   imports: [CommonModule, FormsModule, RouterModule, HeaderComponent]
 })
 export class Login implements OnInit {
-  userRole: string = 'admin';
+  userRole: string = 'paciente';
   email: string = '';
   password: string = '';
   loading: boolean = false;
@@ -88,9 +88,6 @@ export class Login implements OnInit {
 
   private redirectToRole(role: string): void {
     switch (role) {
-      case 'admin':
-        this.router.navigate(['/admin/dashboard']);
-        break;
       case 'medico':
         this.router.navigate(['/medico/dashboard']);
         break;

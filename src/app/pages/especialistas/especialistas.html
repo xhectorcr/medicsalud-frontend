@@ -1,0 +1,25 @@
+<app-header></app-header>
+
+<section class="doctors-section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Conoce a Nuestros Especialistas</h2>
+      <p class="section-subtitle">
+        Profesionales dedicados y apasionados por su trabajo, comprometidos con brindarte la mejor atención médica.
+      </p>
+    </div>
+
+    <div class="doctors-grid">
+      <div *ngFor="let doctor of doctors" class="doctor-card">
+        <div class="doctor-image-container">
+          <img [src]="doctor.imageUrl" [alt]="'Foto de ' + doctor.name">
+        </div>
+        <div class="doctor-info">
+          <h3 class="doctor-name">{{ doctor.name }}</h3>
+          <p class="doctor-specialty">{{ doctor.specialty }}</p>
+          <p class="doctor-bio">{{ doctor.bio }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

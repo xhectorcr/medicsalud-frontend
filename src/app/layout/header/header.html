@@ -17,10 +17,9 @@
     <!-- Navigation -->
     <nav class="main-nav">
       <ul>
-        <li><a href="#inicio">Inicio</a></li>
-        <li><a href="#servicios">Servicios</a></li>
-        <li><a href="#especialistas">Especialistas</a></li>
-        <li><a href="#citas">Citas</a></li>
+        <li><a [routerLink]="['/']">Inicio</a></li>
+        <li><a [routerLink]="['/servicios']">Servicios</a></li>
+        <li><a [routerLink]="['/especialistas']">Especialistas</a></li>
         <li><a href="#contacto">Contacto</a></li>
       </ul>
     </nav>
@@ -47,13 +46,12 @@
   </div>
 
   <!-- Mobile Menu -->
-  <div class="mobile-menu" [class.open]="isMenuOpen">
+    <div class="mobile-menu" [class.open]="isMenuOpen">
     <nav class="mobile-nav">
       <ul>
-        <li><a href="#inicio">Inicio</a></li>
-        <li><a href="#servicios">Servicios</a></li>
-        <li><a href="#especialistas">Especialistas</a></li>
-        <li><a href="#citas">Citas</a></li>
+        <li><a [routerLink]="['/']">Inicio</a></li>
+        <li><a [routerLink]="['/servicios']">Servicios</a></li>
+        <li><a [routerLink]="['/especialistas']">Especialistas</a></li>
         <li><a href="#contacto">Contacto</a></li>
       </ul>
     </nav>

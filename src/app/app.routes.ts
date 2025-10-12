@@ -11,11 +11,17 @@ import { Sidebaradmin } from './layout/sidebar/admin/admin';
 import { Medicoscitas } from './features/medico-dashboard/citas/citas';
 import { Pacientecitas } from './features/paciente-dashboard/citas/citas';
 import { Pacienterecetas } from './features/paciente-dashboard/recetas/recetas';
+import { Especialistas } from './pages/especialistas/especialistas';
+import { Servicios } from './pages/servicios/servicios';
 
 export const routes: Routes = [
 	{ path: '', component: HomeComponent },
+	{ path: 'servicios', component: Servicios },
+	{ path: 'especialistas', component: Especialistas },
+
 	{ path: 'auth/login', component: Login },
 	{ path: 'auth/register', component: Register },
+
 	{ path: 'paciente/medicos', component: Pacientemedico },
 	{ path: 'paciente/citas', component: Pacientecitas },
 	{ path: 'paciente/recetas', component: Pacienterecetas },
