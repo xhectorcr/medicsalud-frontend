@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
-import { HeaderComponent } from "../../layout/header/header";
+import { HeaderComponent } from '../../../layout/header/header';
 
 
 @Component({

@@ -4,7 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HeaderComponent } from "../../layout/header/header";
+import { HeaderComponent } from '../../../layout/header/header';
+
 
 @Component({
   selector: 'app-login',
