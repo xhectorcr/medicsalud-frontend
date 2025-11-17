@@ -1,27 +1,64 @@
-<div class="citas-container">
-  <h2 class="citas-title">Citas Pendientes</h2>
-  
-  <div class="citas-table">
-    <div class="table-header">
-      <div class="header-cell patient">PACIENTE</div>
-      <div class="header-cell date">FECHA</div>
-      <div class="header-cell time">HORA</div>
-      <div class="header-cell reason">MOTIVO</div>
-      <div class="header-cell actions">ACCIONES</div>
-    </div>
-    
-    <div class="table-body">
-      <div class="table-row" *ngFor="let cita of citas">
-        <div class="body-cell patient">{{ cita.paciente }}</div>
-        <div class="body-cell date">{{ cita.fecha }}</div>
-        <div class="body-cell time">{{ cita.hora }}</div>
-        <div class="body-cell reason">{{ cita.motivo }}</div>
-        <div class="body-cell actions">
-          <button class="btn btn-accept" (click)="aceptarCita(cita)">Aceptar</button>
-          <button class="btn btn-reject" (click)="rechazarCita(cita)">Rechazar</button>
-          <button class="btn btn-reschedule" (click)="reprogramarCita(cita)">Reprogramar</button>
+<div class="layout-grid">
+  <aside class="sidebar-col">
+    <app-sidebarpaciente></app-sidebarpaciente>
+  </aside>
+
+  <main class="content-col">
+    <div class="container">
+      <div class="card">
+        <!-- Header -->
+        <div class="header">
+          <h1 class="title">Mis Citas</h1>
+          <p class="subtitle">Consulta y gestiona tus citas médicas.</p>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs-container">
+          <nav class="tabs">
+            <button
+              *ngFor="let tab of tabs"
+              (click)="setActiveTab(tab.id)"
+              class="tab"
+              [class.tab--active]="activeTab === tab.id"
+            >
+              {{ tab.label }}
+            </button>
+          </nav>
+        </div>
+
+        <!-- Appointments List -->
+        <div class="content">
+          <div *ngIf="filteredAppointments.length === 0" class="empty-state">
+            <p>No hay citas en esta categoría</p>
+          </div>
+
+          <div *ngIf="filteredAppointments.length > 0" class="appointments-list">
+            <div
+              *ngFor="let appointment of filteredAppointments"
+              class="appointment-card"
+            >
+              <div class="appointment-info">
+                <img
+                  [src]="appointment.image"
+                  [alt]="appointment.doctor"
+                  class="avatar"
+                />
+                <div class="doctor-info">
+                  <h3 class="doctor-name">{{ appointment.doctor }}</h3>
+                  <p class="specialty">{{ appointment.specialty }}</p>
+                </div>
+              </div>
+
+              <div class="appointment-details">
+                <p class="date">{{ appointment.date }}</p>
+                <span class="status-badge" [attr.data-status]="appointment.status">
+                  {{ getStatusLabel(appointment.status) }}
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </main>
 </div>

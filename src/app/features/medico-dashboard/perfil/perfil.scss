@@ -1,0 +1,208 @@
+.account-settings {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #fafafa;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+
+  .title {
+    margin: 0 0 2rem 0;
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #1a1a1a;
+  }
+
+  .section {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 1.75rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+
+    .section-title {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+
+    .section-subtitle {
+      margin: 0 0 1.5rem 0;
+      font-size: 0.875rem;
+      color: #666;
+      line-height: 1.5;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1.5rem;
+      gap: 1rem;
+
+      @media (max-width: 640px) {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
+
+    @media (max-width: 640px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #1a1a1a;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 0.625rem 0.875rem;
+      font-size: 0.875rem;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      background-color: #fff;
+      color: #1a1a1a;
+      transition: all 0.2s ease;
+      font-family: inherit;
+
+      &:focus {
+        outline: none;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+      }
+
+      &::placeholder {
+        color: #999;
+      }
+    }
+
+    select.form-control {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.875rem center;
+      padding-right: 2.5rem;
+    }
+  }
+
+  .btn-add {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #2563eb;
+    background-color: transparent;
+    border: 1px solid #2563eb;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    font-family: inherit;
+
+    &:hover {
+      background-color: #eff6ff;
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+
+  .schedule-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .schedule-row {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-end;
+    padding: 1rem;
+    background-color: #fafafa;
+    border-radius: 6px;
+    border: 1px solid #f0f0f0;
+
+    .schedule-fields {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1rem;
+
+      @media (max-width: 640px) {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .btn-remove {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: #999;
+      background-color: transparent;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+      font-family: inherit;
+      line-height: 1;
+
+      &:hover {
+        color: #dc2626;
+        border-color: #dc2626;
+        background-color: #fef2f2;
+      }
+
+      &:active {
+        transform: scale(0.95);
+      }
+    }
+  }
+
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+
+    .btn-save {
+      padding: 0.75rem 2rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #fff;
+      background-color: #2563eb;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+
+      &:hover {
+        background-color: #1d4ed8;
+      }
+
+      &:active {
+        transform: scale(0.98);
+      }
+    }
+  }
+}
