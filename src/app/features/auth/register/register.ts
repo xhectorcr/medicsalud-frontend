@@ -1,23 +1,24 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-import { Router } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { HeaderComponent } from '../../../layout/header/header';
-
+import { RegisterService, RegisterRequest } from './register.service';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.html',
   styleUrls: ['./register.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, HeaderComponent]
+  imports: [CommonModule, FormsModule, RouterModule, HeaderComponent],
 })
 export class Register implements OnInit {
   firstName: string = '';
   lastName: string = '';
+  dni: string = '';
   birthdate: string = '';
   phone: string = '';
+  address: string = '';
   email: string = '';
   password: string = '';
   confirmPassword: string = '';
@@ -26,39 +27,76 @@ export class Register implements OnInit {
 
   constructor(
     private router: Router,
-    // private authService: AuthService  // Descomentar cuando tengas el servicio
+    private registerService: RegisterService
   ) {}
 
-  ngOnInit(): void {
-    // Verificar si ya hay sesión activa
-    // if (this.authService.isLoggedIn()) {
-    //   this.router.navigate(['/dashboard']);
-    // }
-  }
+  ngOnInit(): void {}
 
-  onSubmit(): void {
-    // Limpiar mensaje de error previo
+  async onSubmit(): Promise<void> {
+    // 1) No navega ni llama backend si hay errores de validación
     this.errorMessage = '';
 
-    // Validaciones
     if (!this.validateForm()) {
-      return;
+      return; 
     }
 
     this.loading = true;
 
-    // Simular registro de usuario
-    this.registerUser();
+    try {
+      const payload: RegisterRequest = {
+        nombre: this.firstName.trim(),
+        apellido: this.lastName.trim(),
+        dni: this.dni.trim(),
+        email: this.email.trim(),
+        clave: this.password,
+        fechaNacimiento: this.birthdate,
+        telefono: this.phone.replace(/\D/g, ''),
+        direccion: this.address.trim(),
+      };
+
+      console.log('Payload registro:', payload);
+
+      // 2) Esperar a que el backend confirme el registro
+      const resp = await this.registerService.register(payload);
+      console.log('Respuesta registro:', resp);
+
+      this.loading = false;
+
+      // 3) SOLO aquí, cuando el registro fue correcto, cambiamos de página
+      alert('¡Registro exitoso! Ahora puedes iniciar sesión.');
+      this.router.navigate(['/auth/login']);
+    } catch (error: any) {
+      console.error(error);
+      this.loading = false;
+
+      // 4) Si hay error solo mensaje en rojo
+      if (error?.response?.status === 400) {
+        this.errorMessage =
+          error.response.data?.message || 'Datos inválidos en el registro';
+      } else if (error?.response?.status === 409) {
+        this.errorMessage = 'El correo o DNI ya se encuentra registrado';
+      } else {
+        this.errorMessage = 'Error al registrar usuario. Inténtalo nuevamente.';
+      }
+    }
   }
 
   private validateForm(): boolean {
-    // Validar campos vacíos
-    if (!this.firstName || !this.lastName || !this.birthdate || !this.phone || !this.email || !this.password || !this.confirmPassword) {
+    if (
+      !this.firstName ||
+      !this.lastName ||
+      !this.dni ||
+      !this.birthdate ||
+      !this.phone ||
+      !this.address ||
+      !this.email ||
+      !this.password ||
+      !this.confirmPassword
+    ) {
       this.errorMessage = 'Por favor completa todos los campos';
       return false;
     }
 
-    // Validar nombres y apellidos (mínimo 2 caracteres cada uno)
     if (this.firstName.trim().length < 2) {
       this.errorMessage = 'El nombre debe tener al menos 2 caracteres';
       return false;
@@ -68,32 +106,38 @@ export class Register implements OnInit {
       return false;
     }
 
-    // Validar edad (mayor de 18 años)
+    const dniDigits = this.dni.replace(/\D/g, '');
+    if (dniDigits.length !== 8) {
+      this.errorMessage = 'El DNI debe tener 8 dígitos';
+      return false;
+    }
+
     if (!this.validateAge()) {
       this.errorMessage = 'Debes ser mayor de 18 años para registrarte';
       return false;
     }
 
-    // Validar formato de email
     if (!this.validateEmail(this.email)) {
       this.errorMessage = 'Por favor ingresa un correo electrónico válido';
       return false;
     }
 
-    // Validar teléfono (mínimo 9 dígitos)
     const phoneDigits = this.phone.replace(/\D/g, '');
     if (phoneDigits.length < 9) {
       this.errorMessage = 'El número de celular debe tener al menos 9 dígitos';
       return false;
     }
 
-    // Validar contraseña (mínimo 8 caracteres)
+    if (this.address.trim().length < 5) {
+      this.errorMessage = 'La dirección debe ser más detallada';
+      return false;
+    }
+
     if (this.password.length < 8) {
       this.errorMessage = 'La contraseña debe tener al menos 8 caracteres';
       return false;
     }
 
-    // Validar que las contraseñas coincidan
     if (this.password !== this.confirmPassword) {
       this.errorMessage = 'Las contraseñas no coinciden';
       return false;
@@ -107,11 +151,14 @@ export class Register implements OnInit {
     const birthDate = new Date(this.birthdate);
     let age = today.getFullYear() - birthDate.getFullYear();
     const monthDiff = today.getMonth() - birthDate.getMonth();
-    
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+    ) {
       age--;
     }
-    
+
     return age >= 18;
   }
 
@@ -120,57 +167,7 @@ export class Register implements OnInit {
     return emailRegex.test(email);
   }
 
-  private registerUser(): void {
-    // Aquí iría tu llamada al servicio de registro
-    // Ejemplo:
-    /*
-    const userData = {
-      role: this.userRole,
-      name: this.name,
-      birthdate: this.birthdate,
-      phone: this.phone,
-      email: this.email,
-      password: this.password
-    };
-
-    this.authService.register(userData)
-      .subscribe({
-        next: (response) => {
-          this.loading = false;
-          // Mostrar mensaje de éxito
-          alert('Registro exitoso. Por favor inicia sesión.');
-          // Redirigir al login
-          this.router.navigate(['/auth/login']);
-        },
-        error: (error) => {
-          this.loading = false;
-          this.errorMessage = error.message || 'Error al registrar usuario';
-        }
-      });
-    */
-
-    // Simulación temporal (eliminar en producción)
-    setTimeout(() => {
-      this.loading = false;
-      console.log('Registro exitoso:', {
-        firstName: this.firstName,
-        lastName: this.lastName,
-        birthdate: this.birthdate,
-        phone: this.phone,
-        email: this.email
-      });
-      alert('¡Registro exitoso! Ahora puedes iniciar sesión.');
-      this.router.navigate(['/auth/login']);
-    }, 1500);
-  }
-
-  // Método auxiliar para mostrar mensajes de error
   get hasError(): boolean {
     return this.errorMessage.length > 0;
-  }
-
-  // Método para limpiar el mensaje de error
-  clearError(): void {
-    this.errorMessage = '';
   }
 }

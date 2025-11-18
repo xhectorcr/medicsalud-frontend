@@ -1,0 +1,111 @@
+<div class="availability-page">
+  <div class="page-header">
+    <button class="back-button" (click)="onBack()">
+      ← Volver a médicos
+    </button>
+
+    <div class="title-block">
+      <h1 class="page-title">Disponibilidad del médico</h1>
+      <p class="page-subtitle">
+        Elige una fecha y un horario para agendar tu cita.
+      </p>
+    </div>
+  </div>
+
+  <div class="content-layout">
+    <!-- Tarjeta del médico -->
+    <section class="doctor-card">
+      <div class="doctor-info">
+        <img
+          [src]="doctor.photoUrl"
+          [alt]="doctor.name"
+          class="doctor-photo"
+        />
+
+        <div>
+          <h2 class="doctor-name">{{ doctor.name }}</h2>
+          <p class="doctor-speciality">{{ doctor.speciality }}</p>
+          <p class="doctor-clinic">{{ doctor.clinic }}</p>
+        </div>
+      </div>
+
+      <div class="date-selector">
+        <span class="date-label">Fecha</span>
+        <input
+          type="date"
+          class="date-input"
+          [(ngModel)]="selectedDate"
+        />
+      </div>
+    </section>
+
+    <!-- Horarios -->
+    <section class="slots-section">
+      <div class="slots-header">
+        <h3 class="slots-title">Horarios disponibles</h3>
+
+        <div class="tabs">
+          <button
+            class="tab"
+            [class.tab-active]="activeFilter === 'all'"
+            (click)="setFilter('all')"
+          >
+            Todos
+          </button>
+
+          <button
+            class="tab"
+            [class.tab-active]="activeFilter === 'available'"
+            (click)="setFilter('available')"
+          >
+            Disponibles
+          </button>
+
+          <button
+            class="tab"
+            [class.tab-active]="activeFilter === 'booked'"
+            (click)="setFilter('booked')"
+          >
+            Ocupados
+          </button>
+        </div>
+      </div>
+
+      <div class="slots-list">
+        <div
+          class="slot-card"
+          *ngFor="let slot of filteredSlots"
+        >
+          <div class="slot-info">
+            <span class="slot-time">{{ slot.time }}</span>
+
+            <span
+              class="slot-status"
+              [ngClass]="{
+                'status-available': slot.status === 'available',
+                'status-booked': slot.status === 'booked'
+              }"
+            >
+              {{ getStatusLabel(slot.status) }}
+            </span>
+          </div>
+
+          <button
+            class="slot-button"
+            [disabled]="slot.status !== 'available'"
+            (click)="onReserve(slot)"
+          >
+            Reservar
+          </button>
+        </div>
+
+        <div
+          class="empty-state"
+          *ngIf="filteredSlots.length === 0"
+        >
+          No hay horarios para este filtro.
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

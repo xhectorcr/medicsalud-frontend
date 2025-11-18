@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { RouterModule, Router } from '@angular/router';
 import { HeaderComponent } from '../../../layout/header/header';
-
+import { LoginService, LoginResponse } from './login.service';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +13,7 @@ import { HeaderComponent } from '../../../layout/header/header';
   imports: [CommonModule, FormsModule, RouterModule, HeaderComponent]
 })
 export class Login implements OnInit {
-  userRole: string = 'paciente';
+  userRole: 'paciente' | 'medico' | 'admin' = 'paciente';
   email: string = '';
   password: string = '';
   loading: boolean = false;
@@ -23,18 +21,17 @@ export class Login implements OnInit {
 
   constructor(
     private router: Router,
-    // private authService: AuthService  // Descomentar cuando tengas el servicio
+    private loginService: LoginService
   ) {}
 
   ngOnInit(): void {
-    // Verificar si ya hay sesión activa
-    // if (this.authService.isLoggedIn()) {
-    //   this.redirectToRole(this.authService.getUserRole());
-    // }
+    const savedEmail = localStorage.getItem('username');
+    if (savedEmail) {
+      this.email = savedEmail;
+    }
   }
 
-  onSubmit(): void {
-    // Validación básica
+  async onSubmit(): Promise<void> {
     if (!this.email || !this.password) {
       this.errorMessage = 'Por favor completa todos los campos';
       return;
@@ -43,57 +40,69 @@ export class Login implements OnInit {
     this.loading = true;
     this.errorMessage = '';
 
-    // Simular llamada al servicio de autenticación
-    // En producción, reemplazar con tu servicio real
-    this.authenticateUser();
-  }
-
-  private authenticateUser(): void {
-    // Aquí iría tu llamada al servicio de autenticación
-    // Ejemplo:
-    /*
-    this.authService.login(this.email, this.password, this.userRole)
-      .subscribe({
-        next: (response) => {
-          this.loading = false;
-          // Guardar token y datos de usuario
-          localStorage.setItem('token', response.token);
-          localStorage.setItem('userRole', this.userRole);
-          
-          // Redirigir según el rol
-          this.redirectToRole(this.userRole);
-        },
-        error: (error) => {
-          this.loading = false;
-          this.errorMessage = error.message || 'Credenciales incorrectas';
-        }
+    try {
+      const resp: LoginResponse = await this.loginService.login({
+        email: this.email,
+        password: this.password,
       });
-    */
 
-    // Simulación temporal (eliminar en producción)
-    setTimeout(() => {
-      this.loading = false;
-      console.log('Login exitoso:', {
-        role: this.userRole,
-        email: this.email
-      });
-      
-      // Guardar datos temporales
-      localStorage.setItem('userRole', this.userRole);
+      // guardar token y datos del usuario
+      localStorage.setItem('authToken', resp.token);
+      localStorage.setItem('tokenType', resp.type);
+      localStorage.setItem('tokenExpiration', resp.fechaExpiracion);
+      localStorage.setItem('username', resp.username);
+      localStorage.setItem('roles', JSON.stringify(resp.roles || []));
       localStorage.setItem('userEmail', this.email);
-      
-      // Redirigir según rol
+
+      const roles = resp.roles || [];
+      const hasAdmin   = roles.includes('ROLE_ADMIN');
+      const hasMedico  = roles.includes('ROLE_MEDICO');
+      const hasPaciente = roles.includes('ROLE_PACIENTE');
+
+      // Validar que la selección coincida con sus permisos
+      if (this.userRole === 'admin' && !hasAdmin) {
+        this.errorMessage = 'No tienes permisos de administrador';
+        return;
+      }
+
+      if (this.userRole === 'medico' && !hasMedico) {
+        this.errorMessage = 'No tienes permisos de médico';
+        return;
+      }
+
+      if (this.userRole === 'paciente' && !hasPaciente) {
+        this.errorMessage = 'No tienes permisos de paciente';
+        return;
+      }
+
+      // Si pasa las validaciones, se respeta lo que seleccionó
+      localStorage.setItem('userRole', this.userRole);
+
       this.redirectToRole(this.userRole);
-    }, 1000);
+
+    } catch (error: any) {
+      console.error(error);
+
+      if (error?.response?.status === 401) {
+        this.errorMessage = 'Correo o contraseña incorrectos';
+      } else {
+        this.errorMessage = 'Error al iniciar sesión. Inténtalo nuevamente.';
+      }
+    } finally {
+      this.loading = false;
+    }
   }
 
   private redirectToRole(role: string): void {
     switch (role) {
+      case 'admin':
+        this.router.navigate(['/sidebaradmin']);
+        break;
       case 'medico':
-        this.router.navigate(['/medico/dashboard']);
+        this.router.navigate(['/medicos/citas']);
         break;
       case 'paciente':
-        this.router.navigate(['/paciente/dashboard']);
+        this.router.navigate(['/paciente/medicos']);
         break;
       default:
         this.router.navigate(['/']);
@@ -105,7 +114,6 @@ export class Login implements OnInit {
     this.router.navigate(['/auth/forgot-password']);
   }
 
-  // Método auxiliar para mostrar mensajes de error
   get hasError(): boolean {
     return this.errorMessage.length > 0;
   }

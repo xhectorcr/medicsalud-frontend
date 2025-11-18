@@ -1,0 +1,253 @@
+.availability-page {
+  min-height: 100vh;
+  background: #f4f7ff;
+  padding: 32px 40px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    sans-serif;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.back-button {
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  color: #5b6bff;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 999px;
+  transition: background 0.15s ease;
+}
+
+.back-button:hover {
+  background: rgba(91, 107, 255, 0.08);
+}
+
+.title-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #152238;
+}
+
+.page-subtitle {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.content-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.5fr);
+  gap: 24px;
+}
+
+.doctor-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 20px 24px;
+  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.doctor-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.doctor-photo {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #4f46e5;
+  padding: 3px;
+  background: #e0e7ff;
+}
+
+.doctor-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.doctor-speciality {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.doctor-clinic {
+  margin-top: 4px;
+  font-size: 13px;
+  color: #4b5563;
+}
+
+.date-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.date-label {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.date-input {
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  padding: 8px 10px;
+  font-size: 14px;
+  outline: none;
+  background: #f9fafb;
+  transition: border 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.date-input:focus {
+  border-color: #4f46e5;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.slots-section {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 20px 24px;
+  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.slots-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.slots-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.tabs {
+  display: flex;
+  gap: 8px;
+}
+
+.tab {
+  border: none;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 13px;
+  cursor: pointer;
+  background: #f3f4ff;
+  color: #4f46e5;
+  transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.tab-active {
+  background: linear-gradient(90deg, #4f46e5, #2563eb);
+  color: #ffffff;
+  box-shadow: 0 8px 20px rgba(79, 70, 229, 0.25);
+}
+
+.slots-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+.slot-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+}
+
+.slot-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.slot-time {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.slot-status {
+  font-size: 12px;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+.status-available {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.status-booked {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.slot-button {
+  border: none;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  background: linear-gradient(90deg, #4f46e5, #2563eb);
+  color: #ffffff;
+  box-shadow: 0 8px 20px rgba(79, 70, 229, 0.25);
+  transition: transform 0.1s ease, box-shadow 0.1s ease, opacity 0.1s ease;
+}
+
+.slot-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 26px rgba(79, 70, 229, 0.3);
+}
+
+.slot-button:disabled {
+  opacity: 0.5;
+  cursor: default;
+  box-shadow: none;
+}
+
+.empty-state {
+  font-size: 14px;
+  color: #6b7280;
+  text-align: center;
+  padding: 16px 8px;
+}
+
+@media (max-width: 900px) {
+  .availability-page {
+    padding: 20px 16px;
+  }
+
+  .content-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

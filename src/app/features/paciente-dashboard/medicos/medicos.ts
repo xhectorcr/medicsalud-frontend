@@ -1,13 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Sidebarpaciente } from '../../../layout/sidebar/paciente/paciente';
-
+import { MedicosService, MedicoBackend } from './medicos.service';
+import {  Router  } from '@angular/router';
 interface Doctor {
   id: number;
   name: string;
   specialty: string;
   image: string;
+  correo: string; 
 }
 
 @Component({
@@ -17,62 +19,69 @@ interface Doctor {
   templateUrl: './medicos.html',
   styleUrls: ['./medicos.scss']
 })
-export class Pacientemedico{
+export class Pacientemedico implements OnInit {
   searchTerm: string = '';
-  
-  doctors: Doctor[] = [
-    {
-      id: 1,
-      name: 'Dr. Ricardo García',
-      specialty: 'Cardiología',
-      image: 'https://i.pravatar.cc/150?img=12'
-    },
-    {
-      id: 2,
-      name: 'Dra. Sofía Martínez',
-      specialty: 'Dermatología',
-      image: 'https://i.pravatar.cc/150?img=5'
-    },
-    {
-      id: 3,
-      name: 'Dr. Alejandro López',
-      specialty: 'Pediatría',
-      image: 'https://i.pravatar.cc/150?img=13'
-    },
-    {
-      id: 4,
-      name: 'Dra. Isabel Fernández',
-      specialty: 'Ginecología',
-      image: 'https://i.pravatar.cc/150?img=9'
-    },
-    {
-      id: 5,
-      name: 'Dr. Javier Sánchez',
-      specialty: 'Neurología',
-      image: 'https://i.pravatar.cc/150?img=14'
-    },
-    {
-      id: 6,
-      name: 'Dra. Laura Torres',
-      specialty: 'Oftalmología',
-      image: 'https://i.pravatar.cc/150?img=10'
+
+  doctors: Doctor[] = [];
+  loading: boolean = false;
+  errorMessage: string = '';
+
+  constructor( private medicosService: MedicosService,
+  private router: Router  ) {}
+
+  ngOnInit(): void {
+    this.cargarMedicos();
+  }
+
+  async cargarMedicos(): Promise<void> {
+    this.loading = true;
+    this.errorMessage = '';
+
+    try {
+      const data: MedicoBackend[] = await this.medicosService.getMedicosActivos();
+
+      
+      this.doctors = data.map((m, index) => ({
+        id: m.id,
+        name: m.nombre,
+        specialty: m.especialidad,
+        correo: m.correo, 
+       
+        
+        image: 'https://i.pravatar.cc/150?img=' + ((index % 10) + 1),
+      }));
+    } catch (error: any) {
+      console.error(error);
+      this.errorMessage =
+        error?.response?.data?.message || 'No se pudo cargar la lista de médicos.';
+    } finally {
+      this.loading = false;
     }
-  ];
+  }
 
   get filteredDoctors(): Doctor[] {
     if (!this.searchTerm) {
       return this.doctors;
     }
-    
+
     const term = this.searchTerm.toLowerCase();
-    return this.doctors.filter(doctor => 
-      doctor.name.toLowerCase().includes(term) || 
+    return this.doctors.filter(doctor =>
+      doctor.name.toLowerCase().includes(term) ||
       doctor.specialty.toLowerCase().includes(term)
     );
   }
 
-  verDisponibilidad(doctor: Doctor): void {
-    console.log('Ver disponibilidad de:', doctor.name);
-    // Aquí puedes implementar la lógica para ver disponibilidad
-  }
+  verDisponibilidad(doctor: Doctor) {
+  this.router.navigate(
+    ['/paciente/horarios-medico'],   
+    {
+      queryParams: {
+        correo: doctor.correo,
+        nombre: doctor.name,
+        especialidad: doctor.specialty,
+        foto: doctor.image             
+      }
+    }
+  );
+}
 }

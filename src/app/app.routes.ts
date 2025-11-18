@@ -14,6 +14,7 @@ import { Especialistas } from './pages/especialistas/especialistas';
 import { Servicios } from './pages/servicios/servicios';
 import { Login } from './features/auth/login/login';
 import { Register } from './features/auth/register/register';
+import { PacienteMedicoAvailabilityComponent } from './features/paciente-dashboard/medico-horaios/paciente-medico-availability.component';
 
 export const routes: Routes = [
 
@@ -31,10 +32,10 @@ export const routes: Routes = [
 	{ path: 'paciente/citas', component: Pacientecitas },
 	{ path: 'paciente/recetas', component: Pacienterecetas },
 	{ path: 'paciente/perfil', component: Pacienteperfil },
-
+	{ path: 'paciente/horarios-medico', component: PacienteMedicoAvailabilityComponent },
+	
 	//Medico
 	{ path: 'medicos/citas', component: Medicoscitas },
-
 	{ path: 'sidebar', component: Sidebarpaciente  },
 	{ path: 'sidebarmedicos', component: Sidebarmedicos  },
 	{ path: 'sidebaradmin', component: Sidebaradmin }
