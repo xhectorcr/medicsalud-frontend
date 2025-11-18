@@ -26,14 +26,8 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/styles.scss"
-            ],
-            "server": "src/main.server.ts",
-            "outputMode": "server",
-            "ssr": {
-              "entry": "src/server.ts"
-            }
+            "styles": ["src/styles.scss"],
+            "outputMode": "static"
           },
           "configurations": {
             "production": {
@@ -85,9 +79,7 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/styles.scss"
-            ]
+            "styles": ["src/styles.scss"]
           }
         }
       }
@@ -95,6 +87,6 @@
   },
   "cli": {
     "analytics": "c2191298-2a2c-4d2e-8ede-525c0108b9ec",
-    "packageManager": "pnpm"
+    "packageManager": "npm"
   }
 }

@@ -1,62 +1,92 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Sidebarpaciente } from '../../../layout/sidebar/paciente/paciente';
 
-interface Cita {
+interface Appointment {
   id: number;
-  paciente: string;
-  fecha: string;
-  hora: string;
-  motivo: string;
+  doctor: string;
+  specialty: string;
+  date: string;
+  status: 'pendiente' | 'confirmada' | 'reprogramada' | 'rechazada';
+  image: string;
+}
+
+interface Tab {
+  id: string;
+  label: string;
 }
 
 @Component({
-  selector: 'app-medicoscitas',
+  selector: 'app-medicocitas',
+  standalone: true,
+  imports: [CommonModule, Sidebarpaciente],
   templateUrl: './citas.html',
-  styleUrls: ['./citas.scss']
+  styleUrls: ['./citas.scss'],
 })
 export class Medicoscitas {
-  citas: Cita[] = [
+  activeTab: string = 'todas';
+
+  tabs: Tab[] = [
+    { id: 'todas', label: 'Todas' },
+    { id: 'pendiente', label: 'Pendientes' },
+    { id: 'confirmada', label: 'Confirmadas' },
+    { id: 'reprogramada', label: 'Reprogramadas' },
+    { id: 'rechazada', label: 'Rechazadas' }
+  ];
+
+  appointments: Appointment[] = [
     {
       id: 1,
-      paciente: 'Sofía Rodríguez',
-      fecha: '2024-07-20',
-      hora: '10:00 AM',
-      motivo: 'Consulta general'
+      doctor: 'Dr. Ricardo García',
+      specialty: 'Cardiólogo',
+      date: '15 de Julio, 10:00 AM',
+      status: 'pendiente',
+      image: 'https://i.pravatar.cc/150?img=12'
     },
     {
       id: 2,
-      paciente: 'Juan Pérez',
-      fecha: '2024-07-21',
-      hora: '02:00 PM',
-      motivo: 'Dolor de espalda'
+      doctor: 'Dra. Sofía Martínez',
+      specialty: 'Dermatóloga',
+      date: '20 de Julio, 11:30 AM',
+      status: 'confirmada',
+      image: 'https://i.pravatar.cc/150?img=45'
     },
     {
       id: 3,
-      paciente: 'Ana Martínez',
-      fecha: '2024-07-22',
-      hora: '11:30 AM',
-      motivo: 'Control de rutina'
+      doctor: 'Dr. Carlos López',
+      specialty: 'Pediatra',
+      date: '25 de Julio, 9:00 AM',
+      status: 'reprogramada',
+      image: 'https://i.pravatar.cc/150?img=33'
     },
     {
       id: 4,
-      paciente: 'Luis García',
-      fecha: '2024-07-22',
-      hora: '03:05 PM',
-      motivo: 'Fiebre y tos'
+      doctor: 'Dra. Elena Ramírez',
+      specialty: 'Neuróloga',
+      date: '30 de Julio, 2:00 PM',
+      status: 'rechazada',
+      image: 'https://i.pravatar.cc/150?img=47'
     }
   ];
 
-  aceptarCita(cita: Cita): void {
-    console.log('Aceptar cita:', cita);
-    // Implementar lógica para aceptar la cita
+  get filteredAppointments(): Appointment[] {
+    if (this.activeTab === 'todas') {
+      return this.appointments;
+    }
+    return this.appointments.filter(apt => apt.status === this.activeTab);
   }
 
-  rechazarCita(cita: Cita): void {
-    console.log('Rechazar cita:', cita);
-    // Implementar lógica para rechazar la cita
+  setActiveTab(tabId: string): void {
+    this.activeTab = tabId;
   }
 
-  reprogramarCita(cita: Cita): void {
-    console.log('Reprogramar cita:', cita);
-    // Implementar lógica para reprogramar la cita
+  getStatusLabel(status: string): string {
+    const labels: { [key: string]: string } = {
+      pendiente: 'Pendiente',
+      confirmada: 'Confirmada',
+      reprogramada: 'Reprogramada',
+      rechazada: 'Rechazada'
+    };
+    return labels[status] || status;
   }
 }

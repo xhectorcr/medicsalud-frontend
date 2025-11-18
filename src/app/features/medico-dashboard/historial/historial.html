@@ -1,1 +1,77 @@
-<p>historial works!</p>
+<div class="patient-history">
+  <div class="header">
+    <h1>Historia Clínica de Paciente</h1>
+    <p class="subtitle">Historial completo del paciente, incluyendo antecedentes, diagnósticos, tratamientos y consultas previas.</p>
+  </div>
+
+  <div class="content-grid">
+    <!-- Datos del Paciente -->
+    <div class="section patient-data">
+      <h2>Datos del Paciente</h2>
+      <div class="data-row">
+        <span class="label">Nombre</span>
+        <span class="value">{{ patientData.nombre }}</span>
+      </div>
+      <div class="data-row">
+        <span class="label">Fecha de Nacimiento</span>
+        <span class="value">{{ patientData.fechaNacimiento }}</span>
+      </div>
+      <div class="data-row">
+        <span class="label">Género</span>
+        <span class="value">{{ patientData.genero }}</span>
+      </div>
+      <div class="data-row">
+        <span class="label">Grupo Sanguíneo</span>
+        <span class="value">{{ patientData.grupoSanguineo }}</span>
+      </div>
+    </div>
+
+    <!-- Consultas Previas -->
+    <div class="section previous-consults">
+      <h2>Consultas Previas</h2>
+      <div class="consult-list">
+        <div class="consult-item" *ngFor="let consult of previousConsults">
+          <div class="consult-bullet"></div>
+          <div class="consult-content">
+            <div class="consult-type">{{ consult.tipo }}</div>
+            <div class="consult-date">{{ consult.fecha }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Antecedentes Médicos -->
+  <div class="section medical-history">
+    <h2>Antecedentes Médicos</h2>
+    <div class="history-grid">
+      <div class="history-item">
+        <span class="label">Alergias</span>
+        <span class="value">{{ medicalHistory.alergias }}</span>
+      </div>
+      <div class="history-item">
+        <span class="label">Enfermedades Crónicas</span>
+        <span class="value">{{ medicalHistory.enfermedadesCronicas }}</span>
+      </div>
+      <div class="history-item">
+        <span class="label">Cirugías Previas</span>
+        <span class="value">{{ medicalHistory.cirugiasPrevias }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Diagnósticos y Tratamientos -->
+  <div class="section diagnosis">
+    <h2>Diagnósticos y Tratamientos</h2>
+    <div class="diagnosis-grid">
+      <div class="diagnosis-item">
+        <span class="label">Diagnóstico Principal</span>
+        <span class="value">{{ diagnosis.principal }}</span>
+      </div>
+      <div class="diagnosis-item">
+        <span class="label">Tratamiento Actual</span>
+        <span class="value">{{ diagnosis.tratamiento }}</span>
+      </div>
+    </div>
+  </div>
+</div>

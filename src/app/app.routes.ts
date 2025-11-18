@@ -14,7 +14,9 @@ import { Especialistas } from './pages/especialistas/especialistas';
 import { Servicios } from './pages/servicios/servicios';
 import { Login } from './features/auth/login/login';
 import { Register } from './features/auth/register/register';
-import { PacienteMedicoAvailabilityComponent } from './features/paciente-dashboard/medico-horaios/paciente-medico-availability.component';
+import { Medicohistorial } from './features/medico-dashboard/historial/historial';
+import { Medicoperfil } from './features/medico-dashboard/perfil/perfil';
+	import { Admingestiongeneral } from './features/admin-dashboard/gestiongeneral/gestiongeneral';
 
 export const routes: Routes = [
 
@@ -27,15 +29,25 @@ export const routes: Routes = [
 	{ path: 'auth/login', component: Login },
 	{ path: 'auth/register', component: Register },
 
+	//Admin
+	// { path: 'admin/paciente', component: Adminpaciente },
+	{ path: 'admin/paciente', component: Admingestiongeneral },
+	
+	
+
+	//Medico
+	{ path: 'medicos/citas', component: Medicoscitas },
+	{ path: 'medicos/historialpaciente', component: Medicohistorial },
+	{ path: 'medicos/perfil', component: Medicoperfil },
+
 	//Paciente
 	{ path: 'paciente/medicos', component: Pacientemedico },
 	{ path: 'paciente/citas', component: Pacientecitas },
 	{ path: 'paciente/recetas', component: Pacienterecetas },
 	{ path: 'paciente/perfil', component: Pacienteperfil },
-	{ path: 'paciente/horarios-medico', component: PacienteMedicoAvailabilityComponent },
+
 	
-	//Medico
-	{ path: 'medicos/citas', component: Medicoscitas },
+
 	{ path: 'sidebar', component: Sidebarpaciente  },
 	{ path: 'sidebarmedicos', component: Sidebarmedicos  },
 	{ path: 'sidebaradmin', component: Sidebaradmin }
