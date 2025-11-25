@@ -17,6 +17,7 @@ import { Register } from './features/auth/register/register';
 import { Medicohistorial } from './features/medico-dashboard/historial/historial';
 import { Medicoperfil } from './features/medico-dashboard/perfil/perfil';
 	import { Admingestiongeneral } from './features/admin-dashboard/gestiongeneral/gestiongeneral';
+import { PacienteMedicoAvailabilityComponent } from './features/paciente-dashboard/medico-horaios/paciente-medico-availability.component';
 
 export const routes: Routes = [
 
@@ -45,7 +46,7 @@ export const routes: Routes = [
 	{ path: 'paciente/citas', component: Pacientecitas },
 	{ path: 'paciente/recetas', component: Pacienterecetas },
 	{ path: 'paciente/perfil', component: Pacienteperfil },
-
+	{path :'/paciente/horarios-medico', component: PacienteMedicoAvailabilityComponent},
 	
 
 	{ path: 'sidebar', component: Sidebarpaciente  },
