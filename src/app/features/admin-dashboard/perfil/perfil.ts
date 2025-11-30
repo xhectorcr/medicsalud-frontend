@@ -1,11 +1,26 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Sidebaradmin } from '../../../layout/sidebar/admin/admin';
 
 @Component({
-  selector: 'app-perfil',
-  imports: [],
+  selector: 'app-admin-profile',
+  imports: [CommonModule, FormsModule, Sidebaradmin],
   templateUrl: './perfil.html',
-  styleUrl: './perfil.scss'
+  styleUrls: ['./perfil.scss']
 })
-export class Perfil {
+export class Adminperfil {
+  // Información personal
+  email: string = 'admin@medicsalud.com';
+  phone: string = '+51 987 654 321';
+  name: string = 'Administrador Principal';
 
+  saveChanges(): void {
+    console.log('Guardando cambios...', {
+      email: this.email,
+      phone: this.phone,
+      name: this.name
+    });
+    // Aquí implementarías la lógica para guardar en el backend
+  }
 }

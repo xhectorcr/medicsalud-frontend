@@ -1,1 +1,39 @@
-<p>perfil works!</p>
+<div class="app-container">
+    <app-sidebaradmin></app-sidebaradmin>
+    <main class="main-content" style="margin-left: 260px; padding: 20px;">
+        <div class="account-settings">
+            <h1 class="title">Perfil de Administrador</h1>
+
+            <!-- Información Personal -->
+            <div class="section">
+                <h2 class="section-title">Información personal</h2>
+                <p class="section-subtitle">Actualiza tus datos de administrador.</p>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Nombre Completo</label>
+                        <input type="text" [(ngModel)]="name" class="form-control"
+                            placeholder="Nombre del administrador" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Correo electrónico</label>
+                        <input type="email" [(ngModel)]="email" class="form-control" placeholder="admin@ejemplo.com" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Número de teléfono</label>
+                        <input type="tel" [(ngModel)]="phone" class="form-control" placeholder="+51 999 999 999" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botón Guardar -->
+            <div class="actions">
+                <button class="btn-save" (click)="saveChanges()">
+                    Guardar cambios
+                </button>
+            </div>
+        </div>
+    </main>
+</div>

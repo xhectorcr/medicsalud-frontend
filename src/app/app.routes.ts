@@ -20,6 +20,7 @@ import { Medicoperfil } from './features/medico-dashboard/perfil/perfil';
 import { Admingestiongeneral } from './features/admin-dashboard/gestiongeneral/gestiongeneral';
 import { Adminmedicos } from './features/admin-dashboard/medicos/medicos';
 import { Adminpaciente } from './features/admin-dashboard/paciente/paciente';
+import { Adminperfil } from './features/admin-dashboard/perfil/perfil';
 
 export const routes: Routes = [
 
@@ -37,8 +38,9 @@ export const routes: Routes = [
 	{ path: 'admin/gestiongeneral', component: Admingestiongeneral },
 	{ path: 'admin/paciente', component: Adminpaciente },
 	{ path: 'admin/medicos', component: Adminmedicos },
-	
-	
+	{ path: 'admin/perfil', component: Adminperfil },
+
+
 
 	//Medico
 	{ path: 'medicos/citas', component: Medicoscitas },
@@ -51,10 +53,10 @@ export const routes: Routes = [
 	{ path: 'paciente/recetas', component: Pacienterecetas },
 	{ path: 'paciente/perfil', component: Pacienteperfil },
 
-	
 
-	{ path: 'sidebar', component: Sidebarpaciente  },
-	{ path: 'sidebarmedicos', component: Sidebarmedicos  },
+
+	{ path: 'sidebar', component: Sidebarpaciente },
+	{ path: 'sidebarmedicos', component: Sidebarmedicos },
 	{ path: 'sidebaradmin', component: Sidebaradmin }
 
 ];
