@@ -18,6 +18,8 @@ import { Medicohistorial } from './features/medico-dashboard/historial/historial
 import { Medicoperfil } from './features/medico-dashboard/perfil/perfil';
 // import { Adminpaciente } from './features/admin-dashboard/paciente/paciente';
 import { Admingestiongeneral } from './features/admin-dashboard/gestiongeneral/gestiongeneral';
+import { Adminmedicos } from './features/admin-dashboard/medicos/medicos';
+import { Adminpaciente } from './features/admin-dashboard/paciente/paciente';
 
 export const routes: Routes = [
 
@@ -32,7 +34,9 @@ export const routes: Routes = [
 
 	//Admin
 	// { path: 'admin/paciente', component: Adminpaciente },
-	{ path: 'admin/paciente', component: Admingestiongeneral },
+	{ path: 'admin/gestiongeneral', component: Admingestiongeneral },
+	{ path: 'admin/paciente', component: Adminpaciente },
+	{ path: 'admin/medicos', component: Adminmedicos },
 	
 	
 

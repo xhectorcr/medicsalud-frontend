@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 interface PatientData {
   nombre: string;
@@ -25,6 +26,7 @@ interface PreviousConsult {
 
 @Component({
   selector: 'app-patient-history',
+  imports: [CommonModule],
   templateUrl: './historial.html',
   styleUrls: ['./historial.scss']
 })
