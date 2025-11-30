@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Sidebaradmin } from '../../../layout/sidebar/admin/admin';
 
 interface DashboardStats {
   medicos: {
@@ -42,7 +43,7 @@ interface UpcomingAppointment {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, Sidebaradmin],
   templateUrl: './gestiongeneral.html',
   styleUrls: ['./gestiongeneral.scss']
 })

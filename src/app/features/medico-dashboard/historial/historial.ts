@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Sidebarmedicos } from '../../../layout/sidebar/medicos/medicos';
 
 interface PatientData {
   nombre: string;
@@ -26,7 +27,7 @@ interface PreviousConsult {
 
 @Component({
   selector: 'app-patient-history',
-  imports: [CommonModule],
+  imports: [CommonModule, Sidebarmedicos],
   templateUrl: './historial.html',
   styleUrls: ['./historial.scss']
 })

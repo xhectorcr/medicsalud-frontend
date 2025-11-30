@@ -1,97 +1,83 @@
-<div class="account-settings">
-  <h1 class="title">Cuenta</h1>
+<div class="app-container">
+  <app-sidebarmedicos></app-sidebarmedicos>
+  <main class="main-content" style="margin-left: 260px; padding: 20px;">
+    <div class="account-settings">
+      <h1 class="title">Cuenta</h1>
 
-  <!-- Información Personal -->
-  <div class="section">
-    <h2 class="section-title">Información personal</h2>
-    <p class="section-subtitle">Actualiza tus datos personales y de contacto.</p>
+      <!-- Información Personal -->
+      <div class="section">
+        <h2 class="section-title">Información personal</h2>
+        <p class="section-subtitle">Actualiza tus datos personales y de contacto.</p>
 
-    <div class="form-grid">
-      <div class="form-group">
-        <label>Correo electrónico</label>
-        <input 
-          type="email" 
-          [(ngModel)]="email" 
-          class="form-control"
-          placeholder="correo@ejemplo.com"
-        />
-      </div>
-
-      <div class="form-group">
-        <label>Número de teléfono</label>
-        <input 
-          type="tel" 
-          [(ngModel)]="phone" 
-          class="form-control"
-          placeholder="+51 999 999 999"
-        />
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label>Especialidad</label>
-      <input 
-        type="text" 
-        [(ngModel)]="specialty" 
-        class="form-control"
-        placeholder="Tu especialidad médica"
-      />
-    </div>
-  </div>
-
-  <!-- Horario de Consulta -->
-  <div class="section">
-    <div class="section-header">
-      <div>
-        <h2 class="section-title">Horario de consulta</h2>
-        <p class="section-subtitle">Define tus días y horas de disponibilidad</p>
-      </div>
-      <button class="btn-add" (click)="addSchedule()">
-        + Añadir horario
-      </button>
-    </div>
-
-    <div class="schedule-list">
-      <div class="schedule-row" *ngFor="let schedule of schedules; let i = index">
-        <div class="schedule-fields">
+        <div class="form-grid">
           <div class="form-group">
-            <label>Día</label>
-            <select [(ngModel)]="schedule.day" class="form-control">
-              <option *ngFor="let day of days" [value]="day">{{ day }}</option>
-            </select>
+            <label>Correo electrónico</label>
+            <input type="email" [(ngModel)]="email" class="form-control" placeholder="correo@ejemplo.com" />
           </div>
 
           <div class="form-group">
-            <label>Hora de inicio</label>
-            <select [(ngModel)]="schedule.startTime" class="form-control">
-              <option *ngFor="let time of times" [value]="time">{{ time }}</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label>Hora de fin</label>
-            <select [(ngModel)]="schedule.endTime" class="form-control">
-              <option *ngFor="let time of times" [value]="time">{{ time }}</option>
-            </select>
+            <label>Número de teléfono</label>
+            <input type="tel" [(ngModel)]="phone" class="form-control" placeholder="+51 999 999 999" />
           </div>
         </div>
 
-        <button 
-          class="btn-remove" 
-          (click)="removeSchedule(i)"
-          *ngIf="schedules.length > 1"
-          title="Eliminar horario"
-        >
-          ×
+        <div class="form-group">
+          <label>Especialidad</label>
+          <input type="text" [(ngModel)]="specialty" class="form-control" placeholder="Tu especialidad médica" />
+        </div>
+      </div>
+
+      <!-- Horario de Consulta -->
+      <div class="section">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Horario de consulta</h2>
+            <p class="section-subtitle">Define tus días y horas de disponibilidad</p>
+          </div>
+          <button class="btn-add" (click)="addSchedule()">
+            + Añadir horario
+          </button>
+        </div>
+
+        <div class="schedule-list">
+          <div class="schedule-row" *ngFor="let schedule of schedules; let i = index">
+            <div class="schedule-fields">
+              <div class="form-group">
+                <label>Día</label>
+                <select [(ngModel)]="schedule.day" class="form-control">
+                  <option *ngFor="let day of days" [value]="day">{{ day }}</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Hora de inicio</label>
+                <select [(ngModel)]="schedule.startTime" class="form-control">
+                  <option *ngFor="let time of times" [value]="time">{{ time }}</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Hora de fin</label>
+                <select [(ngModel)]="schedule.endTime" class="form-control">
+                  <option *ngFor="let time of times" [value]="time">{{ time }}</option>
+                </select>
+              </div>
+            </div>
+
+            <button class="btn-remove" (click)="removeSchedule(i)" *ngIf="schedules.length > 1"
+              title="Eliminar horario">
+              ×
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botón Guardar -->
+      <div class="actions">
+        <button class="btn-save" (click)="saveChanges()">
+          Guardar cambios
         </button>
       </div>
     </div>
-  </div>
-
-  <!-- Botón Guardar -->
-  <div class="actions">
-    <button class="btn-save" (click)="saveChanges()">
-      Guardar cambios
-    </button>
-  </div>
+  </main>
 </div>

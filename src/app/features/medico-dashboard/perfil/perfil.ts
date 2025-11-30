@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Sidebarmedicos } from '../../../layout/sidebar/medicos/medicos';
 
 interface Schedule {
   day: string;
@@ -10,7 +11,7 @@ interface Schedule {
 
 @Component({
   selector: 'app-account-settings',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, Sidebarmedicos],
   templateUrl: './perfil.html',
   styleUrls: ['./perfil.scss']
 })
@@ -33,10 +34,10 @@ export class Medicoperfil {
   times: string[] = this.generateTimeSlots();
 
   addSchedule(): void {
-    this.schedules.push({ 
-      day: 'Lunes', 
-      startTime: '09:00 AM', 
-      endTime: '05:00 PM' 
+    this.schedules.push({
+      day: 'Lunes',
+      startTime: '09:00 AM',
+      endTime: '05:00 PM'
     });
   }
 
@@ -57,14 +58,14 @@ export class Medicoperfil {
   private generateTimeSlots(): string[] {
     const slots: string[] = [];
     const periods = ['AM', 'PM'];
-    
+
     periods.forEach(period => {
       for (let hour = 1; hour <= 12; hour++) {
         slots.push(`${hour.toString().padStart(2, '0')}:00 ${period}`);
         slots.push(`${hour.toString().padStart(2, '0')}:30 ${period}`);
       }
     });
-    
+
     return slots;
   }
 }

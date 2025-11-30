@@ -1,6 +1,6 @@
 <div class="layout-grid">
   <aside class="sidebar-col">
-    <app-sidebarpaciente></app-sidebarpaciente>
+    <app-sidebarmedicos></app-sidebarmedicos>
   </aside>
 
   <main class="content-col">
@@ -15,12 +15,8 @@
         <!-- Tabs -->
         <div class="tabs-container">
           <nav class="tabs">
-            <button
-              *ngFor="let tab of tabs"
-              (click)="setActiveTab(tab.id)"
-              class="tab"
-              [class.tab--active]="activeTab === tab.id"
-            >
+            <button *ngFor="let tab of tabs" (click)="setActiveTab(tab.id)" class="tab"
+              [class.tab--active]="activeTab === tab.id">
               {{ tab.label }}
             </button>
           </nav>
@@ -33,16 +29,9 @@
           </div>
 
           <div *ngIf="filteredAppointments.length > 0" class="appointments-list">
-            <div
-              *ngFor="let appointment of filteredAppointments"
-              class="appointment-card"
-            >
+            <div *ngFor="let appointment of filteredAppointments" class="appointment-card">
               <div class="appointment-info">
-                <img
-                  [src]="appointment.image"
-                  [alt]="appointment.doctor"
-                  class="avatar"
-                />
+                <img [src]="appointment.image" [alt]="appointment.doctor" class="avatar" />
                 <div class="doctor-info">
                   <h3 class="doctor-name">{{ appointment.doctor }}</h3>
                   <p class="specialty">{{ appointment.specialty }}</p>

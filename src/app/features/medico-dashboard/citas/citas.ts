@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Sidebarpaciente } from '../../../layout/sidebar/paciente/paciente';
+import { Sidebarmedicos } from '../../../layout/sidebar/medicos/medicos';
 
 interface Appointment {
   id: number;
@@ -19,7 +19,7 @@ interface Tab {
 @Component({
   selector: 'app-medicocitas',
   standalone: true,
-  imports: [CommonModule, Sidebarpaciente],
+  imports: [CommonModule, Sidebarmedicos],
   templateUrl: './citas.html',
   styleUrls: ['./citas.scss'],
 })
