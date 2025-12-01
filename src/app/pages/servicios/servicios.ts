@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../../layout/header/header';
+import { FooterComponent } from "../../layout/footer/footer";
 
 @Component({
   selector: 'app-servicios',
   standalone: true,
-  imports: [CommonModule, HeaderComponent],
+  imports: [CommonModule, HeaderComponent, FooterComponent],
   templateUrl: './servicios.html',
   styleUrls: ['./servicios.scss']
 })

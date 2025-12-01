@@ -21,13 +21,15 @@ import { Admingestiongeneral } from './features/admin-dashboard/gestiongeneral/g
 import { Adminmedicos } from './features/admin-dashboard/medicos/medicos';
 import { Adminpaciente } from './features/admin-dashboard/paciente/paciente';
 import { Adminperfil } from './features/admin-dashboard/perfil/perfil';
-
+import { MedicShop } from './pages/medicshop/medicshop';
 export const routes: Routes = [
 
 	// Public
 	{ path: '', component: HomeComponent },
 	{ path: 'servicios', component: Servicios },
 	{ path: 'especialistas', component: Especialistas },
+	{ path: 'medicshop', component: MedicShop },
+
 
 	// Auth
 	{ path: 'auth/login', component: Login },

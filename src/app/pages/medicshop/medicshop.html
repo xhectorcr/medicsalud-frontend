@@ -1,0 +1,134 @@
+<app-header></app-header>
+<div class="productos-container">
+    <!-- Header -->
+    <div class="header">
+        <h1>Productos de la Clínica</h1>
+        <button class="carrito-btn" (click)="toggleCarrito()">
+            <i class="icon-cart">🛒</i>
+            <span class="badge" *ngIf="getCantidadItems() > 0">{{ getCantidadItems() }}</span>
+        </button>
+    </div>
+
+    <!-- Filtros y Búsqueda -->
+    <div class="filtros-section">
+        <div class="busqueda">
+            <input type="text" placeholder="Buscar productos..." [(ngModel)]="terminoBusqueda"
+                (input)="filtrarProductos()" class="input-busqueda">
+        </div>
+
+        <div class="categorias">
+            <button *ngFor="let categoria of categorias" [class.active]="categoriaSeleccionada === categoria"
+                (click)="categoriaSeleccionada = categoria; filtrarProductos()" class="btn-categoria">
+                {{ categoria }}
+            </button>
+        </div>
+
+        <div class="vista-toggle">
+            <button (click)="cambiarVista('grid')" [class.active]="vistaActual === 'grid'" class="btn-vista">
+                ⊞
+            </button>
+            <button (click)="cambiarVista('list')" [class.active]="vistaActual === 'list'" class="btn-vista">
+                ☰
+            </button>
+        </div>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="cargando" class="loading">
+        <div class="spinner"></div>
+        <p>Cargando productos...</p>
+    </div>
+
+    <!-- Lista de Productos -->
+    <div *ngIf="!cargando" [class]="'productos-lista ' + vistaActual">
+        <div *ngFor="let producto of productosFiltrados" class="producto-card">
+            <div class="producto-imagen">
+                <img [src]="producto.imagen || 'assets/images/placeholder.png'" [alt]="producto.nombre">
+                <span *ngIf="producto.stock === 0" class="badge-agotado">Agotado</span>
+            </div>
+
+            <div class="producto-info">
+                <h3>{{ producto.nombre }}</h3>
+                <p class="categoria">{{ producto.categoria }}</p>
+                <p class="descripcion">{{ producto.descripcion }}</p>
+
+                <div class="producto-footer">
+                    <div class="precio-stock">
+                        <span class="precio">S/. {{ producto.precio.toFixed(2) }}</span>
+                        <span class="stock" [class.bajo]="producto.stock < 10">
+                            Stock: {{ producto.stock }}
+                        </span>
+                    </div>
+
+                    <button (click)="agregarAlCarrito(producto)" [disabled]="producto.stock === 0" class="btn-agregar">
+                        <span *ngIf="producto.stock > 0">Agregar al carrito</span>
+                        <span *ngIf="producto.stock === 0">Sin stock</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="productosFiltrados.length === 0" class="sin-resultados">
+            <p>No se encontraron productos</p>
+        </div>
+    </div>
+
+    <!-- Carrito Lateral -->
+    <div class="carrito-sidebar" [class.open]="mostrarCarrito">
+        <div class="carrito-header">
+            <h2>Carrito de Compras</h2>
+            <button (click)="toggleCarrito()" class="btn-cerrar">✕</button>
+        </div>
+
+        <div class="carrito-contenido">
+            <div *ngIf="carritoItems.length === 0" class="carrito-vacio">
+                <p>Tu carrito está vacío</p>
+            </div>
+
+            <div *ngFor="let item of carritoItems" class="carrito-item">
+                <img [src]="item.producto.imagen || 'assets/images/placeholder.png'" [alt]="item.producto.nombre"
+                    class="item-imagen">
+
+                <div class="item-info">
+                    <h4>{{ item.producto.nombre }}</h4>
+                    <p class="item-precio">S/. {{ item.producto.precio.toFixed(2) }}</p>
+
+                    <div class="cantidad-control">
+                        <button (click)="actualizarCantidad(item.producto.id, item.cantidad - 1)" class="btn-cantidad">
+                            −
+                        </button>
+                        <input type="number" [value]="item.cantidad"
+                            (change)="actualizarCantidad(item.producto.id, +$any($event.target).value)" min="1"
+                            [max]="item.producto.stock" class="input-cantidad">
+                        <button (click)="actualizarCantidad(item.producto.id, item.cantidad + 1)"
+                            [disabled]="item.cantidad >= item.producto.stock" class="btn-cantidad">
+                            +
+                        </button>
+                    </div>
+                </div>
+
+                <div class="item-acciones">
+                    <p class="subtotal">S/. {{ (item.producto.precio * item.cantidad).toFixed(2) }}</p>
+                    <button (click)="eliminarDelCarrito(item.producto.id)" class="btn-eliminar">
+                        🗑️
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="carritoItems.length > 0" class="carrito-footer">
+            <div class="total">
+                <span>Total:</span>
+                <span class="total-monto">S/. {{ getTotal().toFixed(2) }}</span>
+            </div>
+            <button (click)="procesarCompra()" class="btn-comprar">
+                Procesar Compra
+            </button>
+        </div>
+    </div>
+
+    <!-- Overlay -->
+    <div *ngIf="mostrarCarrito" class="overlay" (click)="toggleCarrito()"></div>
+</div>
+
+<app-footer />

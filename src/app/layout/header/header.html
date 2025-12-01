@@ -4,8 +4,8 @@
     <div class="logo-section">
       <div class="logo">
         <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="40" height="40" rx="8" fill="#2563eb"/>
-          <path d="M20 8v24M12 16h16" stroke="white" stroke-width="3" stroke-linecap="round"/>
+          <rect width="40" height="40" rx="8" fill="#2563eb" />
+          <path d="M20 8v24M12 16h16" stroke="white" stroke-width="3" stroke-linecap="round" />
         </svg>
         <div class="logo-text">
           <h1>MedicSalud</h1>
@@ -17,10 +17,10 @@
     <!-- Navigation -->
     <nav class="main-nav">
       <ul>
-        <li><a [routerLink]="['/']">Inicio</a></li>
-        <li><a [routerLink]="['/servicios']">Servicios</a></li>
-        <li><a [routerLink]="['/especialistas']">Especialistas</a></li>
-        <li><a href="#contacto">Contacto</a></li>
+        <li><a [routerLink]="['/']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Inicio</a></li>
+        <li><a [routerLink]="['/servicios']" routerLinkActive="active">Servicios</a></li>
+        <li><a [routerLink]="['/especialistas']" routerLinkActive="active">Especialistas</a></li>
+        <li><a [routerLink]="['/medicshop']" routerLinkActive="active">MedicShop</a></li>
       </ul>
     </nav>
 
@@ -46,13 +46,13 @@
   </div>
 
   <!-- Mobile Menu -->
-    <div class="mobile-menu" [class.open]="isMenuOpen">
+  <div class="mobile-menu" [class.open]="isMenuOpen">
     <nav class="mobile-nav">
       <ul>
-        <li><a [routerLink]="['/']">Inicio</a></li>
-        <li><a [routerLink]="['/servicios']">Servicios</a></li>
-        <li><a [routerLink]="['/especialistas']">Especialistas</a></li>
-        <li><a href="#contacto">Contacto</a></li>
+        <li><a [routerLink]="['/']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Inicio</a></li>
+        <li><a [routerLink]="['/servicios']" routerLinkActive="active">Servicios</a></li>
+        <li><a [routerLink]="['/especialistas']" routerLinkActive="active">Especialistas</a></li>
+        <li><a [routerLink]="['/medicshop']" routerLinkActive="active">MedicShop</a></li>
       </ul>
     </nav>
 
