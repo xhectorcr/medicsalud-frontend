@@ -71,7 +71,12 @@
         </div>
       </div>
 
-      <div class="slots-list">
+      <div *ngIf="loading" class="estado">Cargando horarios...</div>
+      <div *ngIf="errorMessage && !loading" class="estado error">
+        {{ errorMessage }}
+      </div>
+
+      <div class="slots-list" *ngIf="!loading && !errorMessage">
         <div
           class="slot-card"
           *ngFor="let slot of filteredSlots"
@@ -109,3 +114,30 @@
     </section>
   </div>
 </div>
+
+
+<div class="modal-backdrop" *ngIf="showSuccessModal">
+  <div class="modal-card">
+    <h2 class="modal-title">Cita reservada correctamente</h2>
+
+    <p class="modal-text" *ngIf="ultimaReserva">
+      <strong>Paciente:</strong>
+      {{ ultimaReserva.nombrePaciente }} ({{ ultimaReserva.pacienteDni }})<br />
+      <strong>Médico:</strong> {{ ultimaReserva.nombreMedico }}<br />
+      <strong>Fecha:</strong> {{ ultimaReserva.fechaCita }}<br />
+      <strong>Hora:</strong> {{ ultimaReserva.horaCita }}<br />
+      <strong>Sede:</strong> {{ ultimaReserva.nombreSede }}
+    </p>
+
+    <div class="modal-actions">
+      <button class="modal-button secondary" (click)="closeModal()">
+        Entendido
+      </button>
+
+      <button class="modal-button primary" (click)="goToMisCitas()">
+        Ver mis citas
+      </button>
+    </div>
+  </div>
+</div>
+

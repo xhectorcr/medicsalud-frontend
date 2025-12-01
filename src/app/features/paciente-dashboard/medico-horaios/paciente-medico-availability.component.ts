@@ -3,12 +3,15 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MedicoHorariosService, HorarioBackend } from './medico-horarios.service';
+import { ReservaService, ReservaResponse } from './reserva.service';
 
 type SlotStatus = 'available' | 'booked';
 
 interface Slot {
   id: number;
-  time: string;    
+  time: string;
+  horaInicio: string;
+  horaFin: string;
   status: SlotStatus;
 }
 
@@ -29,6 +32,10 @@ export class PacienteMedicoAvailabilityComponent implements OnInit {
 
   correoMedico = '';
 
+  medicoDni!: number;
+  pacienteDni!: number;
+  sedeId: number = 1;
+
   doctor = {
     name: '',
     speciality: '',
@@ -38,14 +45,19 @@ export class PacienteMedicoAvailabilityComponent implements OnInit {
 
   slots: Slot[] = [];
 
+
+  showSuccessModal = false;
+  ultimaReserva: ReservaResponse | null = null;
+  
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private horariosService: MedicoHorariosService
+    private horariosService: MedicoHorariosService,
+    private reservaService: ReservaService
   ) {}
 
   ngOnInit(): void {
-   
     this.selectedDate = new Date().toISOString().substring(0, 10);
 
     this.route.queryParams.subscribe(async (params) => {
@@ -53,6 +65,11 @@ export class PacienteMedicoAvailabilityComponent implements OnInit {
       this.doctor.name       = params['nombre'] ?? '';
       this.doctor.speciality = params['especialidad'] ?? '';
       this.doctor.photoUrl   = params['foto'] ?? '';
+      this.doctor.clinic     = params['clinica'] ?? '';
+
+      this.medicoDni   = Number(params['medicoDni']);
+      this.pacienteDni = Number(localStorage.getItem('dniPaciente'));
+      this.sedeId      = Number(params['sedeId'] ?? 1);
 
       if (!this.correoMedico) {
         this.errorMessage = 'No se pudo identificar al médico.';
@@ -71,10 +88,11 @@ export class PacienteMedicoAvailabilityComponent implements OnInit {
       const data: HorarioBackend[] =
         await this.horariosService.getHorariosPorCorreo(this.correoMedico);
 
-      // Por ahora todos como "available"; luego podrás marcar booked según reservas
       this.slots = data.map((h) => ({
         id: h.id,
         time: `${h.horaInicio} - ${h.horaFin}`,
+        horaInicio: h.horaInicio,
+        horaFin: h.horaFin,
         status: 'available'
       }));
     } catch (err: any) {
@@ -105,9 +123,53 @@ export class PacienteMedicoAvailabilityComponent implements OnInit {
     this.router.navigate(['/paciente/medicos']);
   }
 
-  onReserve(slot: Slot): void {
+  
+  async onReserve(slot: Slot): Promise<void> {
     if (slot.status !== 'available') return;
-    // aquí luego llamas al endpoint de crear reserva
-    console.log('Reservar slot', slot, 'para médico', this.correoMedico);
+
+    if (!this.medicoDni) {
+      alert('No se pudo identificar al médico.');
+      return;
+    }
+
+    if (!this.selectedDate) {
+      alert('Selecciona una fecha para la cita.');
+      return;
+    }
+
+    const payload = {
+      medicoDni: this.medicoDni,
+      sedeId: this.sedeId,
+      fechaCita: this.selectedDate,
+      horaCita: slot.horaInicio
+    };
+
+    try {
+      this.loading = true;
+
+      const reserva = await this.reservaService.crearReserva(payload);
+
+      slot.status = 'booked';
+      this.ultimaReserva = reserva;
+      this.showSuccessModal = true;
+
+    } catch (err: any) {
+      console.error('Error al reservar:', err);
+      alert(
+        err?.response?.data?.message ||
+        'No se pudo reservar la cita. Intenta nuevamente.'
+      );
+    } finally {
+      this.loading = false;
+    }
+  }
+  
+  closeModal(): void {
+    this.showSuccessModal = false;
+  }
+
+  goToMisCitas(): void {
+    this.showSuccessModal = false;
+    this.router.navigate(['/paciente/reservas']); 
   }
 }
