@@ -4,12 +4,10 @@
 <div *ngIf="errorMessage" class="error-message">
   {{ errorMessage }}
 </div>
-<div class="layout-grid">
-  <aside class="sidebar-col">
-    <app-sidebarpaciente></app-sidebarpaciente>
-  </aside>
+<div class="app-container">
+  <app-sidebarpaciente></app-sidebarpaciente>
 
-  <main class="content-col">
+  <main class="main-content" style="margin-left: 260px; padding: 20px;">
     <div class="doctors-container">
       <div class="header">
         <h1 class="title">Médicos Disponibles</h1>
@@ -19,17 +17,11 @@
       <div class="search-wrapper">
         <div class="search-box">
           <svg class="search-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-            <path d="M19 19l-4.35-4.35" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-            <circle cx="9" cy="9" r="5.5" stroke="currentColor" stroke-width="1.6"/>
+            <path d="M19 19l-4.35-4.35" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+            <circle cx="9" cy="9" r="5.5" stroke="currentColor" stroke-width="1.6" />
           </svg>
-          <input 
-            type="search" 
-            class="search-input"
-            placeholder="Buscar médico por nombre o especialidad"
-            [(ngModel)]="searchTerm"
-            name="searchTerm"
-            aria-label="Buscar médicos"
-          />
+          <input type="search" class="search-input" placeholder="Buscar médico por nombre o especialidad"
+            [(ngModel)]="searchTerm" name="searchTerm" aria-label="Buscar médicos" />
         </div>
       </div>
 

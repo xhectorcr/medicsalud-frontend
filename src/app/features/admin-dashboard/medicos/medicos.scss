@@ -1,9 +1,8 @@
 .patients-container {
-  padding: 2rem;
-  max-width: 1400px;
-  margin: 0 auto;
+  padding: 1.5rem;
   background: var(--color-bg);
   min-height: 100vh;
+  border-radius: 1rem;
 
   .header {
     display: flex;

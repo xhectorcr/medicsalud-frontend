@@ -1,24 +1,8 @@
-.layout-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  /* single column: sidebar fixed, content uses margin-left */
-  gap: 24px;
-  align-items: start;
-  position: relative;
-}
-
-.content-col {
-  padding: 24px;
-  margin-left: 260px;
-  /* dejar espacio para la sidebar fixed */
-}
-
-.content-col .doctors-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 40px 20px;
+.doctors-container {
+  padding: 1.5rem;
   background-color: var(--color-bg);
   min-height: 100vh;
+  border-radius: 1rem;
 }
 
 .header {
@@ -160,27 +144,6 @@
   padding: 60px 20px;
   color: var(--color-text);
   font-size: 1.1rem;
-}
-
-@media (max-width: 992px) {
-  .layout-grid {
-    grid-template-columns: 1fr;
-    /* single column: sidebar above content */
-  }
-
-  .content-col {
-    margin-left: 0;
-  }
-
-  .sidebar-paciente {
-    position: relative !important;
-    /* override fixed positioning when inside mobile layout */
-    width: 100%;
-    height: auto;
-    top: 0 !important;
-    left: 0 !important;
-    margin: 0 0 16px 0;
-  }
 }
 
 @media (max-width: 768px) {

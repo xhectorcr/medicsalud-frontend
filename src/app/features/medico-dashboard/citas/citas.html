@@ -4,80 +4,82 @@
   </aside>
 
   <main class="content-col">
-    <div class="container">
-      <div class="card">
-        <!-- Header -->
-        <div class="header">
-          <h1 class="title">Mis Citas</h1>
-          <p class="subtitle">Consulta y gestiona tus citas médicas.</p>
-        </div>
+    <div class="main-content">
+      <div class="container">
+        <div class="card">
+          <!-- Header -->
+          <div class="header">
+            <h1 class="title">Mis Citas</h1>
+            <p class="subtitle">Consulta y gestiona tus citas médicas.</p>
+          </div>
 
-        <!-- Upcoming Appointments (Confirmed Only) -->
-        <div class="upcoming-section" *ngIf="upcomingAppointments.length > 0">
-          <h2 class="section-title">Citas que se acercan</h2>
-          <div class="upcoming-grid">
-            <div *ngFor="let apt of upcomingAppointments" class="upcoming-card">
-              <div class="upcoming-info">
-                <img [src]="apt.image" [alt]="apt.patientName" class="avatar-sm" />
-                <div>
-                  <h4 class="patient-name">{{ apt.patientName }}</h4>
-                  <p class="apt-time">{{ apt.date }}</p>
+          <!-- Upcoming Appointments (Confirmed Only) -->
+          <div class="upcoming-section" *ngIf="upcomingAppointments.length > 0">
+            <h2 class="section-title">Citas que se acercan</h2>
+            <div class="upcoming-grid">
+              <div *ngFor="let apt of upcomingAppointments" class="upcoming-card">
+                <div class="upcoming-info">
+                  <img [src]="apt.image" [alt]="apt.patientName" class="avatar-sm" />
+                  <div>
+                    <h4 class="patient-name">{{ apt.patientName }}</h4>
+                    <p class="apt-time">{{ apt.date }}</p>
+                  </div>
                 </div>
-              </div>
-              <span class="status-badge sm" [attr.data-status]="apt.status">
-                {{ getStatusLabel(apt.status) }}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Tabs -->
-        <div class="tabs-container">
-          <nav class="tabs">
-            <button *ngFor="let tab of tabs" (click)="setActiveTab(tab.id)" class="tab"
-              [class.tab--active]="activeTab === tab.id">
-              {{ tab.label }}
-            </button>
-          </nav>
-        </div>
-
-        <!-- Appointments List -->
-        <div class="content">
-          <div *ngIf="filteredAppointments.length === 0" class="empty-state">
-            <p>No hay citas en esta categoría</p>
-          </div>
-
-          <div *ngIf="filteredAppointments.length > 0" class="appointments-list">
-            <div *ngFor="let appointment of filteredAppointments" class="appointment-card">
-              <div class="patient-name-col">
-                <h3 class="patient-name">{{ appointment.patientName }}</h3>
-              </div>
-
-              <div class="appointment-time-col">
-                <p class="date"><i class="far fa-clock"></i> {{ appointment.date }}</p>
-              </div>
-
-              <!-- Actions (Only for Pending) -->
-              <div class="appointment-actions" *ngIf="appointment.status === 'pendiente'">
-                <button (click)="acceptAppointment(appointment.id)" class="btn-action accept" title="Aceptar">
-                  Aceptar
-                </button>
-                <button (click)="rescheduleAppointment(appointment.id)" class="btn-action reschedule"
-                  title="Reprogramar">
-                  Reprogramar
-                </button>
-                <button (click)="rejectAppointment(appointment.id)" class="btn-action reject" title="Rechazar">
-                  Rechazar
-                </button>
-              </div>
-
-              <!-- Status Badge for non-pending (optional, but good for feedback) -->
-              <div class="appointment-status" *ngIf="appointment.status !== 'pendiente'">
-                <span class="status-badge" [attr.data-status]="appointment.status">
-                  {{ getStatusLabel(appointment.status) }}
+                <span class="status-badge sm" [attr.data-status]="apt.status">
+                  {{ getStatusLabel(apt.status) }}
                 </span>
               </div>
+            </div>
+          </div>
 
+          <!-- Tabs -->
+          <div class="tabs-container">
+            <nav class="tabs">
+              <button *ngFor="let tab of tabs" (click)="setActiveTab(tab.id)" class="tab"
+                [class.tab--active]="activeTab === tab.id">
+                {{ tab.label }}
+              </button>
+            </nav>
+          </div>
+
+          <!-- Appointments List -->
+          <div class="content">
+            <div *ngIf="filteredAppointments.length === 0" class="empty-state">
+              <p>No hay citas en esta categoría</p>
+            </div>
+
+            <div *ngIf="filteredAppointments.length > 0" class="appointments-list">
+              <div *ngFor="let appointment of filteredAppointments" class="appointment-card">
+                <div class="patient-name-col">
+                  <h3 class="patient-name">{{ appointment.patientName }}</h3>
+                </div>
+
+                <div class="appointment-time-col">
+                  <p class="date"><i class="far fa-clock"></i> {{ appointment.date }}</p>
+                </div>
+
+                <!-- Actions (Only for Pending) -->
+                <div class="appointment-actions" *ngIf="appointment.status === 'pendiente'">
+                  <button (click)="acceptAppointment(appointment.id)" class="btn-action accept" title="Aceptar">
+                    Aceptar
+                  </button>
+                  <button (click)="rescheduleAppointment(appointment.id)" class="btn-action reschedule"
+                    title="Reprogramar">
+                    Reprogramar
+                  </button>
+                  <button (click)="rejectAppointment(appointment.id)" class="btn-action reject" title="Rechazar">
+                    Rechazar
+                  </button>
+                </div>
+
+                <!-- Status Badge for non-pending (optional, but good for feedback) -->
+                <div class="appointment-status" *ngIf="appointment.status !== 'pendiente'">
+                  <span class="status-badge" [attr.data-status]="appointment.status">
+                    {{ getStatusLabel(appointment.status) }}
+                  </span>
+                </div>
+
+              </div>
             </div>
           </div>
         </div>

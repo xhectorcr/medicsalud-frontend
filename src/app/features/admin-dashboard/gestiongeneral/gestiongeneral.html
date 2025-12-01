@@ -2,7 +2,7 @@
   <app-sidebaradmin></app-sidebaradmin>
 
   <main class="main-content" style="margin-left: 260px; padding: 20px;">
-    <div class="dashboard-container">
+    <div class="container">
       <!-- Header -->
       <div class="dashboard-header">
         <div class="header-content">
@@ -48,10 +48,7 @@
               </div>
             </div>
             <div class="progress-bar">
-              <div
-                class="progress-fill medicos-progress"
-                [style.width.%]="medicosActivosPercentage"
-              ></div>
+              <div class="progress-fill medicos-progress" [style.width.%]="medicosActivosPercentage"></div>
             </div>
             <p class="percentage-text">{{ medicosActivosPercentage }}% activos</p>
           </div>
@@ -79,10 +76,7 @@
               </div>
             </div>
             <div class="progress-bar">
-              <div
-                class="progress-fill pacientes-progress"
-                [style.width.%]="pacientesActivosPercentage"
-              ></div>
+              <div class="progress-fill pacientes-progress" [style.width.%]="pacientesActivosPercentage"></div>
             </div>
             <p class="percentage-text">{{ pacientesActivosPercentage }}% activos</p>
           </div>
@@ -110,10 +104,7 @@
               </div>
             </div>
             <div class="progress-bar">
-              <div
-                class="progress-fill citas-progress"
-                [style.width.%]="citasCompletadasPercentage"
-              ></div>
+              <div class="progress-fill citas-progress" [style.width.%]="citasCompletadasPercentage"></div>
             </div>
             <p class="percentage-text">
               {{ citasCompletadasPercentage }}% tasa de éxito
@@ -123,66 +114,63 @@
       </div>
 
       <!-- Actividad reciente + Próximas citas -->
-<div class="content-grid">
-  <!-- Actividad Reciente (la puedes rellenar más adelante) -->
-  <section class="activity-section">
-    <div class="section-header">
-      <h2>Actividad Reciente</h2>
-      <button class="btn-link">Ver todo</button>
-    </div>
-    <div class="activity-list">
-      <div
-        class="activity-item"
-        *ngFor="let activity of recentActivities"
-      >
-        <div class="activity-icon" [ngClass]="activity.tipo">
-          {{ getActivityIcon(activity.tipo) }}
-        </div>
-        <div class="activity-content">
-          <p class="activity-description">{{ activity.descripcion }}</p>
-          <span class="activity-time">
-            {{ activity.hora }} - {{ activity.fecha | date: 'dd/MM/yyyy' }}
-          </span>
-        </div>
+      <div class="content-grid">
+        <!-- Actividad Reciente (la puedes rellenar más adelante) -->
+        <section class="activity-section">
+          <div class="section-header">
+            <h2>Actividad Reciente</h2>
+            <button class="btn-link">Ver todo</button>
+          </div>
+          <div class="activity-list">
+            <div class="activity-item" *ngFor="let activity of recentActivities">
+              <div class="activity-icon" [ngClass]="activity.tipo">
+                {{ getActivityIcon(activity.tipo) }}
+              </div>
+              <div class="activity-content">
+                <p class="activity-description">{{ activity.descripcion }}</p>
+                <span class="activity-time">
+                  {{ activity.hora }} - {{ activity.fecha | date: 'dd/MM/yyyy' }}
+                </span>
+              </div>
+            </div>
+
+            <p *ngIf="recentActivities.length === 0" class="empty-state">
+              No hay actividad reciente.
+            </p>
+          </div>
+        </section>
+
+        <!-- Próximas Citas -->
+        <section class="appointments-section">
+          <div class="section-header">
+            <h2>Próximas Citas</h2>
+            <button class="btn-link">Ver agenda</button>
+          </div>
+
+          <div class="appointments-list" *ngIf="upcomingAppointments.length > 0; else emptyAppointments">
+            <div class="appointment-item" *ngFor="let cita of upcomingAppointments">
+              <div class="appointment-time">
+                <span class="time">{{ cita.hora }}</span>
+                <span class="date">{{ cita.fecha | date: 'dd/MM' }}</span>
+              </div>
+
+              <div class="appointment-details">
+                <h4>{{ cita.paciente }}</h4>
+                <p class="doctor">
+                  {{ cita.medico }} - {{ cita.especialidad }}
+                </p>
+                <span class="status-badge" [ngClass]="getStatusClass(cita.estado)">
+                  {{ cita.estado | titlecase }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <ng-template #emptyAppointments>
+            <p class="empty-state">No hay próximas citas programadas.</p>
+          </ng-template>
+        </section>
       </div>
-
-      <p *ngIf="recentActivities.length === 0" class="empty-state">
-        No hay actividad reciente.
-      </p>
-    </div>
-  </section>
-
-  <!-- Próximas Citas -->
-  <section class="appointments-section">
-    <div class="section-header">
-      <h2>Próximas Citas</h2>
-      <button class="btn-link">Ver agenda</button>
-    </div>
-
-    <div class="appointments-list" *ngIf="upcomingAppointments.length > 0; else emptyAppointments">
-      <div class="appointment-item" *ngFor="let cita of upcomingAppointments">
-        <div class="appointment-time">
-          <span class="time">{{ cita.hora }}</span>
-          <span class="date">{{ cita.fecha | date: 'dd/MM' }}</span>
-        </div>
-
-        <div class="appointment-details">
-          <h4>{{ cita.paciente }}</h4>
-          <p class="doctor">
-            {{ cita.medico }} - {{ cita.especialidad }}
-          </p>
-          <span class="status-badge" [ngClass]="getStatusClass(cita.estado)">
-            {{ cita.estado | titlecase }}
-          </span>
-        </div>
-      </div>
-    </div>
-
-    <ng-template #emptyAppointments>
-      <p class="empty-state">No hay próximas citas programadas.</p>
-    </ng-template>
-  </section>
-</div>
     </div>
   </main>
 </div>
