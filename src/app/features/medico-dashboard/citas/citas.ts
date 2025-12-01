@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Sidebarmedicos } from '../../../layout/sidebar/medicos/medicos';
+import { api } from '../../../core/http/axios-instance';
 
 interface Appointment {
   id: number;
@@ -16,6 +17,19 @@ interface Tab {
   label: string;
 }
 
+interface ReservaFromApi {
+  id: number;
+  nombrePaciente: string;
+  pacienteDni: number;
+  nombreMedico: string;
+  medicoDni: number | null;
+  nombreSede: string;
+  fechaCreacion: string;
+  fechaCita: string;
+  horaCita: string;
+  estadoCita: boolean;
+}
+
 @Component({
   selector: 'app-medicocitas',
   standalone: true,
@@ -23,7 +37,7 @@ interface Tab {
   templateUrl: './citas.html',
   styleUrls: ['./citas.scss'],
 })
-export class Medicoscitas {
+export class Medicoscitas implements OnInit {
   activeTab: string = 'todas';
 
   tabs: Tab[] = [
@@ -31,64 +45,65 @@ export class Medicoscitas {
     { id: 'pendiente', label: 'Pendientes' },
     { id: 'confirmada', label: 'Confirmadas' },
     { id: 'reprogramada', label: 'Reprogramadas' },
-    { id: 'rechazada', label: 'Rechazadas' }
+    { id: 'rechazada', label: 'Rechazadas' },
   ];
 
-  appointments: Appointment[] = [
-    {
-      id: 1,
-      patientName: 'Juan Pérez',
-      reason: 'Dolor de pecho',
-      date: '15 de Julio, 10:00 AM',
-      status: 'pendiente',
-      image: 'https://i.pravatar.cc/150?img=12'
-    },
-    {
-      id: 2,
-      patientName: 'María Rodríguez',
-      reason: 'Control dermatológico',
-      date: '20 de Julio, 11:30 AM',
-      status: 'confirmada',
-      image: 'https://i.pravatar.cc/150?img=45'
-    },
-    {
-      id: 3,
-      patientName: 'Carlos López',
-      reason: 'Fiebre alta',
-      date: '25 de Julio, 9:00 AM',
-      status: 'reprogramada',
-      image: 'https://i.pravatar.cc/150?img=33'
-    },
-    {
-      id: 4,
-      patientName: 'Elena Ramírez',
-      reason: 'Migraña crónica',
-      date: '30 de Julio, 2:00 PM',
-      status: 'rechazada',
-      image: 'https://i.pravatar.cc/150?img=47'
-    },
-    {
-      id: 5,
-      patientName: 'Ana García',
-      reason: 'Chequeo general',
-      date: '01 de Agosto, 08:00 AM',
-      status: 'pendiente',
-      image: 'https://i.pravatar.cc/150?img=5'
+  appointments: Appointment[] = [];
+
+  async ngOnInit(): Promise<void> {
+    await this.loadAppointments();
+  }
+
+  // === Carga de citas desde el backend ===
+  private async loadAppointments(): Promise<void> {
+    try {
+      const response = await api.get<ReservaFromApi[]>('/api/reservas/lista');
+
+      this.appointments = response.data.map((r) => ({
+        id: r.id,
+        patientName: r.nombrePaciente,
+        // si luego tienes "motivo" en el backend, lo mapeas aquí
+        reason: '',
+        date: this.formatDateTime(r.fechaCita, r.horaCita),
+        status: r.estadoCita ? 'confirmada' : 'pendiente',
+        image: 'https://i.pravatar.cc/150?u=' + r.pacienteDni, // avatar en base al DNI
+      }));
+    } catch (error) {
+      console.error('Error cargando citas médicas', error);
+      this.appointments = [];
     }
-  ];
+  }
 
+  private formatDateTime(fecha: string, hora: string): string {
+    try {
+      const dt = new Date(`${fecha}T${hora}`);
+      return dt.toLocaleString('es-PE', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true,
+      });
+    } catch {
+      return `${fecha}, ${hora.substring(0, 5)}`;
+    }
+  }
+
+  // === Getters para tabs y "citas que se acercan" ===
   get filteredAppointments(): Appointment[] {
     if (this.activeTab === 'todas') {
       return this.appointments;
     }
-    return this.appointments.filter(apt => apt.status === this.activeTab);
+    return this.appointments.filter((apt) => apt.status === this.activeTab);
   }
 
   get upcomingAppointments(): Appointment[] {
-    // Logic to simulate upcoming appointments (e.g., confirmed ones)
-    return this.appointments.filter(apt => apt.status === 'confirmada').slice(0, 2);
+    // por ahora, tomamos las confirmadas como "que se acercan"
+    return this.appointments.filter((apt) => apt.status === 'confirmada').slice(0, 3);
   }
 
+  // === UI ===
   setActiveTab(tabId: string): void {
     this.activeTab = tabId;
   }
@@ -98,31 +113,30 @@ export class Medicoscitas {
       pendiente: 'Pendiente',
       confirmada: 'Confirmada',
       reprogramada: 'Reprogramada',
-      rechazada: 'Rechazada'
+      rechazada: 'Rechazada',
     };
     return labels[status] || status;
   }
 
+  // === Acciones (de momento solo cambian el estado en memoria) ===
   acceptAppointment(id: number): void {
-    const apt = this.appointments.find(a => a.id === id);
+    const apt = this.appointments.find((a) => a.id === id);
     if (apt) {
       apt.status = 'confirmada';
-      // Here you would typically call a service to update the backend
     }
   }
 
   rejectAppointment(id: number): void {
-    const apt = this.appointments.find(a => a.id === id);
+    const apt = this.appointments.find((a) => a.id === id);
     if (apt) {
       apt.status = 'rechazada';
     }
   }
 
   rescheduleAppointment(id: number): void {
-    const apt = this.appointments.find(a => a.id === id);
+    const apt = this.appointments.find((a) => a.id === id);
     if (apt) {
       apt.status = 'reprogramada';
-      // Logic to open a modal or date picker would go here
       alert(`Reprogramar cita para ${apt.patientName}`);
     }
   }

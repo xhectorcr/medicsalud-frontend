@@ -1,4 +1,9 @@
-
+<div *ngIf="loading" class="loading-message">
+  Cargando médicos...
+</div>
+<div *ngIf="errorMessage" class="error-message">
+  {{ errorMessage }}
+</div>
 <div class="layout-grid">
   <aside class="sidebar-col">
     <app-sidebarpaciente></app-sidebarpaciente>

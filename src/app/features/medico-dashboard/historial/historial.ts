@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Sidebarmedicos } from '../../../layout/sidebar/medicos/medicos';
+import { api } from '../../../core/http/axios-instance';
+import { FormsModule } from '@angular/forms';
 
 interface MedicalHistory {
   alergias: string;
@@ -19,7 +21,8 @@ interface PreviousConsult {
 }
 
 interface Patient {
-  id: number;
+  id: number;          // aquí usaré el DNI como id
+  dni: number;
   nombre: string;
   fechaNacimiento: string;
   genero: string;
@@ -27,125 +30,221 @@ interface Patient {
   image: string;
 }
 
+// reservas para armar la lista de pacientes
+interface ReservaFromApi {
+  id: number;
+  nombrePaciente: string;
+  pacienteDni: number;
+  nombreMedico: string;
+  medicoDni: number | null;
+  nombreSede: string;
+  fechaCreacion: string;
+  fechaCita: string;
+  horaCita: string;
+  estadoCita: boolean;
+}
+
+// historial que devuelve tu backend
+interface ClinicalHistoryFromApi {
+  id: number;
+  fechaRegistro: string;
+  diagnostico: string;
+  tratamiento: string;
+  observaciones: string;
+  estado: boolean;
+  pacienteId: number;
+  pacienteNombre: string;
+  pacienteDni: number;
+  medicoId: number;
+  medicoNombre: string;
+}
+
 @Component({
   selector: 'app-patient-history',
-  imports: [CommonModule, Sidebarmedicos],
+  standalone: true,
+  imports: [CommonModule, FormsModule, Sidebarmedicos],
   templateUrl: './historial.html',
-  styleUrls: ['./historial.scss']
+  styleUrls: ['./historial.scss'],
 })
-export class Medicohistorial {
-  patients: Patient[] = [
-    {
-      id: 1,
-      nombre: 'Carlos Pérez',
-      fechaNacimiento: '10 de marzo de 1985',
-      genero: 'Masculino',
-      grupoSanguineo: 'O+',
-      image: 'https://i.pravatar.cc/150?img=11'
-    },
-    {
-      id: 2,
-      nombre: 'Ana García',
-      fechaNacimiento: '22 de julio de 1990',
-      genero: 'Femenino',
-      grupoSanguineo: 'A+',
-      image: 'https://i.pravatar.cc/150?img=5'
-    },
-    {
-      id: 3,
-      nombre: 'Roberto Díaz',
-      fechaNacimiento: '05 de noviembre de 1978',
-      genero: 'Masculino',
-      grupoSanguineo: 'B-',
-      image: 'https://i.pravatar.cc/150?img=3'
-    }
-  ];
-
+export class Medicohistorial implements OnInit {
+  patients: Patient[] = [];
   selectedPatient: Patient | null = null;
 
-  // Data stores for each patient (mock database)
-  private patientRecords: { [key: number]: any } = {
-    1: {
-      medicalHistory: {
-        alergias: 'Penicilina',
-        enfermedadesCronicas: 'Hipertensión',
-        cirugiasPrevias: 'Apendicectomía (2003)'
-      },
-      diagnosis: {
-        principal: 'Hipertensión Arterial Esencial (Primaria)',
-        tratamiento: 'Losartán 50mg, una vez al día.'
-      },
-      previousConsults: [
-        { tipo: 'Consulta General', fecha: '5 de enero de 2024' },
-        { tipo: 'Seguimiento de Hipertensión', fecha: '15 de febrero de 2024' },
-        { tipo: 'Vacunación (Gripe)', fecha: '22 de marzo de 2024' }
-      ]
-    },
-    2: {
-      medicalHistory: {
-        alergias: 'Ninguna',
-        enfermedadesCronicas: 'Asma leve',
-        cirugiasPrevias: 'Ninguna'
-      },
-      diagnosis: {
-        principal: 'Bronquitis Aguda',
-        tratamiento: 'Salbutamol inhalador, reposo.'
-      },
-      previousConsults: [
-        { tipo: 'Urgencias', fecha: '10 de marzo de 2024' },
-        { tipo: 'Revisión', fecha: '20 de marzo de 2024' }
-      ]
-    },
-    3: {
-      medicalHistory: {
-        alergias: 'Polen, Ácaros',
-        enfermedadesCronicas: 'Diabetes Tipo 2',
-        cirugiasPrevias: 'Hernia Inguinal (2015)'
-      },
-      diagnosis: {
-        principal: 'Diabetes Mellitus Tipo 2',
-        tratamiento: 'Metformina 850mg, dieta baja en carbohidratos.'
-      },
-      previousConsults: [
-        { tipo: 'Control Diabetes', fecha: '12 de enero de 2024' },
-        { tipo: 'Nutrición', fecha: '15 de enero de 2024' },
-        { tipo: 'Podología', fecha: '01 de febrero de 2024' }
-      ]
-    }
+  // historial completo del paciente seleccionado
+  histories: ClinicalHistoryFromApi[] = [];
+
+  // Antecedentes médicos (por ahora genérico, hasta que tengas endpoint)
+  medicalHistory: MedicalHistory | null = {
+    alergias: '-',
+    enfermedadesCronicas: '-',
+    cirugiasPrevias: '-',
   };
 
-  // Current displayed data
-  medicalHistory: MedicalHistory | null = null;
-  diagnosis: Diagnosis | null = null;
-  previousConsults: PreviousConsult[] = [];
-
   searchTerm: string = '';
+  loading = false;
+
+  // formulario de nuevo historial
+  showNewHistoryForm = false;
+  newHistory = {
+    diagnostico: '',
+    tratamiento: '',
+    observaciones: '',
+  };
+
+  async ngOnInit(): Promise<void> {
+    await this.loadPatientsFromReservas();
+  }
+
+  // ================== PACIENTES ==================
 
   get filteredPatients(): Patient[] {
-    return this.patients.filter(patient =>
+    return this.patients.filter((patient) =>
       patient.nombre.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
-  }
-
-  constructor() {
-    // Select first patient by default
-    if (this.patients.length > 0) {
-      this.selectPatient(this.patients[0]);
-    }
-  }
-
-  selectPatient(patient: Patient): void {
-    this.selectedPatient = patient;
-    const record = this.patientRecords[patient.id];
-    if (record) {
-      this.medicalHistory = record.medicalHistory;
-      this.diagnosis = record.diagnosis;
-      this.previousConsults = record.previousConsults;
-    }
   }
 
   onSearch(event: Event): void {
     const target = event.target as HTMLInputElement;
     this.searchTerm = target.value;
+  }
+
+  private async loadPatientsFromReservas(): Promise<void> {
+    try {
+      const resp = await api.get<ReservaFromApi[]>('/api/reservas/lista');
+
+      const map = new Map<number, Patient>();
+
+      resp.data.forEach((r) => {
+        if (!map.has(r.pacienteDni)) {
+          map.set(r.pacienteDni, {
+            id: r.pacienteDni,
+            dni: r.pacienteDni,
+            nombre: r.nombrePaciente,
+            // estos datos los puedes llenar luego con otro endpoint de paciente
+            fechaNacimiento: 'No registrado',
+            genero: 'No registrado',
+            grupoSanguineo: 'No registrado',
+            image: 'https://i.pravatar.cc/150?u=' + r.pacienteDni,
+          });
+        }
+      });
+
+      this.patients = Array.from(map.values());
+
+      if (this.patients.length > 0) {
+        this.selectPatient(this.patients[0]);
+      }
+    } catch (err) {
+      console.error('Error cargando pacientes desde reservas', err);
+      this.patients = [];
+    }
+  }
+
+  async selectPatient(patient: Patient): Promise<void> {
+    this.selectedPatient = patient;
+    this.showNewHistoryForm = false;
+    await this.loadHistoryByDni(patient.dni);
+  }
+
+  // ================== HISTORIAL ==================
+
+  private async loadHistoryByDni(dni: number): Promise<void> {
+    this.loading = true;
+    try {
+      const resp = await api.get<ClinicalHistoryFromApi[]>(
+        `/api/historiales/paciente/${dni}`
+      );
+      this.histories = resp.data ?? [];
+    } catch (err) {
+      console.error('Error cargando historial clínico', err);
+      this.histories = [];
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  private formatDate(iso: string): string {
+    try {
+      const d = new Date(iso);
+      return d.toLocaleDateString('es-PE', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+      });
+    } catch {
+      return iso;
+    }
+  }
+
+  private get lastHistory(): ClinicalHistoryFromApi | null {
+    if (!this.histories.length) return null;
+    return [...this.histories].sort(
+      (a, b) =>
+        new Date(b.fechaRegistro).getTime() -
+        new Date(a.fechaRegistro).getTime()
+    )[0];
+  }
+
+  // lo usas igual que antes en el template
+  get previousConsults(): PreviousConsult[] {
+    return this.histories.map((h) => ({
+      tipo: h.diagnostico,
+      fecha: this.formatDate(h.fechaRegistro),
+    }));
+  }
+
+  get diagnosis(): Diagnosis | null {
+    const last = this.lastHistory;
+    if (!last) return null;
+    return {
+      principal: last.diagnostico,
+      tratamiento: last.tratamiento,
+    };
+  }
+
+  // ================== NUEVO HISTORIAL ==================
+
+  toggleNewHistory(): void {
+    this.showNewHistoryForm = !this.showNewHistoryForm;
+  }
+
+  async createHistory(): Promise<void> {
+    if (!this.selectedPatient) return;
+
+    const body = {
+      pacienteDni: this.selectedPatient.dni,
+      diagnostico: this.newHistory.diagnostico.trim(),
+      tratamiento: this.newHistory.tratamiento.trim(),
+      observaciones: this.newHistory.observaciones.trim(),
+    };
+
+    if (!body.diagnostico || !body.tratamiento) {
+      alert('Diagnóstico y tratamiento son obligatorios.');
+      return;
+    }
+
+    this.loading = true;
+    try {
+      const resp = await api.post<ClinicalHistoryFromApi>(
+        '/api/historiales',
+        body
+      );
+
+      // insertamos el nuevo historial en la lista
+      this.histories = [resp.data, ...this.histories];
+
+      // limpiamos formulario
+      this.newHistory = {
+        diagnostico: '',
+        tratamiento: '',
+        observaciones: '',
+      };
+      this.showNewHistoryForm = false;
+    } catch (err) {
+      console.error('Error creando historial clínico', err);
+      alert('No se pudo crear el historial clínico.');
+    } finally {
+      this.loading = false;
+    }
   }
 }

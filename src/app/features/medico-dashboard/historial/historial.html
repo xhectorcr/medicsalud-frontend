@@ -1,36 +1,112 @@
 <div class="app-container">
   <app-sidebarmedicos></app-sidebarmedicos>
+
   <main class="main-content">
     <div class="history-layout">
-      <!-- Patients List Sidebar -->
+      <!-- Sidebar Pacientes -->
       <aside class="patients-sidebar">
         <div class="sidebar-header">
           <h2>Pacientes</h2>
           <p>Selecciona un paciente</p>
           <div class="search-box">
             <i class="fas fa-search search-icon"></i>
-            <input type="text" placeholder="Buscar paciente..." (input)="onSearch($event)" class="search-input">
+            <input
+              type="text"
+              placeholder="Buscar paciente..."
+              (input)="onSearch($event)"
+              class="search-input"
+            />
           </div>
         </div>
+
         <div class="patients-list">
-          <div *ngFor="let patient of filteredPatients" class="patient-card"
-            [class.active]="selectedPatient?.id === patient.id" (click)="selectPatient(patient)">
-            <img [src]="patient.image" [alt]="patient.nombre" class="patient-avatar">
+          <div
+            *ngFor="let patient of filteredPatients"
+            class="patient-card"
+            [class.active]="selectedPatient?.id === patient.id"
+            (click)="selectPatient(patient)"
+          >
+            <img
+              [src]="patient.image"
+              [alt]="patient.nombre"
+              class="patient-avatar"
+            />
             <div class="patient-info">
               <h3>{{ patient.nombre }}</h3>
-              <p>{{ patient.genero }}, {{ patient.fechaNacimiento }}</p>
+              <p>
+                DNI {{ patient.dni }}
+              </p>
             </div>
           </div>
         </div>
       </aside>
 
-      <!-- Patient Details -->
+      <!-- Detalle paciente -->
       <div class="patient-details" *ngIf="selectedPatient">
         <div class="header">
-          <h1>Historia Clínica</h1>
-          <p class="subtitle">Historial médico de {{ selectedPatient.nombre }}</p>
+          <div>
+            <h1>Historia Clínica</h1>
+            <p class="subtitle">
+              Historial médico de {{ selectedPatient.nombre }}
+            </p>
+          </div>
+
+          <button class="btn-primary" (click)="toggleNewHistory()">
+            Nuevo historial clínico
+          </button>
         </div>
 
+        <!-- Formulario nuevo historial -->
+        <div class="new-history" *ngIf="showNewHistoryForm">
+          <h2>Registrar nueva consulta</h2>
+
+          <form (ngSubmit)="createHistory()" #historyForm="ngForm">
+            <div class="form-row">
+              <label>Diagnóstico</label>
+              <textarea
+                name="diagnostico"
+                required
+                [(ngModel)]="newHistory.diagnostico"
+              ></textarea>
+            </div>
+
+            <div class="form-row">
+              <label>Tratamiento</label>
+              <textarea
+                name="tratamiento"
+                required
+                [(ngModel)]="newHistory.tratamiento"
+              ></textarea>
+            </div>
+
+            <div class="form-row">
+              <label>Observaciones</label>
+              <textarea
+                name="observaciones"
+                [(ngModel)]="newHistory.observaciones"
+              ></textarea>
+            </div>
+
+            <div class="form-actions">
+              <button
+                type="submit"
+                class="btn-primary"
+                [disabled]="historyForm.invalid || loading"
+              >
+                Guardar
+              </button>
+              <button
+                type="button"
+                class="btn-secondary"
+                (click)="toggleNewHistory()"
+              >
+                Cancelar
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Grid superior -->
         <div class="content-grid">
           <!-- Datos del Paciente -->
           <div class="section patient-data">
@@ -58,7 +134,7 @@
           <!-- Consultas Previas -->
           <div class="section previous-consults">
             <h2>Consultas Previas</h2>
-            <div class="consult-list">
+            <div class="consult-list" *ngIf="previousConsults.length > 0; else noConsults">
               <div class="consult-item" *ngFor="let consult of previousConsults">
                 <div class="consult-bullet"></div>
                 <div class="consult-content">
@@ -67,10 +143,13 @@
                 </div>
               </div>
             </div>
+            <ng-template #noConsults>
+              <p class="empty-text">No hay consultas registradas.</p>
+            </ng-template>
           </div>
         </div>
 
-        <!-- Antecedentes Médicos -->
+        <!-- Antecedentes Médicos (placeholder por ahora) -->
         <div class="section medical-history" *ngIf="medicalHistory">
           <h2>Antecedentes Médicos</h2>
           <div class="history-grid">
@@ -80,7 +159,9 @@
             </div>
             <div class="history-item">
               <span class="label">Enfermedades Crónicas</span>
-              <span class="value">{{ medicalHistory.enfermedadesCronicas }}</span>
+              <span class="value">
+                {{ medicalHistory.enfermedadesCronicas }}
+              </span>
             </div>
             <div class="history-item">
               <span class="label">Cirugías Previas</span>
@@ -89,20 +170,22 @@
           </div>
         </div>
 
-        <!-- Diagnósticos y Tratamientos -->
-        <div class="section diagnosis" *ngIf="diagnosis">
+        <!-- Diagnósticos y Tratamientos (último historial) -->
+        <div class="section diagnosis" *ngIf="diagnosis as dx">
           <h2>Diagnósticos y Tratamientos</h2>
           <div class="diagnosis-grid">
             <div class="diagnosis-item">
               <span class="label">Diagnóstico Principal</span>
-              <span class="value">{{ diagnosis.principal }}</span>
+              <span class="value">{{ dx.principal }}</span>
             </div>
             <div class="diagnosis-item">
               <span class="label">Tratamiento Actual</span>
-              <span class="value">{{ diagnosis.tratamiento }}</span>
+              <span class="value">{{ dx.tratamiento }}</span>
             </div>
           </div>
         </div>
+
+        <p *ngIf="loading" class="loading-text">Cargando...</p>
       </div>
     </div>
   </main>

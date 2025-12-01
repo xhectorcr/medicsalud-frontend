@@ -1,5 +1,6 @@
 <div class="app-container">
   <app-sidebaradmin></app-sidebaradmin>
+
   <main class="main-content" style="margin-left: 260px; padding: 20px;">
     <div class="patients-container">
       <div class="header">
@@ -16,8 +17,13 @@
       <div class="search-section">
         <div class="search-box">
           <span class="search-icon">🔍</span>
-          <input type="text" placeholder="Buscar por nombre, apellido, DNI o email..." [(ngModel)]="searchTerm"
-            (input)="filterPatients()" class="search-input" />
+          <input
+            type="text"
+            placeholder="Buscar por nombre, DNI o email..."
+            [(ngModel)]="searchTerm"
+            (input)="filterPatients()"
+            class="search-input"
+          />
         </div>
         <div class="stats">
           <span class="stat-item">
@@ -27,10 +33,7 @@
           <span class="stat-item">
             <span class="stat-label">Activos:</span>
             <span class="stat-value success">
-              <span class="stat-value success">
-                {{ activePatientsCount }}
-              </span>
-
+              {{ activePatientsCount }}
             </span>
           </span>
         </div>
@@ -41,40 +44,59 @@
           <thead>
             <tr>
               <th>ID</th>
-              <th>Nombre Completo</th>
+              <th>Nombre de usuario</th>
               <th>DNI</th>
               <th>Email</th>
               <th>Teléfono</th>
-              <th>Obra Social</th>
+              <th>Rol</th>
               <th>Estado</th>
               <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let patient of filteredPatients">
-              <td><span class="id-badge">#{{ patient.id }}</span></td>
-              <td class="name-cell">
-                <strong>{{ patient.nombre }} {{ patient.apellido }}</strong>
+              <td>
+                <span class="id-badge">#{{ patient.id }}</span>
               </td>
+
+              <td class="name-cell">
+                <strong>{{ patient.nombreUsuario }}</strong>
+              </td>
+
               <td>{{ patient.dni }}</td>
               <td class="email-cell">{{ patient.email }}</td>
               <td>{{ patient.telefono }}</td>
-              <td>{{ patient.obraSocial }}</td>
+              <td>{{ patient.rol }}</td>
+
               <td>
-                <span class="status-badge" [class.active]="patient.estado === 'activo'"
-                  [class.inactive]="patient.estado === 'inactivo'" (click)="toggleStatus(patient)">
-                  {{ patient.estado }}
+                <span
+                  class="status-badge"
+                  [class.active]="patient.estado"
+                  [class.inactive]="!patient.estado"
+                  (click)="toggleStatus(patient)"
+                >
+                  {{ patient.estado ? 'Activo' : 'Inactivo' }}
                 </span>
               </td>
+
               <td class="actions-cell">
-                <button class="btn-icon btn-edit" (click)="openEditModal(patient)" title="Editar">
+                <button
+                  class="btn-icon btn-edit"
+                  (click)="openEditModal(patient)"
+                  title="Editar"
+                >
                   ✏️
                 </button>
-                <button class="btn-icon btn-delete" (click)="openDeleteModal(patient)" title="Eliminar">
+                <button
+                  class="btn-icon btn-delete"
+                  (click)="openDeleteModal(patient)"
+                  title="Eliminar"
+                >
                   🗑️
                 </button>
               </td>
             </tr>
+
             <tr *ngIf="filteredPatients.length === 0">
               <td colspan="8" class="no-results">
                 No se encontraron pacientes
@@ -88,7 +110,9 @@
       <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
         <div class="modal" (click)="$event.stopPropagation()">
           <div class="modal-header">
-            <h2>{{ modalMode === 'create' ? 'Nuevo Paciente' : 'Editar Paciente' }}</h2>
+            <h2>
+              {{ modalMode === 'create' ? 'Nuevo Paciente' : 'Editar Paciente' }}
+            </h2>
             <button class="btn-close" (click)="closeModal()">×</button>
           </div>
 
@@ -96,52 +120,65 @@
             <form>
               <div class="form-row">
                 <div class="form-group">
-                  <label>Nombre *</label>
-                  <input type="text" [(ngModel)]="patientForm.nombre" name="nombre" placeholder="Ingrese el nombre"
-                    required />
+                  <label>Nombre de usuario *</label>
+                  <input
+                    type="text"
+                    [(ngModel)]="patientForm.nombreUsuario"
+                    name="nombreUsuario"
+                    placeholder="Nombre del paciente"
+                    required
+                  />
                 </div>
-                <div class="form-group">
-                  <label>Apellido *</label>
-                  <input type="text" [(ngModel)]="patientForm.apellido" name="apellido"
-                    placeholder="Ingrese el apellido" required />
-                </div>
-              </div>
-
-              <div class="form-row">
                 <div class="form-group">
                   <label>DNI *</label>
-                  <input type="text" [(ngModel)]="patientForm.dni" name="dni" placeholder="12345678" required />
-                </div>
-                <div class="form-group">
-                  <label>Fecha de Nacimiento *</label>
-                  <input type="date" [(ngModel)]="patientForm.fechaNacimiento" name="fechaNacimiento" required />
+                  <input
+                    type="text"
+                    [(ngModel)]="patientForm.dni"
+                    name="dni"
+                    placeholder="12345678"
+                    required
+                  />
                 </div>
               </div>
 
               <div class="form-row">
                 <div class="form-group">
                   <label>Email *</label>
-                  <input type="email" [(ngModel)]="patientForm.email" name="email" placeholder="ejemplo@email.com"
-                    required />
+                  <input
+                    type="email"
+                    [(ngModel)]="patientForm.email"
+                    name="email"
+                    placeholder="ejemplo@email.com"
+                    required
+                  />
                 </div>
                 <div class="form-group">
                   <label>Teléfono *</label>
-                  <input type="tel" [(ngModel)]="patientForm.telefono" name="telefono" placeholder="+54 11 1234-5678"
-                    required />
+                  <input
+                    type="tel"
+                    [(ngModel)]="patientForm.telefono"
+                    name="telefono"
+                    placeholder="925XXXXXX"
+                    required
+                  />
                 </div>
               </div>
 
               <div class="form-row">
                 <div class="form-group">
-                  <label>Obra Social</label>
-                  <input type="text" [(ngModel)]="patientForm.obraSocial" name="obraSocial"
-                    placeholder="Nombre de la obra social" />
+                  <label>Rol</label>
+                  <input
+                    type="text"
+                    [(ngModel)]="patientForm.rol"
+                    name="rol"
+                    placeholder="PACIENTE"
+                  />
                 </div>
                 <div class="form-group">
                   <label>Estado</label>
                   <select [(ngModel)]="patientForm.estado" name="estado">
-                    <option value="activo">Activo</option>
-                    <option value="inactivo">Inactivo</option>
+                    <option [ngValue]="true">Activo</option>
+                    <option [ngValue]="false">Inactivo</option>
                   </select>
                 </div>
               </div>
@@ -160,7 +197,11 @@
       </div>
 
       <!-- Modal Eliminar -->
-      <div class="modal-overlay" *ngIf="showDeleteModal" (click)="closeDeleteModal()">
+      <div
+        class="modal-overlay"
+        *ngIf="showDeleteModal"
+        (click)="closeDeleteModal()"
+      >
         <div class="modal modal-delete" (click)="$event.stopPropagation()">
           <div class="modal-header">
             <h2>Confirmar Eliminación</h2>
@@ -172,7 +213,7 @@
               <span class="warning-icon">⚠️</span>
               <p>
                 ¿Estás seguro de que deseas eliminar al paciente
-                <strong>{{ patientToDelete?.nombre }} {{ patientToDelete?.apellido }}</strong>?
+                <strong>{{ patientToDelete?.nombreUsuario }}</strong>?
               </p>
               <p class="warning-text">Esta acción no se puede deshacer.</p>
             </div>

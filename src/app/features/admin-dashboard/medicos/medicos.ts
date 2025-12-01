@@ -2,6 +2,22 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Sidebaradmin } from '../../../layout/sidebar/admin/admin';
+import { api } from '../../../core/http/axios-instance';
+
+interface MedicoFromApi {
+  id: number;
+  especialidad: string;
+  estado: boolean;
+  dni: number;
+  usuario: {
+    id: number;
+    nombre: string;
+    apellido: string;
+    email: string;
+    telefono: string | null;
+  };
+  sede: any;
+}
 
 interface Patient {
   id: number;
@@ -19,47 +35,10 @@ interface Patient {
   selector: 'app-adminmedicos',
   imports: [CommonModule, FormsModule, Sidebaradmin],
   templateUrl: './medicos.html',
-  styleUrls: ['./medicos.scss']
+  styleUrls: ['./medicos.scss'],
 })
 export class Adminmedicos implements OnInit {
-
-  // Siempre inicializados → Angular deja de marcar error
-  patients: Patient[] = [
-    {
-      id: 1,
-      nombre: 'Juan',
-      apellido: 'Pérez',
-      dni: '12345678',
-      email: 'juan.perez@email.com',
-      telefono: '+54 11 1234-5678',
-      fechaNacimiento: '1985-03-15',
-      obraSocial: 'OSDE',
-      estado: 'activo'
-    },
-    {
-      id: 2,
-      nombre: 'María',
-      apellido: 'González',
-      dni: '23456789',
-      email: 'maria.gonzalez@email.com',
-      telefono: '+54 11 2345-6789',
-      fechaNacimiento: '1990-07-22',
-      obraSocial: 'Swiss Medical',
-      estado: 'activo'
-    },
-    {
-      id: 3,
-      nombre: 'Carlos',
-      apellido: 'Rodríguez',
-      dni: '34567890',
-      email: 'carlos.rodriguez@email.com',
-      telefono: '+54 11 3456-7890',
-      fechaNacimiento: '1978-11-03',
-      obraSocial: 'Galeno',
-      estado: 'inactivo'
-    }
-  ];
-
+  patients: Patient[] = [];
   filteredPatients: Patient[] = [];
 
   searchTerm: string = '';
@@ -71,13 +50,12 @@ export class Adminmedicos implements OnInit {
 
   patientForm: Patient = this.getEmptyPatient();
 
-  // Getter para evitar error del template
   get activePatientsCount(): number {
-    return this.patients.filter(p => p.estado === 'activo').length;
+    return this.patients.filter((p) => p.estado === 'activo').length;
   }
 
-  ngOnInit(): void {
-    this.filteredPatients = [...this.patients];
+  async ngOnInit(): Promise<void> {
+    await this.loadMedicos();
   }
 
   getEmptyPatient(): Patient {
@@ -90,17 +68,41 @@ export class Adminmedicos implements OnInit {
       telefono: '',
       fechaNacimiento: '',
       obraSocial: '',
-      estado: 'activo'
+      estado: 'activo',
     };
+  }
+
+  async loadMedicos(): Promise<void> {
+    try {
+      const response = await api.get<MedicoFromApi[]>('/api/medicos/todos');
+
+      this.patients = response.data.map((m) => ({
+        id: m.id,
+        nombre: m.usuario.nombre,
+        apellido: m.usuario.apellido,
+        dni: String(m.dni),
+        email: m.usuario.email,
+        telefono: m.usuario.telefono ?? '',
+        fechaNacimiento: '', 
+        obraSocial: m.especialidad, 
+        estado: m.estado ? 'activo' : 'inactivo',
+      }));
+
+      this.filteredPatients = [...this.patients];
+    } catch (error) {
+      console.error('Error cargando médicos', error);
+      this.filteredPatients = [];
+    }
   }
 
   filterPatients(): void {
     const term = this.searchTerm.toLowerCase();
-    this.filteredPatients = this.patients.filter(patient =>
-      patient.nombre.toLowerCase().includes(term) ||
-      patient.apellido.toLowerCase().includes(term) ||
-      patient.dni.includes(term) ||
-      patient.email.toLowerCase().includes(term)
+    this.filteredPatients = this.patients.filter(
+      (patient) =>
+        patient.nombre.toLowerCase().includes(term) ||
+        patient.apellido.toLowerCase().includes(term) ||
+        patient.dni.includes(term) ||
+        patient.email.toLowerCase().includes(term)
     );
   }
 
@@ -125,11 +127,11 @@ export class Adminmedicos implements OnInit {
 
   savePatient(): void {
     if (this.modalMode === 'create') {
-      const newId = Math.max(...this.patients.map(p => p.id), 0) + 1;
+      const newId = Math.max(...this.patients.map((p) => p.id), 0) + 1;
       this.patientForm.id = newId;
       this.patients.push({ ...this.patientForm });
     } else {
-      const index = this.patients.findIndex(p => p.id === this.patientForm.id);
+      const index = this.patients.findIndex((p) => p.id === this.patientForm.id);
       if (index !== -1) {
         this.patients[index] = { ...this.patientForm };
       }
@@ -151,7 +153,7 @@ export class Adminmedicos implements OnInit {
   confirmDelete(): void {
     if (this.patientToDelete) {
       const idToDelete = this.patientToDelete.id;
-      this.patients = this.patients.filter(p => p.id !== idToDelete);
+      this.patients = this.patients.filter((p) => p.id !== idToDelete);
       this.filterPatients();
       this.closeDeleteModal();
     }
