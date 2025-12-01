@@ -34,7 +34,6 @@ export const routes: Routes = [
 	{ path: 'auth/register', component: Register },
 
 	//Admin
-	// { path: 'admin/paciente', component: Adminpaciente },
 	{ path: 'admin/gestiongeneral', component: Admingestiongeneral },
 	{ path: 'admin/paciente', component: Adminpaciente },
 	{ path: 'admin/medicos', component: Adminmedicos },
