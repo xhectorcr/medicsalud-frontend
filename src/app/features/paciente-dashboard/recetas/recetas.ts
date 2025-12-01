@@ -1,21 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Sidebarpaciente } from '../../../layout/sidebar/paciente/paciente';
-import { api } from '../../../core/http/axios-instance';
-
-interface RecetaBackend {
-  id: number;
-  pacienteId: number;
-  pacienteNombre: string;
-  medicoId: number;
-  medicoNombre: string;
-  medicamentoId: number;
-  medicamentoNombre: string;
-  dosis: string;
-  indicaciones: string;
-  fechaCreacion: string;
-}
+import { RecetasService, RecetaBackend } from './recetas.service';
 
 interface Receta {
   id: number;
@@ -41,7 +28,10 @@ export class Pacienterecetas implements OnInit {
   // Buscador
   searchTerm = '';
 
-  constructor() {}
+  constructor(
+    private recetasService: RecetasService,
+    private cd: ChangeDetectorRef
+  ) { }
 
   ngOnInit(): void {
     this.cargarRecetas();
@@ -50,32 +40,30 @@ export class Pacienterecetas implements OnInit {
   /**
    * Llamada al backend para obtener recetas del paciente actual.
    */
-  private cargarRecetas(): void {
+  private async cargarRecetas(): Promise<void> {
     this.loading = true;
     this.error = undefined;
 
-    api
-      .get<RecetaBackend[]>('/api/recetas/paciente/me')
-      .then((resp) => {
-        console.log('DATA BACKEND:', resp.data);
+    try {
+      const data = await this.recetasService.getRecetasPaciente();
 
-        this.recetas = resp.data.map(r => ({
-          id: r.id,
-          medicamento: r.medicamentoNombre,
-          dosis: r.dosis,
-          fecha: r.fechaCreacion.slice(0, 10), // yyyy-MM-dd
-          medico: r.medicoNombre
-        }));
+      this.recetas = data.map(r => ({
+        id: r.id,
+        medicamento: r.medicamentoNombre,
+        dosis: r.dosis,
+        fecha: r.fechaCreacion.slice(0, 10), // yyyy-MM-dd
+        medico: r.medicoNombre
+      }));
 
-        console.log('RECETAS MAPEADAS:', this.recetas);
-      })
-      .catch((err) => {
-        console.error('Error al cargar recetas', err);
-        this.error = 'No se pudieron cargar tus recetas. Intenta nuevamente.';
-      })
-      .finally(() => {
-        this.loading = false;
-      });
+      this.loading = false;
+      this.cd.detectChanges(); // Force update
+
+    } catch (err) {
+      console.error('Error al cargar recetas', err);
+      this.error = 'No se pudieron cargar tus recetas. Intenta nuevamente.';
+      this.loading = false;
+      this.cd.detectChanges(); // Force update
+    }
   }
 
   /**

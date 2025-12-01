@@ -6,7 +6,7 @@ export interface MedicoBackend {
   nombre: string;
   especialidad: string;
   dni: number;
-  correo: string; 
+  correo: string;
   sede: string | null;
 }
 
@@ -14,8 +14,19 @@ export interface MedicoBackend {
   providedIn: 'root',
 })
 export class MedicosService {
-  async getMedicosActivos(): Promise<MedicoBackend[]> {
-    const resp = await api.get<MedicoBackend[]>('/api/medicos/activos');
-    return resp.data;
+  private medicosCache: MedicoBackend[] = [];
+
+  async getMedicosActivos(forceRefresh: boolean = false): Promise<MedicoBackend[]> {
+    if (this.medicosCache.length > 0 && !forceRefresh) {
+      return this.medicosCache;
+    }
+
+    try {
+      const resp = await api.get<MedicoBackend[]>('/api/medicos/activos');
+      this.medicosCache = resp.data;
+      return this.medicosCache;
+    } catch (error) {
+      throw error;
+    }
   }
 }

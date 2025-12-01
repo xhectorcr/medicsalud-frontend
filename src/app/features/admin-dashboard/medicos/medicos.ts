@@ -1,23 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Sidebaradmin } from '../../../layout/sidebar/admin/admin';
-import { api } from '../../../core/http/axios-instance';
-
-interface MedicoFromApi {
-  id: number;
-  especialidad: string;
-  estado: boolean;
-  dni: number;
-  usuario: {
-    id: number;
-    nombre: string;
-    apellido: string;
-    email: string;
-    telefono: string | null;
-  };
-  sede: any;
-}
+import { AdminMedicosService, MedicoFromApi } from './admin-medicos.service';
 
 interface Patient {
   id: number;
@@ -50,6 +35,11 @@ export class Adminmedicos implements OnInit {
 
   patientForm: Patient = this.getEmptyPatient();
 
+  constructor(
+    private medicosService: AdminMedicosService,
+    private cd: ChangeDetectorRef
+  ) { }
+
   get activePatientsCount(): number {
     return this.patients.filter((p) => p.estado === 'activo').length;
   }
@@ -74,24 +64,26 @@ export class Adminmedicos implements OnInit {
 
   async loadMedicos(): Promise<void> {
     try {
-      const response = await api.get<MedicoFromApi[]>('/api/medicos/todos');
+      const data = await this.medicosService.getMedicos();
 
-      this.patients = response.data.map((m) => ({
+      this.patients = data.map((m) => ({
         id: m.id,
         nombre: m.usuario.nombre,
         apellido: m.usuario.apellido,
         dni: String(m.dni),
         email: m.usuario.email,
         telefono: m.usuario.telefono ?? '',
-        fechaNacimiento: '', 
-        obraSocial: m.especialidad, 
+        fechaNacimiento: '',
+        obraSocial: m.especialidad,
         estado: m.estado ? 'activo' : 'inactivo',
       }));
 
       this.filteredPatients = [...this.patients];
+      this.cd.detectChanges();
     } catch (error) {
       console.error('Error cargando médicos', error);
       this.filteredPatients = [];
+      this.cd.detectChanges();
     }
   }
 

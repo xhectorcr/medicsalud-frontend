@@ -1,6 +1,6 @@
 // src/app/features/admin-dashboard/gestiongeneral/gestiongeneral.ts
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -53,24 +53,28 @@ export class Admingestiongeneral implements OnInit {
 
   constructor(
     private dashboardService: AdminDashboardService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private cd: ChangeDetectorRef
+  ) { }
 
   ngOnInit(): void {
     this.loadDashboardData();
   }
 
-  async loadDashboardData(): Promise<void> {
+  async loadDashboardData(forceRefresh: boolean = false): Promise<void> {
     this.cargando = true;
     this.errorMessage = '';
 
     try {
       const data: AdminDashboardResponse =
-        await this.dashboardService.getDashboard();
+        await this.dashboardService.getDashboard(forceRefresh);
 
       this.stats = data.stats;
       this.recentActivities = data.actividadReciente || [];
       this.upcomingAppointments = data.proximasCitas || [];
+
+      this.cargando = false;
+      this.cd.detectChanges();
     } catch (err) {
       const error = err as AxiosError<any>;
       console.error('Error cargando dashboard', error);
@@ -89,8 +93,8 @@ export class Admingestiongeneral implements OnInit {
       }
 
       this.errorMessage = 'No se pudo cargar el panel.';
-    } finally {
       this.cargando = false;
+      this.cd.detectChanges();
     }
   }
 
@@ -107,7 +111,7 @@ export class Admingestiongeneral implements OnInit {
   }
 
   refreshDashboard(): void {
-    this.loadDashboardData();
+    this.loadDashboardData(true);
   }
 
   // ==== getters que usa el HTML ====

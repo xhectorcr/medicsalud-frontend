@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { Sidebarpaciente } from '../../../layout/sidebar/paciente/paciente';
+import { CitasService, ReservaResponseDTO } from './citas.service';
 
 interface Appointment {
   id: number;
@@ -15,16 +15,6 @@ interface Appointment {
 interface Tab {
   id: string;
   label: string;
-}
-
-interface ReservaResponseDTO {
-  id: number;
-  nombreMedico: string;
-  especialidadMedico: string;
-  fechaCita: string;  
-  horaCita: string;    
-  estadoCita: string;   
-  fotoMedicoUrl?: string | null;
 }
 
 @Component({
@@ -47,7 +37,10 @@ export class Pacientecitas implements OnInit {
 
   appointments: Appointment[] = [];
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private citasService: CitasService,
+    private cd: ChangeDetectorRef
+  ) { }
 
   ngOnInit(): void {
     const pacienteId = 1; // luego lo sacas del token/usuario logueado
@@ -55,16 +48,15 @@ export class Pacientecitas implements OnInit {
   }
 
   private cargarCitas(pacienteId: number): void {
-    // CAMBIA ESTA URL a la de tu backend real
-    const url = `http://localhost:8080/api/reservas/paciente/${pacienteId}`;
-
-    this.http.get<ReservaResponseDTO[]>(url).subscribe({
+    this.citasService.getCitasPaciente(pacienteId).subscribe({
       next: (reservas) => {
         this.appointments = reservas.map((r) => this.mapReserva(r));
+        this.cd.detectChanges(); // Force update
       },
       error: (err) => {
         console.error('Error cargando citas', err);
         this.appointments = []; // para que el *ngIf funcione sin romper
+        this.cd.detectChanges(); // Force update
       },
     });
   }
