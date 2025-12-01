@@ -5,11 +5,49 @@
 
   <main class="content-col">
     <div class="container">
-      <div class="header">
-        <h1 class="title">Mis Recetas</h1>
+
+      <!-- CABECERA -->
+     <div class="header">
+  <h1 class="title">Mis Recetas</h1>
+
+  <div class="search-box">
+    <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="8"></circle>
+      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </svg>
+
+    <input
+      type="text"
+      class="search-input"
+      placeholder="Buscar receta..."
+      [(ngModel)]="searchTerm"
+    />
+  </div>
+</div>
+
+
+
+      <!-- ESTADO: CARGANDO -->
+      <div *ngIf="loading" class="estado">Cargando recetas...</div>
+
+      <!-- ESTADO: ERROR -->
+      <div *ngIf="error && !loading" class="estado error">
+        {{ error }}
       </div>
 
-      <div class="table-container">
+      <!-- ESTADO: SIN RESULTADOS -->
+      <div
+        *ngIf="!loading && !error && filteredRecetas.length === 0"
+        class="estado">
+        No se encontraron recetas que coincidan con la búsqueda.
+      </div>
+
+      <!-- TABLA -->
+      <div class="table-container"
+           *ngIf="!loading && !error && filteredRecetas.length > 0">
+
         <table class="recetas-table">
           <thead>
             <tr>
@@ -20,25 +58,33 @@
               <th></th>
             </tr>
           </thead>
+
           <tbody>
-            <tr *ngFor="let receta of recetas; let last = last" [class.last-row]="last">
+            <tr *ngFor="let receta of filteredRecetas; let last = last"
+                [class.last-row]="last">
+
               <td class="medicamento">{{ receta.medicamento }}</td>
               <td class="dosis">{{ receta.dosis }}</td>
               <td class="fecha">{{ receta.fecha }}</td>
               <td class="medico">{{ receta.medico }}</td>
+
               <td class="actions">
                 <button class="btn-ver" (click)="verReceta(receta)">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                       viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                       stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                     <circle cx="12" cy="12" r="3"></circle>
                   </svg>
                 </button>
               </td>
+
             </tr>
           </tbody>
         </table>
+
       </div>
+
     </div>
   </main>
 </div>

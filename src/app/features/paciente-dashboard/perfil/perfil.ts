@@ -26,7 +26,7 @@ export class Pacienteperfil {
   }
 
   logout() {
-    localStorage.clear(); // O elimina items específicos si prefieres
-    this.router.navigate(['/login']);
+    localStorage.clear(); 
+    this.router.navigate(['/auth/login']);
   }
 }
