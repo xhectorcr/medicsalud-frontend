@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { Sidebarmedicos } from '../../../layout/sidebar/medicos/medicos';
 import { api } from '../../../core/http/axios-instance';
+import { FormsModule } from '@angular/forms';
 
 interface MedicalHistory {
   alergias: string;
