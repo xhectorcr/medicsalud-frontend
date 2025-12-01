@@ -1,0 +1,120 @@
+<div class="app-container">
+    <app-sidebaradmin></app-sidebaradmin>
+    <main class="main-content" style="margin-left: 260px; padding: 20px;">
+        <div class="container">
+            <!-- Encabezado -->
+            <div class="header-card">
+                <div class="header-content">
+                    <div class="header-title">
+                        <div class="icon-wrapper">
+                            <span class="inventory-icon">📦</span>
+                        </div>
+                        <div>
+                            <h1>Inventario</h1>
+                            <p>Gestión de medicamentos y stock</p>
+                        </div>
+                    </div>
+                    <button class="btn-nuevo" (click)="abrirModalNuevo()">
+                        <span class="icon-plus">+</span> Nuevo Medicamento
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filtros -->
+            <div class="filtros-card">
+                <div class="filtros-content">
+                    <div class="filtro-group">
+                        <label>Buscar por nombre</label>
+                        <input type="text" [(ngModel)]="filtroNombre" placeholder="Ej: Paracetamol"
+                            class="input-filtro" />
+                    </div>
+                    <div class="filtro-group">
+                        <label>Filtrar por Sede</label>
+                        <select [(ngModel)]="filtroSede" class="select-filtro">
+                            <option value="">Todas las sedes</option>
+                            <option *ngFor="let sede of sedes" [value]="sede">{{ sede }}</option>
+                        </select>
+                    </div>
+                    <button class="btn-limpiar" (click)="limpiarFiltros()" *ngIf="filtroNombre || filtroSede">
+                        Limpiar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tabla Simplificada -->
+            <div class="tabla-card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre del Medicamento</th>
+                            <th>Sede</th>
+                            <th>Stock</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngIf="inventarioFiltrado.length === 0">
+                            <td colspan="4" class="empty-state">
+                                No se encontraron medicamentos.
+                            </td>
+                        </tr>
+                        <tr *ngFor="let item of inventarioFiltrado; let i = index" [class.row-even]="i % 2 === 0">
+                            <td class="font-medium">{{ item.nombre }}</td>
+                            <td>
+                                <span class="badge-sede">{{ item.sede }}</span>
+                            </td>
+                            <td class="stock-value">
+                                {{ item.stock }}
+                            </td>
+                            <td>
+                                <div class="acciones">
+                                    <button class="btn-editar" (click)="abrirModalEditar(item)" title="Editar">
+                                        <span>✏️</span>
+                                    </button>
+                                    <button class="btn-eliminar" (click)="eliminarItem(item.id)" title="Eliminar">
+                                        <span>🗑️</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal-overlay" *ngIf="mostrarModal" (click)="cerrarModal()">
+            <div class="modal-content" (click)="$event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>{{ modoEdicion ? 'Editar Medicamento' : 'Nuevo Medicamento' }}</h2>
+                    <button class="btn-cerrar" (click)="cerrarModal()">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Nombre</label>
+                        <input type="text" [(ngModel)]="itemActual.nombre" placeholder="Nombre del medicamento" />
+                    </div>
+                    <div class="form-group">
+                        <label>Sede</label>
+                        <select [(ngModel)]="itemActual.sede">
+                            <option value="">Seleccione una sede</option>
+                            <option *ngFor="let sede of sedes" [value]="sede">{{ sede }}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Stock</label>
+                        <input type="number" [(ngModel)]="itemActual.stock" min="0" />
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn-guardar" (click)="guardarItem()">
+                            Guardar
+                        </button>
+                        <button class="btn-cancelar" (click)="cerrarModal()">
+                            Cancelar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>

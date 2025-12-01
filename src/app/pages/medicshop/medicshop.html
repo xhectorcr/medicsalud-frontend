@@ -42,10 +42,7 @@
     <!-- Lista de Productos -->
     <div *ngIf="!cargando" [class]="'productos-lista ' + vistaActual">
         <div *ngFor="let producto of productosFiltrados" class="producto-card">
-            <div class="producto-imagen">
-                <img [src]="producto.imagen || 'assets/images/placeholder.png'" [alt]="producto.nombre">
-                <span *ngIf="producto.stock === 0" class="badge-agotado">Agotado</span>
-            </div>
+            <!-- Imagen eliminada -->
 
             <div class="producto-info">
                 <h3>{{ producto.nombre }}</h3>
@@ -86,8 +83,7 @@
             </div>
 
             <div *ngFor="let item of carritoItems" class="carrito-item">
-                <img [src]="item.producto.imagen || 'assets/images/placeholder.png'" [alt]="item.producto.nombre"
-                    class="item-imagen">
+                <!-- Imagen eliminada del carrito también -->
 
                 <div class="item-info">
                     <h4>{{ item.producto.nombre }}</h4>

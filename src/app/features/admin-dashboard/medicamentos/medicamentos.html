@@ -1,0 +1,105 @@
+<div class="layout-grid">
+    <div class="sidebar-col">
+        <app-sidebaradmin></app-sidebaradmin>
+    </div>
+    <div class="content-col">
+        <div class="container">
+            <div class="header-card">
+                <div class="header-content">
+                    <div class="header-title">
+                        <div class="icon-wrapper">
+                            <span class="pill-icon">💊</span>
+                        </div>
+                        <div>
+                            <h1>Administración de Medicamentos</h1>
+                            <p>Panel de control para gestión de inventario</p>
+                        </div>
+                    </div>
+                    <button class="btn-nuevo" (click)="abrirModalNuevo()">
+                        <span class="icon-plus">+</span> Nuevo Medicamento
+                    </button>
+                </div>
+            </div>
+
+            <div class="tabla-card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Precio</th>
+                            <th>Código de Barras</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngIf="medicamentos.length === 0">
+                            <td colspan="5" class="empty-state">No hay medicamentos registrados</td>
+                        </tr>
+                        <tr *ngFor="let med of medicamentos; let i = index" [class.row-even]="i % 2 === 0">
+                            <td class="font-medium">{{ med.nombre }}</td>
+                            <td>{{ med.descripcion }}</td>
+                            <td class="precio">S/ {{ med.precio | number:'1.2-2' }}</td>
+                            <td class="codigo-barras">{{ med.codigoBarras }}</td>
+                            <td>
+                                <div class="acciones">
+                                    <button class="btn-editar" (click)="abrirModalEditar(med)" title="Editar">
+                                        <span>✏️</span>
+                                    </button>
+                                    <button class="btn-eliminar" (click)="eliminarMedicamento(med.id)" title="Eliminar">
+                                        <span>🗑️</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="modal-overlay" *ngIf="mostrarModal" (click)="cerrarModal()">
+                <div class="modal-content" (click)="$event.stopPropagation()">
+                    <div class="modal-header">
+                        <h2>{{ modoEdicion ? 'Editar Medicamento' : 'Nuevo Medicamento' }}</h2>
+                        <button class="btn-cerrar" (click)="cerrarModal()">×</button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Nombre del Medicamento *</label>
+                            <input type="text" [(ngModel)]="medicamentoActual.nombre"
+                                placeholder="Ej: Paracetamol 500mg" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Descripción</label>
+                            <textarea [(ngModel)]="medicamentoActual.descripcion" rows="3"
+                                placeholder="Descripción del medicamento"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Precio (S/) *</label>
+                            <input type="number" [(ngModel)]="medicamentoActual.precio" step="0.01" min="0"
+                                placeholder="0.00" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Código de Barras</label>
+                            <input type="text" [(ngModel)]="medicamentoActual.codigoBarras"
+                                placeholder="7501234567890" />
+                        </div>
+
+                        <div class="modal-footer">
+                            <button class="btn-guardar" (click)="guardarMedicamento()">
+                                <span class="icon-save">💾</span> {{ modoEdicion ? 'Guardar Cambios' : 'Crear
+                                Medicamento' }}
+                            </button>
+                            <button class="btn-cancelar" (click)="cerrarModal()">
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
