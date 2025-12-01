@@ -1,6 +1,6 @@
 .container {
     min-height: 100vh;
-    background: linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%);
+    background: var(--color-bg);
     padding: 1.5rem;
 }
 
@@ -10,6 +10,7 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     padding: 1.5rem;
     margin-bottom: 1.5rem;
+    border: 1px solid var(--color-border);
 }
 
 .header-content {
@@ -28,21 +29,22 @@
     h1 {
         font-size: 1.875rem;
         font-weight: bold;
-        color: #1F2937;
+        color: var(--color-text);
         margin: 0;
     }
 
     p {
-        color: #6B7280;
+        color: var(--color-text);
         margin: 0.25rem 0 0 0;
         font-size: 0.875rem;
     }
 }
 
 .icon-wrapper {
-    background: #059669;
+    background: var(--color-primary);
     padding: 0.75rem;
     border-radius: 0.5rem;
+    color: white;
 
     .inventory-icon {
         font-size: 1.75rem;
@@ -51,7 +53,7 @@
 }
 
 .btn-nuevo {
-    background: #059669;
+    background: var(--color-primary);
     color: white;
     padding: 0.75rem 1.5rem;
     border: none;
@@ -66,7 +68,7 @@
     font-size: 1rem;
 
     &:hover {
-        background: #047857;
+        background: var(--color-primary-600);
     }
 
     .icon-plus {
@@ -81,6 +83,7 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     padding: 1.5rem;
     margin-bottom: 1.5rem;
+    border: 1px solid var(--color-border);
 }
 
 .filtros-content {
@@ -97,7 +100,7 @@
 
     label {
         display: block;
-        color: #374151;
+        color: var(--color-text);
         font-weight: 600;
         margin-bottom: 0.5rem;
         font-size: 0.875rem;
@@ -108,21 +111,22 @@
 .select-filtro {
     width: 100%;
     padding: 0.75rem 1rem;
-    border: 1px solid #D1D5DB;
+    border: 1px solid var(--color-border);
     border-radius: 0.5rem;
     font-size: 1rem;
     transition: all 0.3s;
     box-sizing: border-box;
+    background: white;
 
     &:focus {
         outline: none;
-        border-color: #059669;
-        box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 3px rgba(47, 103, 255, 0.1);
     }
 }
 
 .btn-limpiar {
-    background: #EF4444;
+    background: var(--color-danger);
     color: white;
     padding: 0.75rem 1.5rem;
     border: none;
@@ -142,7 +146,7 @@
     display: flex;
     gap: 2rem;
     padding-top: 1rem;
-    border-top: 1px solid #E5E7EB;
+    border-top: 1px solid var(--color-border);
 }
 
 .stat-item {
@@ -151,13 +155,13 @@
     gap: 0.25rem;
 
     .stat-label {
-        color: #6B7280;
+        color: var(--color-muted);
         font-size: 0.875rem;
         font-weight: 500;
     }
 
     .stat-value {
-        color: #059669;
+        color: var(--color-primary);
         font-size: 1.5rem;
         font-weight: bold;
     }
@@ -168,6 +172,7 @@
     border-radius: 0.5rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     overflow: hidden;
+    border: 1px solid var(--color-border);
 }
 
 table {
@@ -175,7 +180,7 @@ table {
     border-collapse: collapse;
 
     thead {
-        background: #059669;
+        background: var(--color-primary);
         color: white;
 
         th {
@@ -191,11 +196,11 @@ table {
 
     tbody {
         tr {
-            border-bottom: 1px solid #E5E7EB;
+            border-bottom: 1px solid var(--color-border);
             transition: background 0.2s;
 
             &:hover:not(:has(.empty-state)) {
-                background: #F3F4F6 !important;
+                background: var(--color-bg) !important;
             }
 
             &.row-even {
@@ -204,23 +209,23 @@ table {
 
             td {
                 padding: 1rem 1.5rem;
-                color: #374151;
+                color: var(--color-text);
 
                 &.empty-state {
                     text-align: center;
                     padding: 3rem;
-                    color: #9CA3AF;
+                    color: var(--color-text);
                     font-size: 1.125rem;
                 }
 
                 &.font-medium {
                     font-weight: 500;
-                    color: #111827;
+                    color: var(--color-text);
                 }
 
                 &.stock-value {
                     font-weight: 600;
-                    color: #111827;
+                    color: var(--color-text);
                 }
             }
         }
@@ -230,8 +235,8 @@ table {
 .badge-sede {
     display: inline-block;
     padding: 0.375rem 0.75rem;
-    background: #DBEAFE;
-    color: #1E40AF;
+    background: var(--color-surface);
+    color: var(--color-primary-700);
     border-radius: 0.375rem;
     font-size: 0.875rem;
     font-weight: 500;
@@ -284,16 +289,18 @@ table {
     }
 
     .btn-editar {
-        background: #3B82F6;
+        background: var(--color-accent);
+        color: white;
 
         &:hover {
-            background: #2563EB;
+            background: var(--color-primary);
             transform: scale(1.05);
         }
     }
 
     .btn-eliminar {
-        background: #EF4444;
+        background: var(--color-danger);
+        color: white;
 
         &:hover {
             background: #DC2626;
@@ -348,7 +355,7 @@ table {
 }
 
 .modal-header {
-    background: #059669;
+    background: var(--color-primary);
     color: white;
     padding: 1.5rem;
     display: flex;
@@ -392,7 +399,7 @@ table {
 
     label {
         display: block;
-        color: #374151;
+        color: var(--color-text);
         font-weight: 600;
         margin-bottom: 0.5rem;
         font-size: 0.875rem;
@@ -402,7 +409,7 @@ table {
     select {
         width: 100%;
         padding: 0.75rem 1rem;
-        border: 1px solid #D1D5DB;
+        border: 1px solid var(--color-border);
         border-radius: 0.5rem;
         font-size: 1rem;
         transition: all 0.3s;
@@ -411,12 +418,12 @@ table {
 
         &:focus {
             outline: none;
-            border-color: #059669;
-            box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(47, 103, 255, 0.1);
         }
 
         &::placeholder {
-            color: #9CA3AF;
+            color: var(--color-muted);
         }
     }
 }
@@ -428,7 +435,7 @@ table {
 
     .btn-guardar {
         flex: 1;
-        background: #059669;
+        background: var(--color-primary);
         color: white;
         padding: 0.75rem;
         border: none;
@@ -443,7 +450,7 @@ table {
         font-size: 1rem;
 
         &:hover {
-            background: #047857;
+            background: var(--color-primary-600);
         }
 
         .icon-save {
@@ -454,8 +461,8 @@ table {
 
     .btn-cancelar {
         padding: 0.75rem 1.5rem;
-        background: #E5E7EB;
-        color: #1F2937;
+        background: var(--color-bg);
+        color: var(--color-text);
         border: none;
         border-radius: 0.5rem;
         font-weight: 600;
@@ -464,7 +471,7 @@ table {
         font-size: 1rem;
 
         &:hover {
-            background: #D1D5DB;
+            background: var(--color-border);
         }
     }
 }

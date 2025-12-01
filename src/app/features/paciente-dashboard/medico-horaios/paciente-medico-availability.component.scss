@@ -1,6 +1,6 @@
 .availability-page {
   min-height: 100vh;
-  background: #f4f7ff;
+  background: var(--color-bg);
   padding: 32px 40px;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
     sans-serif;
@@ -17,7 +17,7 @@
   border: none;
   background: transparent;
   font-size: 14px;
-  color: #5b6bff;
+  color: var(--color-primary);
   cursor: pointer;
   padding: 6px 10px;
   border-radius: 999px;
@@ -37,12 +37,12 @@
 .page-title {
   font-size: 24px;
   font-weight: 700;
-  color: #152238;
+  color: var(--color-text);
 }
 
 .page-subtitle {
   font-size: 14px;
-  color: #6b7280;
+  color: var(--color-muted);
 }
 
 .content-layout {
@@ -59,6 +59,7 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
+  border: 1px solid var(--color-border);
 }
 
 .doctor-info {
@@ -72,26 +73,26 @@
   height: 70px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid #4f46e5;
+  border: 3px solid var(--color-primary);
   padding: 3px;
-  background: #e0e7ff;
+  background: var(--color-surface);
 }
 
 .doctor-name {
   font-size: 18px;
   font-weight: 700;
-  color: #111827;
+  color: var(--color-text);
 }
 
 .doctor-speciality {
   font-size: 14px;
-  color: #6b7280;
+  color: var(--color-muted);
 }
 
 .doctor-clinic {
   margin-top: 4px;
   font-size: 13px;
-  color: #4b5563;
+  color: var(--color-text);
 }
 
 .date-selector {
@@ -102,21 +103,21 @@
 
 .date-label {
   font-size: 13px;
-  color: #6b7280;
+  color: var(--color-muted);
 }
 
 .date-input {
   border-radius: 10px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--color-border);
   padding: 8px 10px;
   font-size: 14px;
   outline: none;
-  background: #f9fafb;
+  background: var(--color-bg);
   transition: border 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
 }
 
 .date-input:focus {
-  border-color: #4f46e5;
+  border-color: var(--color-primary);
   background: #ffffff;
   box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
 }
@@ -129,6 +130,7 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  border: 1px solid var(--color-border);
 }
 
 .slots-header {
@@ -140,7 +142,7 @@
 .slots-title {
   font-size: 16px;
   font-weight: 600;
-  color: #111827;
+  color: var(--color-text);
 }
 
 .tabs {
@@ -154,13 +156,13 @@
   padding: 6px 14px;
   font-size: 13px;
   cursor: pointer;
-  background: #f3f4ff;
-  color: #4f46e5;
+  background: var(--color-surface);
+  color: var(--color-primary);
   transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .tab-active {
-  background: linear-gradient(90deg, #4f46e5, #2563eb);
+  background: linear-gradient(90deg, var(--color-primary), var(--color-primary-600));
   color: #ffffff;
   box-shadow: 0 8px 20px rgba(79, 70, 229, 0.25);
 }
@@ -179,8 +181,8 @@
   justify-content: space-between;
   padding: 10px 14px;
   border-radius: 14px;
-  border: 1px solid #e5e7eb;
-  background: #f9fafb;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
 }
 
 .slot-info {
@@ -192,7 +194,7 @@
 .slot-time {
   font-size: 14px;
   font-weight: 600;
-  color: #111827;
+  color: var(--color-text);
 }
 
 .slot-status {
@@ -218,7 +220,7 @@
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
-  background: linear-gradient(90deg, #4f46e5, #2563eb);
+  background: linear-gradient(90deg, var(--color-primary), var(--color-primary-600));
   color: #ffffff;
   box-shadow: 0 8px 20px rgba(79, 70, 229, 0.25);
   transition: transform 0.1s ease, box-shadow 0.1s ease, opacity 0.1s ease;
@@ -237,7 +239,7 @@
 
 .empty-state {
   font-size: 14px;
-  color: #6b7280;
+  color: var(--color-muted);
   text-align: center;
   padding: 16px 8px;
 }

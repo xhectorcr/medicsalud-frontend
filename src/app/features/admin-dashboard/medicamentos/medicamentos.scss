@@ -1,15 +1,16 @@
 .container {
     min-height: 100vh;
-    background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%);
+    background: var(--color-bg);
     padding: 1.5rem;
 }
 
 .header-card {
-    background: white;
+    background: var(--color-text-white);
     border-radius: 0.5rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     padding: 1.5rem;
     margin-bottom: 1.5rem;
+    border: 1px solid var(--color-border);
 }
 
 .header-content {
@@ -28,21 +29,22 @@
     h1 {
         font-size: 1.875rem;
         font-weight: bold;
-        color: #1F2937;
+        color: var(--color-text);
         margin: 0;
     }
 
     p {
-        color: #6B7280;
+        color: var(--color-text);
         margin: 0.25rem 0 0 0;
         font-size: 0.875rem;
     }
 }
 
 .icon-wrapper {
-    background: #4F46E5;
+    background: var(--color-primary);
     padding: 0.75rem;
     border-radius: 0.5rem;
+    color: white;
 
     .pill-icon {
         font-size: 1.75rem;
@@ -51,7 +53,7 @@
 }
 
 .btn-nuevo {
-    background: #4F46E5;
+    background: var(--color-primary);
     color: white;
     padding: 0.75rem 1.5rem;
     border: none;
@@ -66,7 +68,7 @@
     font-size: 1rem;
 
     &:hover {
-        background: #4338CA;
+        background: var(--color-primary-600);
     }
 
     .icon-plus {
@@ -80,6 +82,7 @@
     border-radius: 0.5rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     overflow: hidden;
+    border: 1px solid var(--color-border);
 }
 
 table {
@@ -87,7 +90,7 @@ table {
     border-collapse: collapse;
 
     thead {
-        background: #4F46E5;
+        background: var(--color-primary);
         color: white;
 
         th {
@@ -103,11 +106,11 @@ table {
 
     tbody {
         tr {
-            border-bottom: 1px solid #E5E7EB;
+            border-bottom: 1px solid var(--color-border);
             transition: background 0.2s;
 
             &:hover:not(:has(.empty-state)) {
-                background: #F3F4F6 !important;
+                background: var(--color-bg) !important;
             }
 
             &.row-even {
@@ -116,28 +119,29 @@ table {
 
             td {
                 padding: 1rem 1.5rem;
-                color: #374151;
+                color: var(--color-text);
 
                 &.empty-state {
                     text-align: center;
                     padding: 3rem;
-                    color: #9CA3AF;
+                    color: var(--color-muted);
                     font-size: 1.125rem;
                 }
 
                 &.font-medium {
                     font-weight: 500;
-                    color: #111827;
+                    color: var(--color-text);
                 }
 
                 &.precio {
                     font-weight: 600;
-                    color: #111827;
+                    color: var(--color-text);
                 }
 
                 &.codigo-barras {
                     font-family: 'Courier New', monospace;
                     font-size: 0.875rem;
+                    color: var(--color-text);
                 }
             }
         }
@@ -163,16 +167,18 @@ table {
     }
 
     .btn-editar {
-        background: #3B82F6;
+        background: var(--color-accent);
+        color: white;
 
         &:hover {
-            background: #2563EB;
+            background: var(--color-primary);
             transform: scale(1.05);
         }
     }
 
     .btn-eliminar {
-        background: #EF4444;
+        background: var(--color-danger);
+        color: white;
 
         &:hover {
             background: #DC2626;
@@ -227,7 +233,7 @@ table {
 }
 
 .modal-header {
-    background: #4F46E5;
+    background: var(--color-primary);
     color: white;
     padding: 1.5rem;
     display: flex;
@@ -271,7 +277,7 @@ table {
 
     label {
         display: block;
-        color: #374151;
+        color: var(--color-text);
         font-weight: 600;
         margin-bottom: 0.5rem;
         font-size: 0.875rem;
@@ -281,7 +287,7 @@ table {
     textarea {
         width: 100%;
         padding: 0.75rem 1rem;
-        border: 1px solid #D1D5DB;
+        border: 1px solid var(--color-border);
         border-radius: 0.5rem;
         font-size: 1rem;
         transition: all 0.3s;
@@ -290,12 +296,12 @@ table {
 
         &:focus {
             outline: none;
-            border-color: #4F46E5;
+            border-color: var(--color-primary);
             box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
         }
 
         &::placeholder {
-            color: #9CA3AF;
+            color: var(--color-muted);
         }
     }
 
@@ -311,7 +317,7 @@ table {
 
     .btn-guardar {
         flex: 1;
-        background: #4F46E5;
+        background: var(--color-primary);
         color: white;
         padding: 0.75rem;
         border: none;
@@ -326,7 +332,7 @@ table {
         font-size: 1rem;
 
         &:hover {
-            background: #4338CA;
+            background: var(--color-primary-600);
         }
 
         .icon-save {
@@ -337,8 +343,8 @@ table {
 
     .btn-cancelar {
         padding: 0.75rem 1.5rem;
-        background: #E5E7EB;
-        color: #1F2937;
+        background: var(--color-bg);
+        color: var(--color-text);
         border: none;
         border-radius: 0.5rem;
         font-weight: 600;
@@ -347,7 +353,7 @@ table {
         font-size: 1rem;
 
         &:hover {
-            background: #D1D5DB;
+            background: var(--color-border);
         }
     }
 }
