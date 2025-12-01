@@ -1,14 +1,14 @@
-.app-container {
-  display: flex;
+.main-content {
+  padding: 1.5rem;
+  background: white;
   min-height: 100vh;
-  background-color: var(--color-bg);
 }
 
-.main-content {
-  flex: 1;
+.container {
+  background-color: var(--color-bg);
   padding: 1.5rem;
-  overflow-y: auto;
-  margin-left: 260px; // Accommodate fixed sidebar
+  border-radius: 1rem;
+  min-height: calc(100vh - 3rem);
 }
 
 .history-layout {
@@ -279,37 +279,6 @@
   }
 }
 
-.patient-details {
-  background: white;
-  border-radius: 0.75rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  padding: 2rem;
-  overflow-y: auto;
-
-  .header {
-    margin-bottom: 2rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid var(--color-border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
-
-    h1 {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--color-text);
-      margin: 0;
-    }
-
-    .subtitle {
-      font-size: 0.875rem;
-      color: var(--color-muted);
-      margin: 0.25rem 0 0 0;
-    }
-  }
-}
-
 /* Botones y formulario nuevo historial */
 
 .btn-primary {
@@ -402,6 +371,7 @@
 .empty-text {
   font-size: 0.875rem;
   color: var(--color-muted);
+  margin: 0;
 }
 
 .loading-text {

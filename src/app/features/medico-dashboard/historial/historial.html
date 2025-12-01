@@ -1,192 +1,166 @@
-<div class="app-container">
-  <app-sidebarmedicos></app-sidebarmedicos>
+<div class="layout-grid">
+  <div class="sidebar-col">
+    <app-sidebarmedicos></app-sidebarmedicos>
+  </div>
 
-  <main class="main-content">
-    <div class="history-layout">
-      <!-- Sidebar Pacientes -->
-      <aside class="patients-sidebar">
-        <div class="sidebar-header">
-          <h2>Pacientes</h2>
-          <p>Selecciona un paciente</p>
-          <div class="search-box">
-            <i class="fas fa-search search-icon"></i>
-            <input
-              type="text"
-              placeholder="Buscar paciente..."
-              (input)="onSearch($event)"
-              class="search-input"
-            />
-          </div>
-        </div>
-
-        <div class="patients-list">
-          <div
-            *ngFor="let patient of filteredPatients"
-            class="patient-card"
-            [class.active]="selectedPatient?.id === patient.id"
-            (click)="selectPatient(patient)"
-          >
-            <img
-              [src]="patient.image"
-              [alt]="patient.nombre"
-              class="patient-avatar"
-            />
-            <div class="patient-info">
-              <h3>{{ patient.nombre }}</h3>
-              <p>
-                DNI {{ patient.dni }}
-              </p>
-            </div>
-          </div>
-        </div>
-      </aside>
-
-      <!-- Detalle paciente -->
-      <div class="patient-details" *ngIf="selectedPatient">
-        <div class="header">
-          <div>
-            <h1>Historia Clínica</h1>
-            <p class="subtitle">
-              Historial médico de {{ selectedPatient.nombre }}
-            </p>
-          </div>
-
-          <button class="btn-primary" (click)="toggleNewHistory()">
-            Nuevo historial clínico
-          </button>
-        </div>
-
-        <!-- Formulario nuevo historial -->
-        <div class="new-history" *ngIf="showNewHistoryForm">
-          <h2>Registrar nueva consulta</h2>
-
-          <form (ngSubmit)="createHistory()" #historyForm="ngForm">
-            <div class="form-row">
-              <label>Diagnóstico</label>
-              <textarea
-                name="diagnostico"
-                required
-                [(ngModel)]="newHistory.diagnostico"
-              ></textarea>
-            </div>
-
-            <div class="form-row">
-              <label>Tratamiento</label>
-              <textarea
-                name="tratamiento"
-                required
-                [(ngModel)]="newHistory.tratamiento"
-              ></textarea>
-            </div>
-
-            <div class="form-row">
-              <label>Observaciones</label>
-              <textarea
-                name="observaciones"
-                [(ngModel)]="newHistory.observaciones"
-              ></textarea>
-            </div>
-
-            <div class="form-actions">
-              <button
-                type="submit"
-                class="btn-primary"
-                [disabled]="historyForm.invalid || loading"
-              >
-                Guardar
-              </button>
-              <button
-                type="button"
-                class="btn-secondary"
-                (click)="toggleNewHistory()"
-              >
-                Cancelar
-              </button>
-            </div>
-          </form>
-        </div>
-
-        <!-- Grid superior -->
-        <div class="content-grid">
-          <!-- Datos del Paciente -->
-          <div class="section patient-data">
-            <h2>Datos Personales</h2>
-            <div class="data-grid">
-              <div class="data-row">
-                <span class="label">Nombre</span>
-                <span class="value">{{ selectedPatient.nombre }}</span>
-              </div>
-              <div class="data-row">
-                <span class="label">Fecha de Nacimiento</span>
-                <span class="value">{{ selectedPatient.fechaNacimiento }}</span>
-              </div>
-              <div class="data-row">
-                <span class="label">Género</span>
-                <span class="value">{{ selectedPatient.genero }}</span>
-              </div>
-              <div class="data-row">
-                <span class="label">Grupo Sanguíneo</span>
-                <span class="value">{{ selectedPatient.grupoSanguineo }}</span>
+  <div class="content-col">
+    <div class="main-content">
+      <div class="container">
+        <div class="history-layout">
+          <!-- Sidebar Pacientes -->
+          <aside class="patients-sidebar">
+            <div class="sidebar-header">
+              <h2>Pacientes</h2>
+              <p>Selecciona un paciente</p>
+              <div class="search-box">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" placeholder="Buscar paciente..." (input)="onSearch($event)" class="search-input" />
               </div>
             </div>
-          </div>
 
-          <!-- Consultas Previas -->
-          <div class="section previous-consults">
-            <h2>Consultas Previas</h2>
-            <div class="consult-list" *ngIf="previousConsults.length > 0; else noConsults">
-              <div class="consult-item" *ngFor="let consult of previousConsults">
-                <div class="consult-bullet"></div>
-                <div class="consult-content">
-                  <div class="consult-type">{{ consult.tipo }}</div>
-                  <div class="consult-date">{{ consult.fecha }}</div>
+            <div class="patients-list">
+              <div *ngFor="let patient of filteredPatients" class="patient-card"
+                [class.active]="selectedPatient?.id === patient.id" (click)="selectPatient(patient)">
+                <img [src]="patient.image" [alt]="patient.nombre" class="patient-avatar" />
+                <div class="patient-info">
+                  <h3>{{ patient.nombre }}</h3>
+                  <p>
+                    DNI {{ patient.dni }}
+                  </p>
                 </div>
               </div>
             </div>
-            <ng-template #noConsults>
-              <p class="empty-text">No hay consultas registradas.</p>
-            </ng-template>
+          </aside>
+
+          <!-- Detalle paciente -->
+          <div class="patient-details" *ngIf="selectedPatient">
+            <div class="header">
+              <div>
+                <h1>Historia Clínica</h1>
+                <p class="subtitle">
+                  Historial médico de {{ selectedPatient.nombre }}
+                </p>
+              </div>
+
+              <button class="btn-primary" (click)="toggleNewHistory()">
+                Nuevo historial clínico
+              </button>
+            </div>
+
+            <!-- Formulario nuevo historial -->
+            <div class="new-history" *ngIf="showNewHistoryForm">
+              <h2>Registrar nueva consulta</h2>
+
+              <form (ngSubmit)="createHistory()" #historyForm="ngForm">
+                <div class="form-row">
+                  <label>Diagnóstico</label>
+                  <textarea name="diagnostico" required [(ngModel)]="newHistory.diagnostico"></textarea>
+                </div>
+
+                <div class="form-row">
+                  <label>Tratamiento</label>
+                  <textarea name="tratamiento" required [(ngModel)]="newHistory.tratamiento"></textarea>
+                </div>
+
+                <div class="form-row">
+                  <label>Observaciones</label>
+                  <textarea name="observaciones" [(ngModel)]="newHistory.observaciones"></textarea>
+                </div>
+
+                <div class="form-actions">
+                  <button type="submit" class="btn-primary" [disabled]="historyForm.invalid || loading">
+                    Guardar
+                  </button>
+                  <button type="button" class="btn-secondary" (click)="toggleNewHistory()">
+                    Cancelar
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Grid superior -->
+            <div class="content-grid">
+              <!-- Datos del Paciente -->
+              <div class="section patient-data">
+                <h2>Datos Personales</h2>
+                <div class="data-grid">
+                  <div class="data-row">
+                    <span class="label">Nombre</span>
+                    <span class="value">{{ selectedPatient.nombre }}</span>
+                  </div>
+                  <div class="data-row">
+                    <span class="label">Fecha de Nacimiento</span>
+                    <span class="value">{{ selectedPatient.fechaNacimiento }}</span>
+                  </div>
+                  <div class="data-row">
+                    <span class="label">Género</span>
+                    <span class="value">{{ selectedPatient.genero }}</span>
+                  </div>
+                  <div class="data-row">
+                    <span class="label">Grupo Sanguíneo</span>
+                    <span class="value">{{ selectedPatient.grupoSanguineo }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Consultas Previas -->
+              <div class="section previous-consults">
+                <h2>Consultas Previas</h2>
+                <div class="consult-list" *ngIf="previousConsults.length > 0; else noConsults">
+                  <div class="consult-item" *ngFor="let consult of previousConsults">
+                    <div class="consult-bullet"></div>
+                    <div class="consult-content">
+                      <div class="consult-type">{{ consult.tipo }}</div>
+                      <div class="consult-date">{{ consult.fecha }}</div>
+                    </div>
+                  </div>
+                </div>
+                <ng-template #noConsults>
+                  <p class="empty-text">No hay consultas registradas.</p>
+                </ng-template>
+              </div>
+            </div>
+
+            <!-- Antecedentes Médicos (placeholder por ahora) -->
+            <div class="section medical-history" *ngIf="medicalHistory">
+              <h2>Antecedentes Médicos</h2>
+              <div class="history-grid">
+                <div class="history-item">
+                  <span class="label">Alergias</span>
+                  <span class="value">{{ medicalHistory.alergias }}</span>
+                </div>
+                <div class="history-item">
+                  <span class="label">Enfermedades Crónicas</span>
+                  <span class="value">
+                    {{ medicalHistory.enfermedadesCronicas }}
+                  </span>
+                </div>
+                <div class="history-item">
+                  <span class="label">Cirugías Previas</span>
+                  <span class="value">{{ medicalHistory.cirugiasPrevias }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Diagnósticos y Tratamientos (último historial) -->
+            <div class="section diagnosis" *ngIf="diagnosis as dx">
+              <h2>Diagnósticos y Tratamientos</h2>
+              <div class="diagnosis-grid">
+                <div class="diagnosis-item">
+                  <span class="label">Diagnóstico Principal</span>
+                  <span class="value">{{ dx.principal }}</span>
+                </div>
+                <div class="diagnosis-item">
+                  <span class="label">Tratamiento Actual</span>
+                  <span class="value">{{ dx.tratamiento }}</span>
+                </div>
+              </div>
+            </div>
+
+            <p *ngIf="loading" class="loading-text">Cargando...</p>
           </div>
         </div>
-
-        <!-- Antecedentes Médicos (placeholder por ahora) -->
-        <div class="section medical-history" *ngIf="medicalHistory">
-          <h2>Antecedentes Médicos</h2>
-          <div class="history-grid">
-            <div class="history-item">
-              <span class="label">Alergias</span>
-              <span class="value">{{ medicalHistory.alergias }}</span>
-            </div>
-            <div class="history-item">
-              <span class="label">Enfermedades Crónicas</span>
-              <span class="value">
-                {{ medicalHistory.enfermedadesCronicas }}
-              </span>
-            </div>
-            <div class="history-item">
-              <span class="label">Cirugías Previas</span>
-              <span class="value">{{ medicalHistory.cirugiasPrevias }}</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Diagnósticos y Tratamientos (último historial) -->
-        <div class="section diagnosis" *ngIf="diagnosis as dx">
-          <h2>Diagnósticos y Tratamientos</h2>
-          <div class="diagnosis-grid">
-            <div class="diagnosis-item">
-              <span class="label">Diagnóstico Principal</span>
-              <span class="value">{{ dx.principal }}</span>
-            </div>
-            <div class="diagnosis-item">
-              <span class="label">Tratamiento Actual</span>
-              <span class="value">{{ dx.tratamiento }}</span>
-            </div>
-          </div>
-        </div>
-
-        <p *ngIf="loading" class="loading-text">Cargando...</p>
       </div>
     </div>
-  </main>
+  </div>
 </div>

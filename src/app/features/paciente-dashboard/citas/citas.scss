@@ -1,7 +1,14 @@
-.container {
+.main-content {
+  padding: 1.5rem;
+  background: white;
   min-height: 100vh;
+}
+
+.container {
   background-color: var(--color-bg);
   padding: 1.5rem;
+  border-radius: 1rem;
+  min-height: calc(100vh - 3rem);
 }
 
 .card {
