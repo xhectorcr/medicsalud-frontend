@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule, Router } from '@angular/router';
 import { Sidebarmedicos } from '../../../layout/sidebar/medicos/medicos';
 
 interface Schedule {
@@ -11,7 +12,7 @@ interface Schedule {
 
 @Component({
   selector: 'app-account-settings',
-  imports: [CommonModule, FormsModule, Sidebarmedicos],
+  imports: [CommonModule, FormsModule, Sidebarmedicos, RouterModule],
   templateUrl: './perfil.html',
   styleUrls: ['./perfil.scss']
 })
@@ -31,7 +32,11 @@ export class Medicoperfil {
     'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'
   ];
 
-  times: string[] = this.generateTimeSlots();
+  times: string[] = [];
+
+  constructor(private router: Router) {
+    this.times = this.generateTimeSlots();
+  }
 
   addSchedule(): void {
     this.schedules.push({
@@ -46,13 +51,19 @@ export class Medicoperfil {
   }
 
   saveChanges(): void {
-    console.log('Guardando cambios...', {
+    const data = {
       email: this.email,
       phone: this.phone,
       specialty: this.specialty,
       schedules: this.schedules
-    });
-    // Aquí implementarías la lógica para guardar en el backend
+    };
+    console.log('Guardando cambios:', data);
+    alert('Cambios guardados correctamente');
+  }
+
+  logout() {
+    localStorage.clear();
+    this.router.navigate(['/login']);
   }
 
   private generateTimeSlots(): string[] {

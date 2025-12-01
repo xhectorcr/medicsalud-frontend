@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { Sidebarpaciente } from '../../../layout/sidebar/paciente/paciente';
 
 @Component({
@@ -18,8 +18,15 @@ export class Pacienteperfil {
     address: ''
   };
 
+  constructor(private router: Router) { }
+
   onSubmit() {
     console.log('Guardando cambios:', this.formData);
     alert('Cambios guardados correctamente');
+  }
+
+  logout() {
+    localStorage.clear(); // O elimina items específicos si prefieres
+    this.router.navigate(['/login']);
   }
 }
