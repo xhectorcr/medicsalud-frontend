@@ -17,9 +17,15 @@ export interface Patient {
 })
 export class AdminPacientesService {
   private readonly BASE_URL = '/api/pacientes/todos';
+  private patientsCache: Patient[] = [];
 
-  async getPatients(): Promise<Patient[]> {
+  async getPatients(forceRefresh: boolean = false): Promise<Patient[]> {
+    if (this.patientsCache.length > 0 && !forceRefresh) {
+      return this.patientsCache;
+    }
+
     const resp = await api.get<Patient[]>(this.BASE_URL);
-    return resp.data ?? [];
+    this.patientsCache = resp.data ?? [];
+    return this.patientsCache;
   }
 }

@@ -79,7 +79,13 @@ export class AdminDashboardService {
   private readonly PACIENTES_ACTIVOS_URL = '/api/pacientes/lista';
   private readonly RESERVAS_URL = '/api/reservas/lista';
 
-  async getDashboard(): Promise<AdminDashboardResponse> {
+  private dashboardCache: AdminDashboardResponse | null = null;
+
+  async getDashboard(forceRefresh: boolean = false): Promise<AdminDashboardResponse> {
+    if (this.dashboardCache && !forceRefresh) {
+      return this.dashboardCache;
+    }
+
     const [medicosRes, pacientesRes, reservasRes] = await Promise.all([
       api.get<MedicoActivo[]>(this.MEDICOS_ACTIVOS_URL),
       api.get<PacienteActivo[]>(this.PACIENTES_ACTIVOS_URL),
@@ -91,7 +97,7 @@ export class AdminDashboardService {
     const reservas = reservasRes.data || [];
 
     // --- Citas (reservas) ---
-    const hoyStr = this.getTodayString(); 
+    const hoyStr = this.getTodayString();
     const reservasHoy = reservas.filter(r => r.fechaCita === hoyStr);
 
     const completadas = reservas.filter(r => r.estadoCita === true).length;
@@ -106,17 +112,17 @@ export class AdminDashboardService {
       pacientes: {
         total: pacientesActivos.length,
         activos: pacientesActivos.length,
-        nuevosEsteMes: 0, 
+        nuevosEsteMes: 0,
       },
       citas: {
         hoy: reservasHoy.length,
         pendientes,
         completadas,
-        canceladas: 0, 
+        canceladas: 0,
       },
     };
 
-   
+
     const proximasCitas: UpcomingAppointment[] = reservas
       .filter(r => r.fechaCita >= hoyStr)
       .sort((a, b) => (a.fechaCita + a.horaCita).localeCompare(b.fechaCita + b.horaCita))
@@ -134,11 +140,13 @@ export class AdminDashboardService {
     // Actividad reciente se puede montar más adelante
     const actividadReciente: RecentActivity[] = [];
 
-    return {
+    this.dashboardCache = {
       stats,
       actividadReciente,
       proximasCitas,
     };
+
+    return this.dashboardCache;
   }
 
   private getTodayString(): string {

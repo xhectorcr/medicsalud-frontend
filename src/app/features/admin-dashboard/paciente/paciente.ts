@@ -1,5 +1,5 @@
 // src/app/features/admin-dashboard/paciente/paciente.ts
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Sidebaradmin } from '../../../layout/sidebar/admin/admin';
@@ -31,16 +31,25 @@ export class Adminpaciente implements OnInit {
   patientForm: Patient = this.getEmptyForm();
   patientToDelete: Patient | null = null;
 
-  constructor(private patientsService: AdminPacientesService) {}
+  constructor(
+    private patientsService: AdminPacientesService,
+    private cd: ChangeDetectorRef
+  ) { }
 
   ngOnInit(): void {
     this.loadPatients();
   }
 
   private async loadPatients(): Promise<void> {
-    const data = await this.patientsService.getPatients();
-    this.patients = data;
-    this.filteredPatients = [...data];
+    try {
+      const data = await this.patientsService.getPatients();
+      this.patients = data;
+      this.filteredPatients = [...data];
+      this.cd.detectChanges();
+    } catch (error) {
+      console.error('Error loading patients', error);
+      this.cd.detectChanges();
+    }
   }
 
   // ======== getters para la UI ========
