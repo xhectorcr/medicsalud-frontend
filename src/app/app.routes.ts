@@ -16,8 +16,11 @@ import { Login } from './features/auth/login/login';
 import { Register } from './features/auth/register/register';
 import { Medicohistorial } from './features/medico-dashboard/historial/historial';
 import { Medicoperfil } from './features/medico-dashboard/perfil/perfil';
-	import { Admingestiongeneral } from './features/admin-dashboard/gestiongeneral/gestiongeneral';
-import { PacienteMedicoAvailabilityComponent } from './features/paciente-dashboard/medico-horaios/paciente-medico-availability.component';
+// import { Adminpaciente } from './features/admin-dashboard/paciente/paciente';
+import { Admingestiongeneral } from './features/admin-dashboard/gestiongeneral/gestiongeneral';
+import { Adminmedicos } from './features/admin-dashboard/medicos/medicos';
+import { Adminpaciente } from './features/admin-dashboard/paciente/paciente';
+import { Adminperfil } from './features/admin-dashboard/perfil/perfil';
 
 export const routes: Routes = [
 
@@ -32,9 +35,12 @@ export const routes: Routes = [
 
 	//Admin
 	// { path: 'admin/paciente', component: Adminpaciente },
-	{ path: 'admin/paciente', component: Admingestiongeneral },
-	
-	
+	{ path: 'admin/gestiongeneral', component: Admingestiongeneral },
+	{ path: 'admin/paciente', component: Adminpaciente },
+	{ path: 'admin/medicos', component: Adminmedicos },
+	{ path: 'admin/perfil', component: Adminperfil },
+
+
 
 	//Medico
 	{ path: 'medicos/citas', component: Medicoscitas },
@@ -46,11 +52,11 @@ export const routes: Routes = [
 	{ path: 'paciente/citas', component: Pacientecitas },
 	{ path: 'paciente/recetas', component: Pacienterecetas },
 	{ path: 'paciente/perfil', component: Pacienteperfil },
-	{path :'/paciente/horarios-medico', component: PacienteMedicoAvailabilityComponent},
-	
 
-	{ path: 'sidebar', component: Sidebarpaciente  },
-	{ path: 'sidebarmedicos', component: Sidebarmedicos  },
+
+
+	{ path: 'sidebar', component: Sidebarpaciente },
+	{ path: 'sidebarmedicos', component: Sidebarmedicos },
 	{ path: 'sidebaradmin', component: Sidebaradmin }
 
 ];

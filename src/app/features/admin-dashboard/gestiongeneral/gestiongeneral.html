@@ -1,181 +1,188 @@
-<div class="dashboard-container">
-  <!-- Header -->
-  <div class="dashboard-header">
-    <div class="header-content">
-      <div class="title-section">
-        <h1>Panel de Control</h1>
-        <p class="subtitle">Bienvenido al sistema de gestión administrativa</p>
-      </div>
-      <div class="header-actions">
-        <div class="date-display">
-          <span class="date-icon">📆</span>
-          <span class="date-text">{{ currentDate | date:'EEEE, d MMMM yyyy':'es-ES' }}</span>
-        </div>
-        <button class="btn-refresh" (click)="refreshDashboard()" title="Actualizar">
-          🔄
-        </button>
-      </div>
-    </div>
-  </div>
+<div class="app-container">
+  <app-sidebaradmin></app-sidebaradmin>
 
-  <!-- Main Stats Cards -->
-  <div class="stats-grid">
-    <!-- Médicos Card -->
-    <div class="stat-card medicos">
-      <div class="card-header">
-        <div class="icon-wrapper medicos-icon">
-          ⚕️
+  <main class="main-content" style="margin-left: 260px; padding: 20px;">
+    <div class="dashboard-container">
+      <!-- Header -->
+      <div class="dashboard-header">
+        <div class="header-content">
+          <div class="title-section">
+            <h1>Panel de Control</h1>
+            <p class="subtitle">Bienvenido al sistema de gestión administrativa</p>
+          </div>
+          <div class="header-actions">
+            <div class="date-display">
+              <span class="date-icon">📆</span>
+              <span class="date-text">
+                {{ currentDate | date: 'EEEE, d MMMM yyyy':'es-ES' }}
+              </span>
+            </div>
+            <button class="btn-refresh" (click)="refreshDashboard()" title="Actualizar">
+              🔄
+            </button>
+          </div>
         </div>
-        <h3>Médicos</h3>
       </div>
-      <div class="card-body">
-        <div class="main-stat">
-          <span class="number">{{ stats.medicos.total }}</span>
-          <span class="label">Total registrados</span>
-        </div>
-        <div class="sub-stats">
-          <div class="sub-stat success">
-            <span class="value">{{ stats.medicos.activos }}</span>
-            <span class="label">Activos</span>
+
+      <!-- Tarjetas principales -->
+      <div class="stats-grid">
+        <!-- Médicos -->
+        <div class="stat-card medicos">
+          <div class="card-header">
+            <div class="icon-wrapper medicos-icon">⚕️</div>
+            <h3>Médicos</h3>
           </div>
-          <div class="sub-stat inactive">
-            <span class="value">{{ stats.medicos.inactivos }}</span>
-            <span class="label">Inactivos</span>
+          <div class="card-body">
+            <div class="main-stat">
+              <span class="number">{{ stats.medicos.total }}</span>
+              <span class="label">Total registrados</span>
+            </div>
+            <div class="sub-stats">
+              <div class="sub-stat success">
+                <span class="value">{{ stats.medicos.activos }}</span>
+                <span class="label">Activos</span>
+              </div>
+              <div class="sub-stat inactive">
+                <span class="value">{{ stats.medicos.inactivos }}</span>
+                <span class="label">Inactivos</span>
+              </div>
+            </div>
+            <div class="progress-bar">
+              <div
+                class="progress-fill medicos-progress"
+                [style.width.%]="medicosActivosPercentage"
+              ></div>
+            </div>
+            <p class="percentage-text">{{ medicosActivosPercentage }}% activos</p>
           </div>
         </div>
-        <div class="progress-bar">
-          <div class="progress-fill medicos-progress" [style.width.%]="medicosActivosPercentage"></div>
+
+        <!-- Pacientes -->
+        <div class="stat-card pacientes">
+          <div class="card-header">
+            <div class="icon-wrapper pacientes-icon">👥</div>
+            <h3>Pacientes</h3>
+          </div>
+          <div class="card-body">
+            <div class="main-stat">
+              <span class="number">{{ stats.pacientes.total }}</span>
+              <span class="label">Total registrados</span>
+            </div>
+            <div class="sub-stats">
+              <div class="sub-stat success">
+                <span class="value">{{ stats.pacientes.activos }}</span>
+                <span class="label">Activos</span>
+              </div>
+              <div class="sub-stat new">
+                <span class="value">+{{ stats.pacientes.nuevosEsteMes }}</span>
+                <span class="label">Este mes</span>
+              </div>
+            </div>
+            <div class="progress-bar">
+              <div
+                class="progress-fill pacientes-progress"
+                [style.width.%]="pacientesActivosPercentage"
+              ></div>
+            </div>
+            <p class="percentage-text">{{ pacientesActivosPercentage }}% activos</p>
+          </div>
         </div>
-        <p class="percentage-text">{{ medicosActivosPercentage }}% activos</p>
+
+        <!-- Citas -->
+        <div class="stat-card citas">
+          <div class="card-header">
+            <div class="icon-wrapper citas-icon">📋</div>
+            <h3>Citas</h3>
+          </div>
+          <div class="card-body">
+            <div class="main-stat">
+              <span class="number">{{ stats.citas.hoy }}</span>
+              <span class="label">Citas hoy</span>
+            </div>
+            <div class="sub-stats">
+              <div class="sub-stat pending">
+                <span class="value">{{ stats.citas.pendientes }}</span>
+                <span class="label">Pendientes</span>
+              </div>
+              <div class="sub-stat success">
+                <span class="value">{{ stats.citas.completadas }}</span>
+                <span class="label">Completadas</span>
+              </div>
+            </div>
+            <div class="progress-bar">
+              <div
+                class="progress-fill citas-progress"
+                [style.width.%]="citasCompletadasPercentage"
+              ></div>
+            </div>
+            <p class="percentage-text">
+              {{ citasCompletadasPercentage }}% tasa de éxito
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actividad reciente + Próximas citas -->
+<div class="content-grid">
+  <!-- Actividad Reciente (la puedes rellenar más adelante) -->
+  <section class="activity-section">
+    <div class="section-header">
+      <h2>Actividad Reciente</h2>
+      <button class="btn-link">Ver todo</button>
+    </div>
+    <div class="activity-list">
+      <div
+        class="activity-item"
+        *ngFor="let activity of recentActivities"
+      >
+        <div class="activity-icon" [ngClass]="activity.tipo">
+          {{ getActivityIcon(activity.tipo) }}
+        </div>
+        <div class="activity-content">
+          <p class="activity-description">{{ activity.descripcion }}</p>
+          <span class="activity-time">
+            {{ activity.hora }} - {{ activity.fecha | date: 'dd/MM/yyyy' }}
+          </span>
+        </div>
+      </div>
+
+      <p *ngIf="recentActivities.length === 0" class="empty-state">
+        No hay actividad reciente.
+      </p>
+    </div>
+  </section>
+
+  <!-- Próximas Citas -->
+  <section class="appointments-section">
+    <div class="section-header">
+      <h2>Próximas Citas</h2>
+      <button class="btn-link">Ver agenda</button>
+    </div>
+
+    <div class="appointments-list" *ngIf="upcomingAppointments.length > 0; else emptyAppointments">
+      <div class="appointment-item" *ngFor="let cita of upcomingAppointments">
+        <div class="appointment-time">
+          <span class="time">{{ cita.hora }}</span>
+          <span class="date">{{ cita.fecha | date: 'dd/MM' }}</span>
+        </div>
+
+        <div class="appointment-details">
+          <h4>{{ cita.paciente }}</h4>
+          <p class="doctor">
+            {{ cita.medico }} - {{ cita.especialidad }}
+          </p>
+          <span class="status-badge" [ngClass]="getStatusClass(cita.estado)">
+            {{ cita.estado | titlecase }}
+          </span>
+        </div>
       </div>
     </div>
 
-    <!-- Pacientes Card -->
-    <div class="stat-card pacientes">
-      <div class="card-header">
-        <div class="icon-wrapper pacientes-icon">
-          👥
-        </div>
-        <h3>Pacientes</h3>
-      </div>
-      <div class="card-body">
-        <div class="main-stat">
-          <span class="number">{{ stats.pacientes.total }}</span>
-          <span class="label">Total registrados</span>
-        </div>
-        <div class="sub-stats">
-          <div class="sub-stat success">
-            <span class="value">{{ stats.pacientes.activos }}</span>
-            <span class="label">Activos</span>
-          </div>
-          <div class="sub-stat new">
-            <span class="value">+{{ stats.pacientes.nuevosEsteMes }}</span>
-            <span class="label">Este mes</span>
-          </div>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-fill pacientes-progress" [style.width.%]="pacientesActivosPercentage"></div>
-        </div>
-        <p class="percentage-text">{{ pacientesActivosPercentage }}% activos</p>
-      </div>
+    <ng-template #emptyAppointments>
+      <p class="empty-state">No hay próximas citas programadas.</p>
+    </ng-template>
+  </section>
+</div>
     </div>
-
-    <!-- Citas Card -->
-    <div class="stat-card citas">
-      <div class="card-header">
-        <div class="icon-wrapper citas-icon">
-          📋
-        </div>
-        <h3>Citas</h3>
-      </div>
-      <div class="card-body">
-        <div class="main-stat">
-          <span class="number">{{ stats.citas.hoy }}</span>
-          <span class="label">Citas hoy</span>
-        </div>
-        <div class="sub-stats">
-          <div class="sub-stat pending">
-            <span class="value">{{ stats.citas.pendientes }}</span>
-            <span class="label">Pendientes</span>
-          </div>
-          <div class="sub-stat success">
-            <span class="value">{{ stats.citas.completadas }}</span>
-            <span class="label">Completadas</span>
-          </div>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-fill citas-progress" [style.width.%]="citasCompletadasPercentage"></div>
-        </div>
-        <p class="percentage-text">{{ citasCompletadasPercentage }}% tasa de éxito</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- Secondary Content -->
-  <div class="content-grid">
-    <!-- Recent Activity -->
-    <div class="activity-section">
-      <div class="section-header">
-        <h2>Actividad Reciente</h2>
-        <button class="btn-link">Ver todo</button>
-      </div>
-      <div class="activity-list">
-        <div class="activity-item" *ngFor="let activity of recentActivities">
-          <div class="activity-icon" [ngClass]="activity.tipo">
-            {{ getActivityIcon(activity.tipo) }}
-          </div>
-          <div class="activity-content">
-            <p class="activity-description">{{ activity.descripcion }}</p>
-            <span class="activity-time">{{ activity.hora }} - {{ activity.fecha | date:'dd/MM/yyyy' }}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Upcoming Appointments -->
-    <div class="appointments-section">
-      <div class="section-header">
-        <h2>Próximas Citas</h2>
-        <button class="btn-link">Ver agenda</button>
-      </div>
-      <div class="appointments-list">
-        <div class="appointment-item" *ngFor="let appointment of upcomingAppointments">
-          <div class="appointment-time">
-            <span class="time">{{ appointment.hora }}</span>
-            <span class="date">{{ appointment.fecha | date:'dd/MM' }}</span>
-          </div>
-          <div class="appointment-details">
-            <h4>{{ appointment.paciente }}</h4>
-            <p class="doctor">{{ appointment.medico }} - {{ appointment.especialidad }}</p>
-            <span class="status-badge" [ngClass]="getStatusClass(appointment.estado)">
-              {{ appointment.estado }}
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Quick Actions -->
-  <div class="quick-actions">
-    <h2>Acciones Rápidas</h2>
-    <div class="actions-grid">
-      <button class="action-btn">
-        <span class="action-icon">➕</span>
-        <span class="action-text">Nueva Cita</span>
-      </button>
-      <button class="action-btn">
-        <span class="action-icon">👤</span>
-        <span class="action-text">Nuevo Paciente</span>
-      </button>
-      <button class="action-btn">
-        <span class="action-icon">⚕️</span>
-        <span class="action-text">Nuevo Médico</span>
-      </button>
-      <button class="action-btn">
-        <span class="action-icon">📊</span>
-        <span class="action-text">Ver Reportes</span>
-      </button>
-    </div>
-  </div>
+  </main>
 </div>

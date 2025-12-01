@@ -1,55 +1,36 @@
-<div class="layout-grid">
-  <aside class="sidebar-col">
-    <app-sidebarpaciente></app-sidebarpaciente>
-  </aside>
+<div class="app-container">
+  <app-sidebarpaciente></app-sidebarpaciente>
+  <main class="main-content" style="margin-left: 260px; padding: 20px;">
+    <div class="account-settings">
+      <h1 class="title">Mi Perfil</h1>
 
-  <main class="content-col">
-    <div class="container">
-      <div class="form-card">
-        <h1 class="form-title">Información Personal</h1>
-        <p class="form-subtitle">Actualiza tu información personal aquí.</p>
-        
-        <form (ngSubmit)="onSubmit()">
+      <div class="section">
+        <h2 class="section-title">Información personal</h2>
+        <p class="section-subtitle">Actualiza tu información de contacto y dirección.</p>
+
+        <div class="form-grid">
           <div class="form-group">
-            <label for="email" class="form-label">Correo Electrónico</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              class="form-input"
-              [(ngModel)]="formData.email"
-              required
-            />
+            <label>Correo electrónico</label>
+            <input type="email" [(ngModel)]="formData.email" class="form-control" placeholder="correo@ejemplo.com" />
           </div>
 
           <div class="form-group">
-            <label for="phone" class="form-label">Número de Teléfono</label>
-            <input
-              type="tel"
-              id="phone"
-              name="phone"
-              class="form-input"
-              [(ngModel)]="formData.phone"
-              required
-            />
+            <label>Número de teléfono</label>
+            <input type="tel" [(ngModel)]="formData.phone" class="form-control" placeholder="+51 999 999 999" />
           </div>
+        </div>
 
-          <div class="form-group">
-            <label for="address" class="form-label">Dirección</label>
-            <textarea
-              id="address"
-              name="address"
-              class="form-textarea"
-              rows="4"
-              [(ngModel)]="formData.address"
-              required
-            ></textarea>
-          </div>
+        <div class="form-group">
+          <label>Dirección</label>
+          <textarea [(ngModel)]="formData.address" class="form-control" rows="3"
+            placeholder="Tu dirección completa"></textarea>
+        </div>
+      </div>
 
-          <div class="form-actions">
-            <button type="submit" class="btn-primary">Guardar Cambios</button>
-          </div>
-        </form>
+      <div class="actions">
+        <button class="btn-save" (click)="onSubmit()">
+          Guardar cambios
+        </button>
       </div>
     </div>
   </main>

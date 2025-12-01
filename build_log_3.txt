@@ -1,0 +1,23 @@
+
+> medicsalud-frontend@0.0.0 build
+> ng build
+
+[33mÔØ»[39m Building...
+[32mÔ£ö[39m Building...
+[1mInitial chunk files[22m[2m | [22m[1mNames[22m        [2m | [22m [1mRaw size[22m[2m | [22m[1mEstimated transfer size[22m
+[32mmain-FHGOK3EQ.js[39m   [2m | [22m[2mmain[22m         [2m | [22m[36m470.93 kB[39m[2m | [22m              [36m107.17 kB[39m
+[32mstyles-EFWCZS3S.css[39m[2m | [22m[2mstyles[22m       [2m | [22m[36m780 bytes[39m[2m | [22m              [36m780 bytes[39m
+
+[1m [22m                  [2m | [22m[1mInitial total[22m[2m | [22m[1m471.71 kB[22m[2m | [22m              [1m107.95 kB[22m
+
+Application bundle generation complete. [3.778 seconds] - 2025-11-30T00:37:44.332Z
+
+Ôû▓ [WARNING] NG8113: HomeComponent is not used within the template of App [plugin angular-compiler]
+
+    src/app/app.ts:9:26:
+      9 Ôöé   imports: [RouterOutlet, HomeComponent],
+        ÔòÁ                           ~~~~~~~~~~~~~
+
+
+Output location: E:\Sistema e informatica\Projects Hector\University Projects\MedisSalud\medicsalud-frontend\dist\medicsalud-frontend
+

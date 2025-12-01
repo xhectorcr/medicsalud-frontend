@@ -1,112 +1,144 @@
+// src/app/features/admin-dashboard/gestiongeneral/gestiongeneral.ts
+
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
-interface DashboardStats {
-  medicos: {
-    total: number;
-    activos: number;
-    inactivos: number;
-  };
-  pacientes: {
-    total: number;
-    activos: number;
-    nuevosEsteMes: number;
-  };
-  citas: {
-    hoy: number;
-    pendientes: number;
-    completadas: number;
-    canceladas: number;
-  };
-}
-
-interface RecentActivity {
-  id: number;
-  tipo: 'cita' | 'paciente' | 'medico';
-  descripcion: string;
-  fecha: string;
-  hora: string;
-}
-
-interface UpcomingAppointment {
-  id: number;
-  paciente: string;
-  medico: string;
-  especialidad: string;
-  fecha: string;
-  hora: string;
-  estado: 'confirmada' | 'pendiente' | 'en-proceso';
-}
+import { Router } from '@angular/router';
+import { Sidebaradmin } from '../../../layout/sidebar/admin/admin';
+import {
+  AdminDashboardService,
+  AdminDashboardResponse,
+  DashboardStats,
+  RecentActivity,
+  UpcomingAppointment,
+} from './services/admin-dashboard.service';
+import { AxiosError } from 'axios';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, Sidebaradmin],
   templateUrl: './gestiongeneral.html',
-  styleUrls: ['./gestiongeneral.scss']
+  styleUrls: ['./gestiongeneral.scss'],
 })
 export class Admingestiongeneral implements OnInit {
-
+  // SIEMPRE inicializado → el HTML puede usar stats.medicos.total sin romperse
   stats: DashboardStats = {
-    medicos: { total: 45, activos: 42, inactivos: 3 },
-    pacientes: { total: 1248, activos: 1180, nuevosEsteMes: 87 },
-    citas: { hoy: 24, pendientes: 156, completadas: 3420, canceladas: 89 }
+    medicos: {
+      total: 0,
+      activos: 0,
+      inactivos: 0,
+    },
+    pacientes: {
+      total: 0,
+      activos: 0,
+      nuevosEsteMes: 0,
+    },
+    citas: {
+      hoy: 0,
+      pendientes: 0,
+      completadas: 0,
+      canceladas: 0,
+    },
   };
 
-  recentActivities: RecentActivity[] = [
-    { id: 1, tipo: 'paciente', descripcion: 'Nuevo paciente registrado: María González', fecha: '2024-11-17', hora: '10:30' },
-    { id: 2, tipo: 'cita', descripcion: 'Cita completada con Dr. Ramírez', fecha: '2024-11-17', hora: '09:15' },
-    { id: 3, tipo: 'medico', descripcion: 'Dr. Carlos Pérez actualizó su perfil', fecha: '2024-11-17', hora: '08:45' },
-    { id: 4, tipo: 'cita', descripcion: 'Nueva cita agendada para mañana', fecha: '2024-11-16', hora: '18:20' },
-    { id: 5, tipo: 'paciente', descripcion: 'Paciente Juan Martínez dio de baja', fecha: '2024-11-16', hora: '16:00' }
-  ];
-
-  upcomingAppointments: UpcomingAppointment[] = [
-    { id: 1, paciente: 'Ana García', medico: 'Dr. Martínez', especialidad: 'Cardiología', fecha: '2024-11-17', hora: '14:00', estado: 'confirmada' },
-    { id: 2, paciente: 'Pedro López', medico: 'Dra. Fernández', especialidad: 'Pediatría', fecha: '2024-11-17', hora: '15:30', estado: 'pendiente' },
-    { id: 3, paciente: 'Laura Sánchez', medico: 'Dr. Ramírez', especialidad: 'Dermatología', fecha: '2024-11-17', hora: '16:00', estado: 'confirmada' },
-    { id: 4, paciente: 'Carlos Ruiz', medico: 'Dr. Torres', especialidad: 'Traumatología', fecha: '2024-11-18', hora: '09:00', estado: 'confirmada' }
-  ];
+  // listas que usa el template
+  recentActivities: RecentActivity[] = [];
+  upcomingAppointments: UpcomingAppointment[] = [];
 
   currentDate: Date = new Date();
+
+  cargando = false;
+  errorMessage = '';
+
+  constructor(
+    private dashboardService: AdminDashboardService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loadDashboardData();
   }
 
-  loadDashboardData(): void {
-    console.log('Dashboard data loaded');
+  async loadDashboardData(): Promise<void> {
+    this.cargando = true;
+    this.errorMessage = '';
+
+    try {
+      const data: AdminDashboardResponse =
+        await this.dashboardService.getDashboard();
+
+      this.stats = data.stats;
+      this.recentActivities = data.actividadReciente || [];
+      this.upcomingAppointments = data.proximasCitas || [];
+    } catch (err) {
+      const error = err as AxiosError<any>;
+      console.error('Error cargando dashboard', error);
+
+      const status = error.response?.status;
+      const msg = (error.response?.data as any)?.message ?? '';
+
+      // si el token está mal / vencido → limpiar y mandar al login
+      if (
+        status === 401 ||
+        status === 403 ||
+        (status === 500 && msg.toString().includes('JWT'))
+      ) {
+        this.logoutAndRedirect();
+        return;
+      }
+
+      this.errorMessage = 'No se pudo cargar el panel.';
+    } finally {
+      this.cargando = false;
+    }
   }
 
-  get medicosActivosPercentage(): number {
-    return Math.round((this.stats.medicos.activos / this.stats.medicos.total) * 100);
-  }
+  private logoutAndRedirect(): void {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('tokenType');
+    localStorage.removeItem('tokenExpiration');
+    localStorage.removeItem('username');
+    localStorage.removeItem('roles');
+    localStorage.removeItem('userEmail');
+    localStorage.removeItem('userRole');
 
-  get pacientesActivosPercentage(): number {
-    return Math.round((this.stats.pacientes.activos / this.stats.pacientes.total) * 100);
-  }
-
-  get citasCompletadasPercentage(): number {
-    const total = this.stats.citas.completadas + this.stats.citas.canceladas;
-    return Math.round((this.stats.citas.completadas / total) * 100);
-  }
-
-  getActivityIcon(tipo: 'cita' | 'paciente' | 'medico'): string {
-    const icons = {
-      cita: '📅',
-      paciente: '👤',
-      medico: '⚕️'
-    };
-    return icons[tipo];
-  }
-
-  getStatusClass(estado: string): string {
-    return estado.toLowerCase().replace(' ', '-');
+    this.router.navigate(['/auth/login']);
   }
 
   refreshDashboard(): void {
     this.loadDashboardData();
-    console.log('Dashboard refreshed');
+  }
+
+  // ==== getters que usa el HTML ====
+
+  get medicosActivosPercentage(): number {
+    if (this.stats.medicos.total === 0) return 0;
+    return Math.round(
+      (this.stats.medicos.activos / this.stats.medicos.total) * 100
+    );
+  }
+
+  get pacientesActivosPercentage(): number {
+    if (this.stats.pacientes.total === 0) return 0;
+    return Math.round(
+      (this.stats.pacientes.activos / this.stats.pacientes.total) * 100
+    );
+  }
+
+  get citasCompletadasPercentage(): number {
+    const total =
+      this.stats.citas.completadas + this.stats.citas.canceladas || 1;
+    return Math.round((this.stats.citas.completadas / total) * 100);
+  }
+
+  getActivityIcon(tipo: 'cita' | 'paciente' | 'medico'): string {
+    const icons = { cita: '📅', paciente: '👤', medico: '⚕️' };
+    return icons[tipo];
+  }
+
+  getStatusClass(estado: string): string {
+    // confirmada → confirmada, en-proceso → en-proceso
+    return estado.toLowerCase().replace(' ', '-');
   }
 }
