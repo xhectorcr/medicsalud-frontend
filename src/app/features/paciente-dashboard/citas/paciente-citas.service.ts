@@ -31,7 +31,7 @@ interface ReservaResponseDTO {
   fechaCreacion: string;
   fechaCita: string;
   horaCita: string;
-  estadoCita: boolean; // true / false
+  estadoCita: string; // "PENDIENTE", "CONFIRMADA", etc.
 }
 
 @Injectable({
@@ -60,8 +60,18 @@ export class PacienteCitasService {
     };
   }
 
-  private mapEstado(estado: boolean): AppointmentStatus {
-    // ajusta si luego tienes más estados
-    return estado ? 'confirmada' : 'pendiente';
+  private mapEstado(estado: string): AppointmentStatus {
+    switch (estado) {
+      case 'PENDIENTE':
+        return 'pendiente';
+      case 'CONFIRMADA':
+        return 'confirmada';
+      case 'REPROGRAMADA':
+        return 'reprogramada';
+      case 'RECHAZADA':
+        return 'rechazada';
+      default:
+        return 'pendiente'; // Default fallback
+    }
   }
 }
