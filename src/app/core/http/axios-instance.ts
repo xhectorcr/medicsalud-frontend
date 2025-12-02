@@ -7,7 +7,7 @@ const isBrowser = typeof window !== 'undefined' && typeof localStorage !== 'unde
 
 export const api = axios.create({
   // Nota: Es mejor usar variables de entorno para el baseURL en un entorno de producción/Railway.
-  baseURL: 'https://backend-web-production-e5ac.up.railway.app/',
+  baseURL: 'http://localhost:8080',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -71,7 +71,7 @@ api.interceptors.response.use(
 
     if (status === 401) {
       // Si el código es 401 (No autorizado), limpiamos la sesión y redirigimos.
-      
+
       // Si estamos en el navegador, mostramos la alerta.
       if (isBrowser) {
         // si tu backend devuelve { error: "token_expired" }
@@ -82,7 +82,7 @@ api.interceptors.response.use(
           alert('Tu sesión ha expirado. Vuelve a iniciar sesión.');
         }
       }
-      
+
       // La redirección también se ejecuta solo si es en el navegador.
       clearAuthAndRedirect();
     }
