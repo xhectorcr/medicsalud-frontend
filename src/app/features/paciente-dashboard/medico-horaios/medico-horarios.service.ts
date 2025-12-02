@@ -1,4 +1,3 @@
-// src/app/features/paciente-dashboard/medico-horarios/medico-horarios.service.ts
 import { Injectable } from '@angular/core';
 import { api } from '../../../core/http/axios-instance';
 

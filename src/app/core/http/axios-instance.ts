@@ -2,7 +2,7 @@
 import axios, { AxiosRequestHeaders, AxiosError } from 'axios';
 
 export const api = axios.create({
-  baseURL: 'http://backend-web-production-e5ac.up.railway.app',
+  baseURL: 'https://backend-web-production-e5ac.up.railway.app/',
   headers: {
     'Content-Type': 'application/json',
   },
