@@ -10,6 +10,8 @@ interface Doctor {
   specialty: string;
   image: string;
   correo: string;
+  dni: number;
+  sede: string | null;
 }
 
 @Component({
@@ -47,6 +49,8 @@ export class Pacientemedico implements OnInit {
         name: m.nombre,
         specialty: m.especialidad,
         correo: m.correo,
+        dni: m.dni,
+        sede: m.sede,
         image: 'https://i.pravatar.cc/150?img=' + ((index % 10) + 1),
       }));
 
@@ -74,6 +78,8 @@ export class Pacientemedico implements OnInit {
   }
 
   verDisponibilidad(doctor: Doctor) {
+    console.log('🔍 Navegando con doctor:', doctor);
+
     this.router.navigate(
       ['/paciente/horarios-medico'],
       {
@@ -81,7 +87,10 @@ export class Pacientemedico implements OnInit {
           correo: doctor.correo,
           nombre: doctor.name,
           especialidad: doctor.specialty,
-          foto: doctor.image
+          foto: doctor.image,
+          medicoDni: doctor.dni,
+          sedeId: 1,  // TODO: usar doctor.sede cuando esté disponible
+          clinica: doctor.sede || 'Clínica Principal'
         }
       }
     );

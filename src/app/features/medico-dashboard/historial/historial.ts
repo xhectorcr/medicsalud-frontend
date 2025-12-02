@@ -21,7 +21,7 @@ interface PreviousConsult {
 }
 
 interface Patient {
-  id: number;          // aquí usaré el DNI como id
+  id: number;          
   dni: number;
   nombre: string;
   fechaNacimiento: string;
@@ -30,7 +30,7 @@ interface Patient {
   image: string;
 }
 
-// reservas para armar la lista de pacientes
+
 interface ReservaFromApi {
   id: number;
   nombrePaciente: string;

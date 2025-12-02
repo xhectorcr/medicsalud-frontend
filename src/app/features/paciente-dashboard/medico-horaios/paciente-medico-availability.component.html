@@ -16,11 +16,7 @@
     <!-- Tarjeta del médico -->
     <section class="doctor-card">
       <div class="doctor-info">
-        <img
-          [src]="doctor.photoUrl"
-          [alt]="doctor.name"
-          class="doctor-photo"
-        />
+        <img [src]="doctor.photoUrl" [alt]="doctor.name" class="doctor-photo" />
 
         <div>
           <h2 class="doctor-name">{{ doctor.name }}</h2>
@@ -31,11 +27,7 @@
 
       <div class="date-selector">
         <span class="date-label">Fecha</span>
-        <input
-          type="date"
-          class="date-input"
-          [(ngModel)]="selectedDate"
-        />
+        <input type="date" class="date-input" [(ngModel)]="selectedDate" />
       </div>
     </section>
 
@@ -45,27 +37,15 @@
         <h3 class="slots-title">Horarios disponibles</h3>
 
         <div class="tabs">
-          <button
-            class="tab"
-            [class.tab-active]="activeFilter === 'all'"
-            (click)="setFilter('all')"
-          >
+          <button class="tab" [class.tab-active]="activeFilter === 'all'" (click)="setFilter('all')">
             Todos
           </button>
 
-          <button
-            class="tab"
-            [class.tab-active]="activeFilter === 'available'"
-            (click)="setFilter('available')"
-          >
+          <button class="tab" [class.tab-active]="activeFilter === 'available'" (click)="setFilter('available')">
             Disponibles
           </button>
 
-          <button
-            class="tab"
-            [class.tab-active]="activeFilter === 'booked'"
-            (click)="setFilter('booked')"
-          >
+          <button class="tab" [class.tab-active]="activeFilter === 'booked'" (click)="setFilter('booked')">
             Ocupados
           </button>
         </div>
@@ -77,41 +57,111 @@
       </div>
 
       <div class="slots-list" *ngIf="!loading && !errorMessage">
-        <div
-          class="slot-card"
-          *ngFor="let slot of filteredSlots"
-        >
+        <div class="slot-card" *ngFor="let slot of filteredSlots">
           <div class="slot-info">
             <span class="slot-time">{{ slot.time }}</span>
 
-            <span
-              class="slot-status"
-              [ngClass]="{
+            <span class="slot-status" [ngClass]="{
                 'status-available': slot.status === 'available',
                 'status-booked': slot.status === 'booked'
-              }"
-            >
+              }">
               {{ getStatusLabel(slot.status) }}
             </span>
           </div>
 
-          <button
-            class="slot-button"
-            [disabled]="slot.status !== 'available'"
-            (click)="onReserve(slot)"
-          >
-            Reservar
-          </button>
+          <div class="slot-actions">
+            <button class="slot-button direct" [disabled]="slot.status !== 'available' ||loading"
+              (click)="agendarDirecto(slot)">
+              Agendar Cita
+            </button>
+
+            <button class="slot-button payment" [disabled]="slot.status !== 'available' || loading"
+              (click)="onReserve(slot)">
+              Con Pago
+            </button>
+          </div>
         </div>
 
-        <div
-          class="empty-state"
-          *ngIf="filteredSlots.length === 0"
-        >
+        <div class="empty-state" *ngIf="filteredSlots.length === 0">
           No hay horarios para este filtro.
         </div>
       </div>
     </section>
+  </div>
+</div>
+
+<!-- Payment Modal -->
+<div class="modal-backdrop" *ngIf="showPaymentModal">
+  <div class="modal-card payment-modal">
+    <h2 class="modal-title">Procesar Pago</h2>
+
+    <p class="payment-description">
+      Complete los datos de su tarjeta para confirmar la reserva de su cita médica.
+    </p>
+
+    <div class="payment-summary">
+      <div class="summary-row">
+        <span>Consulta con {{ doctor.name }}</span>
+        <span class="amount">${{ paymentInfo.amount.toFixed(2) }}</span>
+      </div>
+      <div class="summary-row">
+        <span>Fecha:</span>
+        <span>{{ selectedDate }}</span>
+      </div>
+      <div class="summary-row" *ngIf="selectedSlotForPayment">
+        <span>Hora:</span>
+        <span>{{ selectedSlotForPayment.horaInicio }}</span>
+      </div>
+    </div>
+
+    <form class="payment-form">
+      <div class="form-group">
+        <label for="cardHolder">Nombre del Titular</label>
+        <input type="text" id="cardHolder" class="form-input" placeholder="Nombre completo"
+          [(ngModel)]="paymentInfo.cardHolder" [disabled]="paymentProcessing" name="cardHolder" />
+      </div>
+
+      <div class="form-group">
+        <label for="cardNumber">Número de Tarjeta</label>
+        <input type="text" id="cardNumber" class="form-input card-number" placeholder="1234 5678 9012 3456"
+          [(ngModel)]="paymentInfo.cardNumber" (input)="formatCardNumber($event)" [disabled]="paymentProcessing"
+          maxlength="19" name="cardNumber" />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="expiryDate">Fecha de Expiración</label>
+          <input type="text" id="expiryDate" class="form-input" placeholder="MM/YY" [(ngModel)]="paymentInfo.expiryDate"
+            (input)="formatExpiryDate($event)" [disabled]="paymentProcessing" maxlength="5" name="expiryDate" />
+        </div>
+
+        <div class="form-group">
+          <label for="cvv">CVV</label>
+          <input type="text" id="cvv" class="form-input" placeholder="123" [(ngModel)]="paymentInfo.cvv"
+            [disabled]="paymentProcessing" maxlength="3" pattern="[0-9]*" name="cvv" />
+        </div>
+      </div>
+    </form>
+
+    <div class="payment-processing" *ngIf="paymentProcessing">
+      <div class="spinner"></div>
+      <p>Procesando pago seguro...</p>
+    </div>
+
+    <div class="modal-actions">
+      <button class="modal-button secondary" (click)="cancelPayment()" [disabled]="paymentProcessing">
+        Cancelar
+      </button>
+
+      <button class="modal-button primary" (click)="processPayment()" [disabled]="paymentProcessing">
+        <span *ngIf="!paymentProcessing">Pagar ${{ paymentInfo.amount.toFixed(2) }}</span>
+        <span *ngIf="paymentProcessing">Procesando...</span>
+      </button>
+    </div>
+
+    <p class="security-note">
+      Tu información está protegida y es completamente segura
+    </p>
   </div>
 </div>
 
@@ -140,4 +190,3 @@
     </div>
   </div>
 </div>
-
