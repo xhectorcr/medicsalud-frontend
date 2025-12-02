@@ -1,5 +1,5 @@
 // src/app/features/paciente/citas/citas.ts
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Sidebarpaciente } from '../../../layout/sidebar/paciente/paciente';
 import {
@@ -33,7 +33,10 @@ export class Pacientecitas implements OnInit {
 
   appointments: Appointment[] = [];
 
-  constructor(private citasService: PacienteCitasService) {}
+  constructor(
+    private citasService: PacienteCitasService,
+    private cd: ChangeDetectorRef
+  ) { }
 
   ngOnInit(): void {
     this.cargarCitas();
@@ -43,10 +46,12 @@ export class Pacientecitas implements OnInit {
     this.citasService.getCitasPaciente().subscribe({
       next: (citas) => {
         this.appointments = citas;
+        this.cd.detectChanges();
       },
       error: (err) => {
         console.error('Error cargando citas', err);
         this.appointments = [];
+        this.cd.detectChanges();
       },
     });
   }

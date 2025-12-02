@@ -27,7 +27,7 @@
 
       <div class="date-selector">
         <span class="date-label">Fecha</span>
-        <input type="date" class="date-input" [(ngModel)]="selectedDate" />
+        <input type="date" class="date-input" [(ngModel)]="selectedDate" (ngModelChange)="onDateChange()" />
       </div>
     </section>
 

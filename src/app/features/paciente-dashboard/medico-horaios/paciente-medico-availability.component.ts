@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -65,13 +65,16 @@ export class PacienteMedicoAvailabilityComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private horariosService: MedicoHorariosService,
-    private reservaService: ReservaService
+    private reservaService: ReservaService,
+    private cd: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
     this.selectedDate = new Date().toISOString().substring(0, 10);
+    console.log('ngOnInit iniciado. Fecha:', this.selectedDate);
 
     this.route.queryParams.subscribe(async (params) => {
+      console.log('Query params recibidos:', params);
       this.correoMedico = params['correo'] ?? '';
       this.doctor.name = params['nombre'] ?? '';
       this.doctor.speciality = params['especialidad'] ?? '';
@@ -83,21 +86,25 @@ export class PacienteMedicoAvailabilityComponent implements OnInit {
       this.sedeId = Number(params['sedeId'] ?? 1);
 
       if (!this.correoMedico) {
+        console.error('No se encontró correo médico en params');
         this.errorMessage = 'No se pudo identificar al médico.';
         return;
       }
 
+      console.log('Llamando a cargarHorarios para:', this.correoMedico);
       await this.cargarHorarios();
     });
   }
 
   async cargarHorarios(): Promise<void> {
+    console.log('cargarHorarios ejecutándose...');
     this.loading = true;
     this.errorMessage = '';
 
     try {
       const data: HorarioBackend[] =
         await this.horariosService.getHorariosPorCorreo(this.correoMedico);
+      console.log('Datos recibidos del servicio:', data);
 
       if (data.length > 0 && data[0].medicoDni) {
         this.medicoDni = typeof data[0].medicoDni === 'string'
@@ -112,11 +119,14 @@ export class PacienteMedicoAvailabilityComponent implements OnInit {
         horaFin: h.horaFin,
         status: 'available'
       }));
+      this.cd.detectChanges();
     } catch (err: any) {
       this.errorMessage =
         err?.response?.data?.message || 'No se pudieron cargar los horarios del médico.';
+      this.cd.detectChanges();
     } finally {
       this.loading = false;
+      this.cd.detectChanges();
     }
   }
 
@@ -133,6 +143,11 @@ export class PacienteMedicoAvailabilityComponent implements OnInit {
     if (status === 'available') return 'Disponible';
     if (status === 'booked') return 'Ocupado';
     return status;
+  }
+
+  onDateChange(): void {
+    console.log('Fecha cambiada:', this.selectedDate);
+    this.cargarHorarios();
   }
 
   onBack(): void {
