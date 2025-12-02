@@ -112,13 +112,37 @@ export class PacienteMedicoAvailabilityComponent implements OnInit {
           : data[0].medicoDni;
       }
 
-      this.slots = data.map((h) => ({
-        id: h.id,
-        time: `${h.horaInicio} - ${h.horaFin}`,
-        horaInicio: h.horaInicio,
-        horaFin: h.horaFin,
-        status: 'available'
-      }));
+      // Obtener el día de la semana de la fecha seleccionada en inglés mayúsculas
+      const selectedDayName = this.getDayName(this.selectedDate).toUpperCase();
+      console.log('Día seleccionado:', selectedDayName);
+
+      // Filtrar por día (case insensitive)
+      const horariosDelDia = data.filter(h => h.dia.toUpperCase() === selectedDayName);
+
+      if (horariosDelDia.length === 0 && data.length > 0) {
+        // Encontrar qué días sí tienen horarios
+        const availableDays = [...new Set(data.map(h => h.dia))].join(', ');
+        this.errorMessage = `El médico no tiene horarios para este día. Días disponibles: ${availableDays}`;
+      }
+
+      this.slots = horariosDelDia.map((h) => {
+        let status: SlotStatus = 'booked';
+        const estado = h.estado ? h.estado.trim() : '';
+
+        if (estado === 'DISPONIBLE') {
+          status = 'available';
+        } else if (estado === 'OCUPADO') {
+          status = 'booked';
+        }
+
+        return {
+          id: h.id,
+          time: `${h.horaInicio} - ${h.horaFin}`,
+          horaInicio: h.horaInicio,
+          horaFin: h.horaFin,
+          status: status
+        };
+      });
       this.cd.detectChanges();
     } catch (err: any) {
       this.errorMessage =
@@ -130,11 +154,18 @@ export class PacienteMedicoAvailabilityComponent implements OnInit {
     }
   }
 
+  getDayName(dateString: string): string {
+    const [year, month, day] = dateString.split('-').map(Number);
+    const date = new Date(year, month - 1, day);
+
+    const days = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
+    return days[date.getDay()];
+  }
+
   get filteredSlots(): Slot[] {
     if (this.activeFilter === 'all') return this.slots;
     return this.slots.filter((s) => s.status === this.activeFilter);
   }
-
   setFilter(filter: 'all' | SlotStatus): void {
     this.activeFilter = filter;
   }
@@ -166,6 +197,9 @@ export class PacienteMedicoAvailabilityComponent implements OnInit {
     this.showPaymentModal = true;
   }
 
+  showConfirmationModal = false;
+  selectedSlotForConfirmation: Slot | null = null;
+
   async agendarDirecto(slot: Slot): Promise<void> {
     if (slot.status !== 'available') return;
 
@@ -174,11 +208,20 @@ export class PacienteMedicoAvailabilityComponent implements OnInit {
       return;
     }
 
-    const confirmar = confirm(`¿Confirmar cita para ${this.selectedDate} a las ${slot.horaInicio}?`);
+    this.selectedSlotForConfirmation = slot;
+    this.showConfirmationModal = true;
+  }
 
-    if (!confirmar) return;
+  cancelConfirmation(): void {
+    this.showConfirmationModal = false;
+    this.selectedSlotForConfirmation = null;
+  }
+
+  async confirmReservation(): Promise<void> {
+    if (!this.selectedSlotForConfirmation) return;
 
     this.loading = true;
+    const slot = this.selectedSlotForConfirmation;
 
     const payload = {
       medicoDni: this.medicoDni,
@@ -197,6 +240,9 @@ export class PacienteMedicoAvailabilityComponent implements OnInit {
 
       slot.status = 'booked';
       this.ultimaReserva = reserva;
+
+      this.showConfirmationModal = false;
+      this.selectedSlotForConfirmation = null;
       this.showSuccessModal = true;
 
     } catch (err: any) {
@@ -204,6 +250,9 @@ export class PacienteMedicoAvailabilityComponent implements OnInit {
         err?.response?.data?.error ||
         err?.message ||
         'No se pudo agendar la cita.';
+
+      this.showConfirmationModal = false;
+      this.selectedSlotForConfirmation = null;
     } finally {
       this.loading = false;
     }

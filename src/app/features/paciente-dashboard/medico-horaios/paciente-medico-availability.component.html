@@ -165,7 +165,29 @@
   </div>
 </div>
 
+<!-- Confirmation Modal -->
+<div class="modal-backdrop" *ngIf="showConfirmationModal">
+  <div class="modal-card">
+    <h2 class="modal-title">Confirmar Cita</h2>
 
+    <p class="modal-text">
+      ¿Deseas confirmar tu cita para el <strong>{{ selectedDate }}</strong> a las <strong>{{
+        selectedSlotForConfirmation?.horaInicio }}</strong> con el Dr/a. <strong>{{ doctor.name }}</strong>?
+    </p>
+
+    <div class="modal-actions">
+      <button class="modal-button secondary" (click)="cancelConfirmation()">
+        Cancelar
+      </button>
+
+      <button class="modal-button primary" (click)="confirmReservation()">
+        Confirmar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Success Modal -->
 <div class="modal-backdrop" *ngIf="showSuccessModal">
   <div class="modal-card">
     <h2 class="modal-title">Cita reservada correctamente</h2>

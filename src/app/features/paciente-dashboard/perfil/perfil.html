@@ -8,7 +8,20 @@
         <h2 class="section-title">Información personal</h2>
         <p class="section-subtitle">Actualiza tu información de contacto y dirección.</p>
 
-        <div class="form-grid">
+        <div *ngIf="loading" class="loading-indicator">Cargando datos...</div>
+        <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+
+        <div class="form-grid" *ngIf="!loading">
+          <div class="form-group">
+            <label>Nombre</label>
+            <input type="text" [(ngModel)]="formData.nombre" class="form-control" placeholder="Tu nombre" />
+          </div>
+
+          <div class="form-group">
+            <label>Apellido</label>
+            <input type="text" [(ngModel)]="formData.apellido" class="form-control" placeholder="Tu apellido" />
+          </div>
+
           <div class="form-group">
             <label>Correo electrónico</label>
             <input type="email" [(ngModel)]="formData.email" class="form-control" placeholder="correo@ejemplo.com" />
@@ -16,20 +29,20 @@
 
           <div class="form-group">
             <label>Número de teléfono</label>
-            <input type="tel" [(ngModel)]="formData.phone" class="form-control" placeholder="+51 999 999 999" />
+            <input type="tel" [(ngModel)]="formData.telefono" class="form-control" placeholder="+51 999 999 999" />
           </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" *ngIf="!loading">
           <label>Dirección</label>
-          <textarea [(ngModel)]="formData.address" class="form-control" rows="3"
+          <textarea [(ngModel)]="formData.direccion" class="form-control" rows="3"
             placeholder="Tu dirección completa"></textarea>
         </div>
       </div>
 
       <div class="actions">
-        <button class="btn-save" (click)="onSubmit()">
-          Guardar cambios
+        <button class="btn-save" (click)="onSubmit()" [disabled]="loading">
+          {{ loading ? 'Guardando...' : 'Guardar cambios' }}
         </button>
 
         <button class="btn-logout" (click)="logout()"
