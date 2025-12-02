@@ -7,6 +7,7 @@ export interface HorarioBackend {
   horaInicio: string;
   horaFin: string;
   medicoDni: string | number;
+  estado: string;
 }
 
 @Injectable({ providedIn: 'root' })
