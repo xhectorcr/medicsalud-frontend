@@ -1,0 +1,77 @@
+<div class="layout-grid">
+    <div class="sidebar-col">
+        <app-sidebarmedicos></app-sidebarmedicos>
+    </div>
+
+    <div class="content-col">
+        <div class="main-content">
+            <div class="container">
+                <div class="header">
+                    <h1 class="title">Gestión de Horarios</h1>
+                    <p class="subtitle">Configura tus días y horas de disponibilidad para citas.</p>
+                </div>
+
+                <!-- Formulario Agregar / Editar -->
+                <div class="card add-schedule-card">
+                    <h2>{{ editingId ? 'Editar Horario' : 'Agregar Nuevo Horario' }}</h2>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Fecha</label>
+                            <input type="date" [(ngModel)]="nuevoHorario.fecha" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Hora Inicio</label>
+                            <select [(ngModel)]="nuevoHorario.horaInicio" class="form-control">
+                                <option *ngFor="let hora of horasDisponibles" [value]="hora">{{ hora }}</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Hora Fin</label>
+                            <select [(ngModel)]="nuevoHorario.horaFin" class="form-control">
+                                <option *ngFor="let hora of horasDisponibles" [value]="hora">{{ hora }}</option>
+                            </select>
+                        </div>
+                        <div class="form-group action-group" style="display: flex; gap: 10px;">
+                            <button class="btn-primary" (click)="guardarHorario()">
+                                {{ editingId ? 'Actualizar' : 'Agregar' }}
+                            </button>
+                            <button *ngIf="editingId" class="btn-secondary" (click)="cancelarEdicion()"
+                                style="background-color: #6b7280; color: white; padding: 0.625rem 1.25rem; border-radius: 0.375rem; border: none; cursor: pointer;">
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lista de Horarios -->
+                <div class="schedule-list">
+                    <h2>Mis Horarios</h2>
+
+                    <div *ngIf="loading" class="loading">Cargando horarios...</div>
+
+                    <div *ngIf="!loading && horarios.length === 0" class="empty-state">
+                        <p>No tienes horarios configurados.</p>
+                    </div>
+
+                    <div class="schedule-grid" *ngIf="!loading && horarios.length > 0">
+                        <div class="schedule-card" *ngFor="let horario of horarios">
+                            <div class="schedule-info">
+                                <span class="day-badge">{{ horario.fecha }}</span>
+                                <span class="time-range">{{ horario.horaInicio }} - {{ horario.horaFin }}</span>
+                            </div>
+                            <div class="card-actions" style="display: flex; gap: 5px;">
+                                <button class="btn-edit" (click)="iniciarEdicion(horario)" title="Editar"
+                                    style="color: #2563eb; background: none; border: 1px solid #bfdbfe; padding: 0.5rem 0.75rem; border-radius: 0.375rem; cursor: pointer;">
+                                    <i class="fas fa-edit"></i> Editar
+                                </button>
+                                <button class="btn-delete" (click)="eliminarHorario(horario.id)" title="Eliminar">
+                                    <i class="fas fa-trash"></i> Eliminar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

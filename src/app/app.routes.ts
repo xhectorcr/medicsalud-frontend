@@ -23,6 +23,7 @@ import { MedicShop } from './pages/medicshop/medicshop';
 import { Adminmedicamentos } from './features/admin-dashboard/medicamentos/medicamentos';
 import { Admininventario } from './features/admin-dashboard/inventario/inventario';
 import { PacienteMedicoAvailabilityComponent } from './features/paciente-dashboard/medico-horaios/paciente-medico-availability.component';
+import { Medicohorarios } from './features/medico-dashboard/horarios/horarios';
 export const routes: Routes = [
 
 	// Public
@@ -48,6 +49,7 @@ export const routes: Routes = [
 	{ path: 'medicos/citas', component: Medicoscitas },
 	{ path: 'medicos/historialpaciente', component: Medicohistorial },
 	{ path: 'medicos/perfil', component: Medicoperfil },
+	{ path: 'medicos/horarios', component: Medicohorarios },
 
 
 	//Paciente
@@ -55,10 +57,10 @@ export const routes: Routes = [
 	{ path: 'paciente/citas', component: Pacientecitas },
 	{ path: 'paciente/recetas', component: Pacienterecetas },
 	{ path: 'paciente/perfil', component: Pacienteperfil },
- 	{path: 'paciente/horarios-medico', component:PacienteMedicoAvailabilityComponent},
+	{ path: 'paciente/horarios-medico', component: PacienteMedicoAvailabilityComponent },
 
 
-	
+
 	{ path: 'sidebar', component: Sidebarpaciente },
 	{ path: 'sidebarmedicos', component: Sidebarmedicos },
 	{ path: 'sidebaradmin', component: Sidebaradmin }

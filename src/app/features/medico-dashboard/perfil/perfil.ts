@@ -1,82 +1,91 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { Sidebarmedicos } from '../../../layout/sidebar/medicos/medicos';
+import { api } from '../../../core/http/axios-instance';
 
-interface Schedule {
-  day: string;
-  startTime: string;
-  endTime: string;
+interface MedicoProfile {
+  id: number;
+  nombre: string;
+  especialidad: string;
+  correo: string;
+  dni: number;
+  sede: any;
+  telefono: string;
 }
 
 @Component({
   selector: 'app-account-settings',
+  standalone: true,
   imports: [CommonModule, FormsModule, Sidebarmedicos, RouterModule],
   templateUrl: './perfil.html',
   styleUrls: ['./perfil.scss']
 })
-export class Medicoperfil {
+export class Medicoperfil implements OnInit {
   // Información personal
-  email: string = 'carlos.perez@redcard.com';
-  phone: string = '+51 987 654 321';
-  specialty: string = 'Cardiología';
+  email: string = '';
+  phone: string = '';
+  specialty: string = ''; // Read-only or fetched
+  loading = false;
 
-  // Horarios de consulta
-  schedules: Schedule[] = [
-    { day: 'Lunes', startTime: '08:00 AM', endTime: '01:00 PM' },
-    { day: 'Miércoles', startTime: '03:00 PM', endTime: '06:00 PM' }
-  ];
+  constructor(private router: Router, private cdr: ChangeDetectorRef) { }
 
-  days: string[] = [
-    'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'
-  ];
-
-  times: string[] = [];
-
-  constructor(private router: Router) {
-    this.times = this.generateTimeSlots();
+  ngOnInit(): void {
+    this.loadProfile();
   }
 
-  addSchedule(): void {
-    this.schedules.push({
-      day: 'Lunes',
-      startTime: '09:00 AM',
-      endTime: '05:00 PM'
-    });
+  async loadProfile() {
+    this.loading = true;
+    try {
+      // Endpoint actualizado según imagen
+      const response = await api.get<MedicoProfile>('/api/medicos/me');
+      const data = response.data;
+
+      this.email = data.correo;
+      this.phone = data.telefono;
+      this.specialty = data.especialidad;
+
+      // Actualizar localStorage para persistencia
+      localStorage.setItem('medicoEmail', this.email);
+      localStorage.setItem('medicoPhone', this.phone);
+      localStorage.setItem('medicoEspecialidad', this.specialty);
+
+      this.cdr.detectChanges();
+    } catch (error) {
+      console.error('Error cargando perfil', error);
+      // Fallback a localStorage si falla la API
+      this.email = localStorage.getItem('medicoEmail') || '';
+      this.phone = localStorage.getItem('medicoPhone') || '';
+      this.specialty = localStorage.getItem('medicoEspecialidad') || '';
+    } finally {
+      this.loading = false;
+      this.cdr.detectChanges();
+    }
   }
 
-  removeSchedule(index: number): void {
-    this.schedules.splice(index, 1);
-  }
-
-  saveChanges(): void {
+  async saveChanges(): Promise<void> {
     const data = {
       email: this.email,
-      phone: this.phone,
-      specialty: this.specialty,
-      schedules: this.schedules
+      telefono: this.phone
     };
-    console.log('Guardando cambios:', data);
-    alert('Cambios guardados correctamente');
+
+    try {
+      await api.put('/api/medicos/perfil', data);
+      alert('Perfil actualizado correctamente');
+
+      // Actualizar localStorage si es necesario
+      localStorage.setItem('medicoEmail', this.email);
+      localStorage.setItem('medicoPhone', this.phone);
+
+    } catch (error) {
+      console.error('Error actualizando perfil', error);
+      alert('No se pudo actualizar el perfil');
+    }
   }
 
   logout() {
     localStorage.clear();
     this.router.navigate(['/auth/login']);
-  }
-
-  private generateTimeSlots(): string[] {
-    const slots: string[] = [];
-    const periods = ['AM', 'PM'];
-
-    periods.forEach(period => {
-      for (let hour = 1; hour <= 12; hour++) {
-        slots.push(`${hour.toString().padStart(2, '0')}:00 ${period}`);
-        slots.push(`${hour.toString().padStart(2, '0')}:30 ${period}`);
-      }
-    });
-
-    return slots;
   }
 }

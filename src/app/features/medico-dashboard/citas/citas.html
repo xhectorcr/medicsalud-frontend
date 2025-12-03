@@ -52,28 +52,42 @@
               <div *ngFor="let appointment of filteredAppointments" class="appointment-card">
                 <div class="patient-name-col">
                   <h3 class="patient-name">{{ appointment.patientName }}</h3>
+                  <span class="dni-label" *ngIf="appointment.patientDni">DNI: {{ appointment.patientDni }}</span>
                 </div>
 
                 <div class="appointment-time-col">
                   <p class="date"><i class="far fa-clock"></i> {{ appointment.date }}</p>
                 </div>
 
-                <!-- Actions (Only for Pending) -->
-                <div class="appointment-actions" *ngIf="appointment.status === 'pendiente'">
+                <!-- Actions for PENDIENTE -->
+                <div class="appointment-actions" *ngIf="appointment.status === 'PENDIENTE'">
                   <button (click)="acceptAppointment(appointment.id)" class="btn-action accept" title="Aceptar">
-                    Aceptar
-                  </button>
-                  <button (click)="rescheduleAppointment(appointment.id)" class="btn-action reschedule"
-                    title="Reprogramar">
-                    Reprogramar
+                    Confirmar
                   </button>
                   <button (click)="rejectAppointment(appointment.id)" class="btn-action reject" title="Rechazar">
                     Rechazar
                   </button>
                 </div>
 
-                <!-- Status Badge for non-pending (optional, but good for feedback) -->
-                <div class="appointment-status" *ngIf="appointment.status !== 'pendiente'">
+                <!-- Actions for CONFIRMADA -->
+                <div class="appointment-actions" *ngIf="appointment.status === 'CONFIRMADA'">
+                  <button (click)="openRescheduleModal(appointment)" class="btn-action reschedule" title="Reprogramar">
+                    Reprogramar
+                  </button>
+                  <button (click)="markAsPending(appointment.id)" class="btn-action pending" title="Poner en Pendiente">
+                    Poner en Pendiente
+                  </button>
+                </div>
+
+                <!-- Actions for REPROGRAMADA (Optional, maybe same as confirmed?) -->
+                <div class="appointment-actions" *ngIf="appointment.status === 'REPROGRAMADA'">
+                  <button (click)="openRescheduleModal(appointment)" class="btn-action reschedule" title="Reprogramar">
+                    Reprogramar de nuevo
+                  </button>
+                </div>
+
+                <!-- Status Badge -->
+                <div class="appointment-status">
                   <span class="status-badge" [attr.data-status]="appointment.status">
                     {{ getStatusLabel(appointment.status) }}
                   </span>
@@ -87,3 +101,189 @@
     </div>
   </main>
 </div>
+
+<!-- Reschedule Modal -->
+<div class="modal-backdrop" *ngIf="showRescheduleModal">
+  <div class="modal-card">
+    <h2 class="modal-title">Reprogramar Cita</h2>
+    <p class="modal-subtitle" *ngIf="selectedAppointment">
+      Paciente: {{ selectedAppointment.patientName }}
+    </p>
+
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Selecciona nueva fecha:</label>
+        <input type="date" class="form-input" [(ngModel)]="selectedDateForReschedule" (change)="onDateChange()">
+      </div>
+
+      <div class="slots-container">
+        <p *ngIf="loadingSlots">Cargando horarios...</p>
+        <p *ngIf="!loadingSlots && availableSlots.length === 0">No hay horarios disponibles para esta fecha.</p>
+
+        <div class="slots-grid" *ngIf="!loadingSlots && availableSlots.length > 0">
+          <button *ngFor="let slot of availableSlots" class="slot-btn" (click)="confirmReschedule(slot)"
+            [disabled]="rescheduleLoading">
+            <div class="layout-grid">
+              <aside class="sidebar-col">
+                <app-sidebarmedicos></app-sidebarmedicos>
+              </aside>
+
+              <main class="content-col">
+                <div class="main-content">
+                  <div class="container">
+                    <div class="card">
+                      <!-- Header -->
+                      <div class="header">
+                        <h1 class="title">Mis Citas</h1>
+                        <p class="subtitle">Consulta y gestiona tus citas médicas.</p>
+                      </div>
+
+                      <!-- Upcoming Appointments (Confirmed Only) -->
+                      <div class="upcoming-section" *ngIf="upcomingAppointments.length > 0">
+                        <h2 class="section-title">Citas que se acercan</h2>
+                        <div class="upcoming-grid">
+                          <div *ngFor="let apt of upcomingAppointments" class="upcoming-card">
+                            <div class="upcoming-info">
+                              <img [src]="apt.image" [alt]="apt.patientName" class="avatar-sm" />
+                              <div>
+                                <h4 class="patient-name">{{ apt.patientName }}</h4>
+                                <p class="apt-time">{{ apt.date }}</p>
+                              </div>
+                            </div>
+                            <span class="status-badge sm" [attr.data-status]="apt.status">
+                              {{ getStatusLabel(apt.status) }}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Tabs -->
+                      <div class="tabs-container">
+                        <nav class="tabs">
+                          <button *ngFor="let tab of tabs" (click)="setActiveTab(tab.id)" class="tab"
+                            [class.tab--active]="activeTab === tab.id">
+                            {{ tab.label }}
+                          </button>
+                        </nav>
+                      </div>
+
+                      <!-- Appointments List -->
+                      <div class="content">
+                        <div *ngIf="filteredAppointments.length === 0" class="empty-state">
+                          <p>No hay citas en esta categoría</p>
+                        </div>
+
+                        <div *ngIf="filteredAppointments.length > 0" class="appointments-list">
+                          <div *ngFor="let appointment of filteredAppointments" class="appointment-card">
+                            <div class="patient-name-col">
+                              <h3 class="patient-name">{{ appointment.patientName }}</h3>
+                              <span class="dni-label" *ngIf="appointment.patientDni">DNI: {{ appointment.patientDni
+                                }}</span>
+                            </div>
+
+                            <div class="appointment-time-col">
+                              <p class="date"><i class="far fa-clock"></i> {{ appointment.date }}</p>
+                            </div>
+
+                            <!-- Actions for PENDIENTE -->
+                            <div class="appointment-actions" *ngIf="appointment.status === 'PENDIENTE'">
+                              <button (click)="acceptAppointment(appointment.id)" class="btn-action accept"
+                                title="Aceptar">
+                                Confirmar
+                              </button>
+                              <button (click)="rejectAppointment(appointment.id)" class="btn-action reject"
+                                title="Rechazar">
+                                Rechazar
+                              </button>
+                            </div>
+
+                            <!-- Actions for CONFIRMADA -->
+                            <div class="appointment-actions" *ngIf="appointment.status === 'CONFIRMADA'">
+                              <button (click)="openRescheduleModal(appointment)" class="btn-action reschedule"
+                                title="Reprogramar">
+                                Reprogramar
+                              </button>
+                              <button (click)="markAsPending(appointment.id)" class="btn-action pending"
+                                title="Poner en Pendiente">
+                                Poner en Pendiente
+                              </button>
+                            </div>
+
+                            <!-- Actions for REPROGRAMADA (Optional, maybe same as confirmed?) -->
+                            <div class="appointment-actions" *ngIf="appointment.status === 'REPROGRAMADA'">
+                              <button (click)="openRescheduleModal(appointment)" class="btn-action reschedule"
+                                title="Reprogramar">
+                                Reprogramar de nuevo
+                              </button>
+                            </div>
+
+                            <!-- Status Badge -->
+                            <div class="appointment-status">
+                              <span class="status-badge" [attr.data-status]="appointment.status">
+                                {{ getStatusLabel(appointment.status) }}
+                              </span>
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </main>
+            </div>
+
+            <!-- Reschedule Modal -->
+            <div class="modal-backdrop" *ngIf="showRescheduleModal">
+              <div class="modal-card">
+                <h2 class="modal-title">Reprogramar Cita</h2>
+                <p class="modal-subtitle" *ngIf="selectedAppointment">
+                  Paciente: {{ selectedAppointment.patientName }}
+                </p>
+
+                <div class="modal-body">
+                  <div class="form-group">
+                    <label>Selecciona nueva fecha:</label>
+                    <input type="date" class="form-input" [(ngModel)]="selectedDateForReschedule"
+                      (change)="onDateChange()">
+                  </div>
+
+                  <div class="slots-container">
+                    <p *ngIf="loadingSlots">Cargando horarios...</p>
+                    <p *ngIf="!loadingSlots && availableSlots.length === 0">No hay horarios disponibles para esta fecha.
+                    </p>
+
+                    <div class="slots-grid" *ngIf="!loadingSlots && availableSlots.length > 0">
+                      <button *ngFor="let slot of availableSlots" class="slot-btn" (click)="confirmReschedule(slot)"
+                        [disabled]="rescheduleLoading">
+                        {{ slot.horaInicio }} - {{ slot.horaFin }}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="modal-actions">
+                  <button class="modal-button secondary" (click)="closeRescheduleModal()"
+                    [disabled]="rescheduleLoading">
+                    Cancelar
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Generic Modal (Info/Confirm) -->
+            <div class="modal-backdrop" *ngIf="showGenericModal">
+              <div class="modal-card">
+                <h2 class="modal-title">{{ modalTitle }}</h2>
+                <p class="modal-body">{{ modalMessage }}</p>
+
+                <div class="modal-actions">
+                  <button *ngIf="modalType === 'confirm'" class="modal-button secondary" (click)="closeGenericModal()">
+                    Cancelar
+                  </button>
+                  <button class="modal-button primary" (click)="confirmGenericAction()">
+                    Aceptar
+                  </button>
+                </div>
+              </div>
+            </div>

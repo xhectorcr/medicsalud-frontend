@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Sidebarmedicos } from '../../../layout/sidebar/medicos/medicos';
 import { api } from '../../../core/http/axios-instance';
@@ -21,7 +21,7 @@ interface PreviousConsult {
 }
 
 interface Patient {
-  id: number;          
+  id: number;
   dni: number;
   nombre: string;
   fechaNacimiento: string;
@@ -91,6 +91,8 @@ export class Medicohistorial implements OnInit {
     observaciones: '',
   };
 
+  constructor(private cdr: ChangeDetectorRef) { }
+
   async ngOnInit(): Promise<void> {
     await this.loadPatientsFromReservas();
   }
@@ -109,8 +111,10 @@ export class Medicohistorial implements OnInit {
   }
 
   private async loadPatientsFromReservas(): Promise<void> {
+    console.log('Cargando pacientes desde reservas...');
     try {
       const resp = await api.get<ReservaFromApi[]>('/api/reservas/lista');
+      console.log('Reservas cargadas:', resp.data);
 
       const map = new Map<number, Patient>();
 
@@ -120,7 +124,6 @@ export class Medicohistorial implements OnInit {
             id: r.pacienteDni,
             dni: r.pacienteDni,
             nombre: r.nombrePaciente,
-            // estos datos los puedes llenar luego con otro endpoint de paciente
             fechaNacimiento: 'No registrado',
             genero: 'No registrado',
             grupoSanguineo: 'No registrado',
@@ -130,17 +133,21 @@ export class Medicohistorial implements OnInit {
       });
 
       this.patients = Array.from(map.values());
+      console.log('Pacientes únicos encontrados:', this.patients.length);
 
       if (this.patients.length > 0) {
         this.selectPatient(this.patients[0]);
       }
+      this.cdr.detectChanges(); // Force update
     } catch (err) {
       console.error('Error cargando pacientes desde reservas', err);
       this.patients = [];
+      this.cdr.detectChanges(); // Force update
     }
   }
 
   async selectPatient(patient: Patient): Promise<void> {
+    console.log('Paciente seleccionado:', patient);
     this.selectedPatient = patient;
     this.showNewHistoryForm = false;
     await this.loadHistoryByDni(patient.dni);
@@ -149,17 +156,21 @@ export class Medicohistorial implements OnInit {
   // ================== HISTORIAL ==================
 
   private async loadHistoryByDni(dni: number): Promise<void> {
+    console.log('Cargando historial para DNI:', dni);
     this.loading = true;
+    this.cdr.detectChanges(); // Force update for loading state
     try {
       const resp = await api.get<ClinicalHistoryFromApi[]>(
         `/api/historiales/paciente/${dni}`
       );
+      console.log('Historial cargado:', resp.data);
       this.histories = resp.data ?? [];
     } catch (err) {
       console.error('Error cargando historial clínico', err);
       this.histories = [];
     } finally {
       this.loading = false;
+      this.cdr.detectChanges(); // Force update
     }
   }
 
@@ -218,6 +229,8 @@ export class Medicohistorial implements OnInit {
       observaciones: this.newHistory.observaciones.trim(),
     };
 
+    console.log('Creando nuevo historial con payload:', body);
+
     if (!body.diagnostico || !body.tratamiento) {
       alert('Diagnóstico y tratamiento son obligatorios.');
       return;
@@ -225,13 +238,15 @@ export class Medicohistorial implements OnInit {
 
     this.loading = true;
     try {
-      const resp = await api.post<ClinicalHistoryFromApi>(
+      await api.post<ClinicalHistoryFromApi>(
         '/api/historiales',
         body
       );
 
-      // insertamos el nuevo historial en la lista
-      this.histories = [resp.data, ...this.histories];
+      console.log('Historial creado exitosamente. Recargando lista...');
+
+      // Recarga forzada del historial
+      await this.loadHistoryByDni(this.selectedPatient.dni);
 
       // limpiamos formulario
       this.newHistory = {
@@ -240,11 +255,13 @@ export class Medicohistorial implements OnInit {
         observaciones: '',
       };
       this.showNewHistoryForm = false;
+      alert('Historial médico creado correctamente');
     } catch (err) {
       console.error('Error creando historial clínico', err);
       alert('No se pudo crear el historial clínico.');
     } finally {
       this.loading = false;
+      this.cdr.detectChanges();
     }
   }
 }

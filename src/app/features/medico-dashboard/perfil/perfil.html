@@ -23,52 +23,8 @@
 
         <div class="form-group">
           <label>Especialidad</label>
-          <input type="text" [(ngModel)]="specialty" class="form-control" placeholder="Tu especialidad médica" />
-        </div>
-      </div>
-
-      <!-- Horario de Consulta -->
-      <div class="section">
-        <div class="section-header">
-          <div>
-            <h2 class="section-title">Horario de consulta</h2>
-            <p class="section-subtitle">Define tus días y horas de disponibilidad</p>
-          </div>
-          <button class="btn-add" (click)="addSchedule()">
-            + Añadir horario
-          </button>
-        </div>
-
-        <div class="schedule-list">
-          <div class="schedule-row" *ngFor="let schedule of schedules; let i = index">
-            <div class="schedule-fields">
-              <div class="form-group">
-                <label>Día</label>
-                <select [(ngModel)]="schedule.day" class="form-control">
-                  <option *ngFor="let day of days" [value]="day">{{ day }}</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label>Hora de inicio</label>
-                <select [(ngModel)]="schedule.startTime" class="form-control">
-                  <option *ngFor="let time of times" [value]="time">{{ time }}</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label>Hora de fin</label>
-                <select [(ngModel)]="schedule.endTime" class="form-control">
-                  <option *ngFor="let time of times" [value]="time">{{ time }}</option>
-                </select>
-              </div>
-            </div>
-
-            <button class="btn-remove" (click)="removeSchedule(i)" *ngIf="schedules.length > 1"
-              title="Eliminar horario">
-              ×
-            </button>
-          </div>
+          <input type="text" [(ngModel)]="specialty" class="form-control" placeholder="Tu especialidad médica"
+            readonly />
         </div>
       </div>
 
