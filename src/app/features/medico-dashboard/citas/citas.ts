@@ -207,10 +207,8 @@ export class Medicoscitas implements OnInit {
       const correoMedico = localStorage.getItem('correoMedico') || 'medico@example.com';
       const data = await this.horariosService.getHorariosPorCorreo(correoMedico);
 
-      const selectedDayName = this.getDayName(this.selectedDateForReschedule).toUpperCase();
-
       this.availableSlots = data.filter(h =>
-        h.dia.toUpperCase() === selectedDayName &&
+        h.fecha === this.selectedDateForReschedule &&
         h.estado === 'DISPONIBLE'
       );
 
@@ -280,10 +278,5 @@ export class Medicoscitas implements OnInit {
     }
   }
 
-  private getDayName(dateString: string): string {
-    const [year, month, day] = dateString.split('-').map(Number);
-    const date = new Date(year, month - 1, day);
-    const days = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
-    return days[date.getDay()];
-  }
+
 }

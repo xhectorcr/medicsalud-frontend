@@ -3,7 +3,7 @@ import { api } from '../../../core/http/axios-instance';
 
 export interface HorarioBackend {
   id: number;
-  dia: string;
+  fecha: string; // YYYY-MM-DD
   horaInicio: string;
   horaFin: string;
   medicoDni: string | number;

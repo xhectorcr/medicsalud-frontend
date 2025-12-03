@@ -112,17 +112,15 @@ export class PacienteMedicoAvailabilityComponent implements OnInit {
           : data[0].medicoDni;
       }
 
-      // Obtener el día de la semana de la fecha seleccionada en inglés mayúsculas
-      const selectedDayName = this.getDayName(this.selectedDate).toUpperCase();
-      console.log('Día seleccionado:', selectedDayName);
+      console.log('Filtrando por fecha:', this.selectedDate);
 
-      // Filtrar por día (case insensitive)
-      const horariosDelDia = data.filter(h => h.dia.toUpperCase() === selectedDayName);
+      // Filtrar por fecha exacta (YYYY-MM-DD)
+      const horariosDelDia = data.filter(h => h.fecha === this.selectedDate);
 
       if (horariosDelDia.length === 0 && data.length > 0) {
-        // Encontrar qué días sí tienen horarios
-        const availableDays = [...new Set(data.map(h => h.dia))].join(', ');
-        this.errorMessage = `El médico no tiene horarios para este día. Días disponibles: ${availableDays}`;
+        // Encontrar qué fechas sí tienen horarios
+        const availableDates = [...new Set(data.map(h => h.fecha))].sort().join(', ');
+        this.errorMessage = `El médico no tiene horarios para esta fecha. Fechas disponibles: ${availableDates}`;
       }
 
       this.slots = horariosDelDia.map((h) => {
@@ -137,7 +135,7 @@ export class PacienteMedicoAvailabilityComponent implements OnInit {
 
         return {
           id: h.id,
-          time: `${h.horaInicio} - ${h.horaFin}`,
+          time: `${h.horaInicio.substring(0, 5)} - ${h.horaFin.substring(0, 5)}`,
           horaInicio: h.horaInicio,
           horaFin: h.horaFin,
           status: status
@@ -152,14 +150,6 @@ export class PacienteMedicoAvailabilityComponent implements OnInit {
       this.loading = false;
       this.cd.detectChanges();
     }
-  }
-
-  getDayName(dateString: string): string {
-    const [year, month, day] = dateString.split('-').map(Number);
-    const date = new Date(year, month - 1, day);
-
-    const days = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
-    return days[date.getDay()];
   }
 
   get filteredSlots(): Slot[] {
