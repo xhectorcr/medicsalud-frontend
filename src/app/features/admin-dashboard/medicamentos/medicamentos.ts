@@ -1,15 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Sidebaradmin } from '../../../layout/sidebar/admin/admin';
-
-interface Medicamento {
-  id: number;
-  nombre: string;
-  descripcion: string;
-  precio: number;
-  codigoBarras: string;
-}
+import { MedicamentoService, Medicamento, CrearMedicamentoDTO } from './services/medicamento.service';
 
 @Component({
   selector: 'app-inventario',
@@ -18,35 +11,40 @@ interface Medicamento {
   templateUrl: './medicamentos.html',
   styleUrls: ['./medicamentos.scss']
 })
-export class Adminmedicamentos {
-  medicamentos: Medicamento[] = [
-    {
-      id: 1,
-      nombre: 'Paracetamol 500mg',
-      descripcion: 'Analgésico y antipirético',
-      precio: 12.50,
-      codigoBarras: '7501234567890'
-    },
-    {
-      id: 2,
-      nombre: 'Ibuprofeno 400mg',
-      descripcion: 'Antiinflamatorio no esteroideo',
-      precio: 18.00,
-      codigoBarras: '7501234567891'
-    }
-  ];
-
+export class Adminmedicamentos implements OnInit {
+  medicamentos: Medicamento[] = [];
   mostrarModal = false;
   modoEdicion = false;
   medicamentoActual: Medicamento = this.inicializarMedicamento();
+  loading = false;
+
+  constructor(private medicamentoService: MedicamentoService) { }
+
+  ngOnInit(): void {
+    this.cargarMedicamentos();
+  }
+
+  async cargarMedicamentos() {
+    this.loading = true;
+    try {
+      this.medicamentos = await this.medicamentoService.getMedicamentosActivos();
+    } catch (error) {
+      console.error('Error cargando medicamentos:', error);
+      alert('Error al cargar la lista de medicamentos');
+    } finally {
+      this.loading = false;
+    }
+  }
 
   inicializarMedicamento(): Medicamento {
     return {
       id: 0,
       nombre: '',
       descripcion: '',
-      precio: 0,
-      codigoBarras: ''
+      precioVenta: 0,
+      codigoBarras: '',
+      requiereReceta: false,
+      estado: true
     };
   }
 
@@ -67,30 +65,46 @@ export class Adminmedicamentos {
     this.medicamentoActual = this.inicializarMedicamento();
   }
 
-  guardarMedicamento(): void {
-    if (!this.medicamentoActual.nombre || !this.medicamentoActual.precio) {
-      alert('Por favor complete los campos obligatorios');
+  async guardarMedicamento() {
+    if (!this.medicamentoActual.nombre || this.medicamentoActual.precioVenta < 0) {
+      alert('Por favor complete los campos obligatorios correctamente');
       return;
     }
 
-    if (this.modoEdicion) {
-      const index = this.medicamentos.findIndex(m => m.id === this.medicamentoActual.id);
-      if (index !== -1) {
-        this.medicamentos[index] = { ...this.medicamentoActual };
-      }
-    } else {
-      const nuevoId = this.medicamentos.length > 0
-        ? Math.max(...this.medicamentos.map(m => m.id)) + 1
-        : 1;
-      this.medicamentos.push({ ...this.medicamentoActual, id: nuevoId });
-    }
+    const dto: CrearMedicamentoDTO = {
+      nombre: this.medicamentoActual.nombre,
+      descripcion: this.medicamentoActual.descripcion,
+      precioVenta: this.medicamentoActual.precioVenta,
+      codigoBarras: this.medicamentoActual.codigoBarras,
+      requiereReceta: this.medicamentoActual.requiereReceta
+    };
 
-    this.cerrarModal();
+    try {
+      if (this.modoEdicion) {
+        await this.medicamentoService.actualizarMedicamento(this.medicamentoActual.id, dto);
+        alert('Medicamento actualizado correctamente');
+      } else {
+        await this.medicamentoService.crearMedicamento(dto);
+        alert('Medicamento creado correctamente');
+      }
+      this.cerrarModal();
+      this.cargarMedicamentos();
+    } catch (error) {
+      console.error('Error guardando medicamento:', error);
+      alert('Error al guardar el medicamento');
+    }
   }
 
-  eliminarMedicamento(id: number): void {
+  async eliminarMedicamento(id: number) {
     if (confirm('¿Está seguro de eliminar este medicamento?')) {
-      this.medicamentos = this.medicamentos.filter(m => m.id !== id);
+      try {
+        await this.medicamentoService.eliminarMedicamento(id);
+        alert('Medicamento eliminado correctamente');
+        this.cargarMedicamentos();
+      } catch (error) {
+        console.error('Error eliminando medicamento:', error);
+        alert('Error al eliminar el medicamento');
+      }
     }
   }
 }

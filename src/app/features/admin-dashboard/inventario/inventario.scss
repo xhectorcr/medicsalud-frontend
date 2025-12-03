@@ -490,10 +490,6 @@ table {
     .header-title {
         flex-direction: column;
         text-align: center;
-
-        h1 {
-            font-size: 1.5rem;
-        }
     }
 
     .filtros-content {
@@ -529,4 +525,24 @@ table {
             width: 100%;
         }
     }
+}
+
+.input-disabled {
+    background-color: #f3f4f6;
+    cursor: not-allowed;
+    color: #6b7280;
+}
+
+.text-muted {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-top: 0.25rem;
+    display: block;
+}
+
+.loading-state {
+    padding: 2rem;
+    text-align: center;
+    color: var(--color-muted);
+    font-size: 1.125rem;
 }

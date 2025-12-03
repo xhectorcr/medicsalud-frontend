@@ -37,7 +37,7 @@ export interface UpcomingAppointment {
   especialidad: string;
   fecha: string;
   hora: string;
-  estado: 'confirmada' | 'pendiente' | 'en-proceso';
+  estado: 'confirmada' | 'pendiente' | 'en-proceso' | 'reprogramada' | 'rechazada';
 }
 
 export interface AdminDashboardResponse {
@@ -68,7 +68,7 @@ interface Reserva {
   fechaCreacion: string; // "2025-11-09T22:07:04.410717"
   fechaCita: string;     // "2025-11-15"
   horaCita: string;      // "10:30:00"
-  estadoCita: boolean;   // true/false
+  estadoCita: string;   // "PENDIENTE", "CONFIRMADA", etc.
 }
 
 @Injectable({
@@ -76,7 +76,7 @@ interface Reserva {
 })
 export class AdminDashboardService {
   private readonly MEDICOS_ACTIVOS_URL = '/api/medicos/activos';
-  private readonly PACIENTES_ACTIVOS_URL = '/api/pacientes/lista';
+  private readonly PACIENTES_ACTIVOS_URL = '/api/pacientes/todos';
   private readonly RESERVAS_URL = '/api/reservas/lista';
 
   private dashboardCache: AdminDashboardResponse | null = null;
@@ -86,22 +86,51 @@ export class AdminDashboardService {
       return this.dashboardCache;
     }
 
-    const [medicosRes, pacientesRes, reservasRes] = await Promise.all([
-      api.get<MedicoActivo[]>(this.MEDICOS_ACTIVOS_URL),
-      api.get<PacienteActivo[]>(this.PACIENTES_ACTIVOS_URL),
-      api.get<Reserva[]>(this.RESERVAS_URL),
-    ]);
+    // Inicializamos arrays vacíos por defecto
+    let medicosActivos: MedicoActivo[] = [];
+    let pacientesActivos: PacienteActivo[] = [];
+    let reservas: Reserva[] = [];
 
-    const medicosActivos = medicosRes.data || [];
-    const pacientesActivos = pacientesRes.data || [];
-    const reservas = reservasRes.data || [];
+    try {
+      // Usamos Promise.allSettled para que si falla uno, no fallen los demás
+      const results = await Promise.allSettled([
+        api.get<MedicoActivo[]>(this.MEDICOS_ACTIVOS_URL),
+        api.get<PacienteActivo[]>(this.PACIENTES_ACTIVOS_URL),
+        api.get<Reserva[]>(this.RESERVAS_URL),
+      ]);
+
+      // 0: Medicos
+      if (results[0].status === 'fulfilled') {
+        medicosActivos = results[0].value.data || [];
+      } else {
+        console.error('Error cargando médicos:', results[0].reason);
+      }
+
+      // 1: Pacientes
+      if (results[1].status === 'fulfilled') {
+        pacientesActivos = results[1].value.data || [];
+      } else {
+        console.error('Error cargando pacientes:', results[1].reason);
+      }
+
+      // 2: Reservas
+      if (results[2].status === 'fulfilled') {
+        reservas = results[2].value.data || [];
+      } else {
+        console.error('Error cargando reservas:', results[2].reason);
+        // Si falla reservas, seguimos con array vacío
+      }
+    } catch (error) {
+      console.error('Error inesperado en getDashboard:', error);
+      // En caso de error catastrófico en Promise.allSettled (raro), devolvemos estructura vacía o re-lanzamos
+    }
 
     // --- Citas (reservas) ---
     const hoyStr = this.getTodayString();
     const reservasHoy = reservas.filter(r => r.fechaCita === hoyStr);
 
-    const completadas = reservas.filter(r => r.estadoCita === true).length;
-    const pendientes = reservas.filter(r => r.estadoCita === false).length;
+    const completadas = reservas.filter(r => r.estadoCita === 'CONFIRMADA').length;
+    const pendientes = reservas.filter(r => r.estadoCita === 'PENDIENTE').length;
 
     const stats: DashboardStats = {
       medicos: {
@@ -118,7 +147,7 @@ export class AdminDashboardService {
         hoy: reservasHoy.length,
         pendientes,
         completadas,
-        canceladas: 0,
+        canceladas: reservas.filter(r => r.estadoCita === 'RECHAZADA').length,
       },
     };
 
@@ -134,7 +163,10 @@ export class AdminDashboardService {
         especialidad: r.nombreSede, // de momento usamos la sede como texto extra
         fecha: r.fechaCita,
         hora: r.horaCita.slice(0, 5), // "10:30"
-        estado: r.estadoCita ? 'confirmada' : 'pendiente',
+        estado: (r.estadoCita === 'CONFIRMADA' ? 'confirmada' :
+          r.estadoCita === 'PENDIENTE' ? 'pendiente' :
+            r.estadoCita === 'REPROGRAMADA' ? 'reprogramada' :
+              r.estadoCita === 'RECHAZADA' ? 'rechazada' : 'pendiente') as any,
       }));
 
     // Actividad reciente se puede montar más adelante

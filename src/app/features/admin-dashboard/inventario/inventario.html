@@ -15,7 +15,7 @@
                         </div>
                     </div>
                     <button class="btn-nuevo" (click)="abrirModalNuevo()">
-                        <span class="icon-plus">+</span> Nuevo Medicamento
+                        <span class="icon-plus">+</span> Agregar Stock
                     </button>
                 </div>
             </div>
@@ -43,7 +43,10 @@
 
             <!-- Tabla Simplificada -->
             <div class="tabla-card">
-                <table>
+                <div *ngIf="loading" class="loading-state">
+                    Cargando inventario...
+                </div>
+                <table *ngIf="!loading">
                     <thead>
                         <tr>
                             <th>Nombre del Medicamento</th>
@@ -55,22 +58,23 @@
                     <tbody>
                         <tr *ngIf="inventarioFiltrado.length === 0">
                             <td colspan="4" class="empty-state">
-                                No se encontraron medicamentos.
+                                No se encontraron items en el inventario.
                             </td>
                         </tr>
                         <tr *ngFor="let item of inventarioFiltrado; let i = index" [class.row-even]="i % 2 === 0">
-                            <td class="font-medium">{{ item.nombre }}</td>
+                            <td class="font-medium">{{ item.medicamentoNombre }}</td>
                             <td>
-                                <span class="badge-sede">{{ item.sede }}</span>
+                                <span class="badge-sede">{{ item.sedeNombre }}</span>
                             </td>
                             <td class="stock-value">
                                 {{ item.stock }}
                             </td>
                             <td>
                                 <div class="acciones">
-                                    <button class="btn-editar" (click)="abrirModalEditar(item)" title="Editar">
+                                    <!-- Editar no implementado en API aun, o no solicitado explicitamente cambio -->
+                                    <!-- <button class="btn-editar" (click)="abrirModalEditar(item)" title="Editar">
                                         <span>✏️</span>
-                                    </button>
+                                    </button> -->
                                     <button class="btn-eliminar" (click)="eliminarItem(item.id)" title="Eliminar">
                                         <span>🗑️</span>
                                     </button>
@@ -86,25 +90,31 @@
         <div class="modal-overlay" *ngIf="mostrarModal" (click)="cerrarModal()">
             <div class="modal-content" (click)="$event.stopPropagation()">
                 <div class="modal-header">
-                    <h2>{{ modoEdicion ? 'Editar Medicamento' : 'Nuevo Medicamento' }}</h2>
+                    <h2>Agregar Stock al Inventario</h2>
                     <button class="btn-cerrar" (click)="cerrarModal()">×</button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label>Nombre</label>
-                        <input type="text" [(ngModel)]="itemActual.nombre" placeholder="Nombre del medicamento" />
-                    </div>
-                    <div class="form-group">
-                        <label>Sede</label>
-                        <select [(ngModel)]="itemActual.sede">
-                            <option value="">Seleccione una sede</option>
-                            <option *ngFor="let sede of sedes" [value]="sede">{{ sede }}</option>
+                        <label>Medicamento</label>
+                        <select [(ngModel)]="nuevoItem.medicamentoId">
+                            <option [value]="0">Seleccione un medicamento</option>
+                            <option *ngFor="let med of medicamentos" [value]="med.id">
+                                {{ med.nombre }} - {{ med.codigoBarras }}
+                            </option>
                         </select>
                     </div>
+
                     <div class="form-group">
-                        <label>Stock</label>
-                        <input type="number" [(ngModel)]="itemActual.stock" min="0" />
+                        <label>Sede</label>
+                        <input type="text" value="Sede Central" disabled class="input-disabled" />
+                        <small class="text-muted">La sede está predefinida por el sistema.</small>
                     </div>
+
+                    <div class="form-group">
+                        <label>Cantidad a Agregar</label>
+                        <input type="number" [(ngModel)]="nuevoItem.cantidad" min="1" placeholder="Ej: 100" />
+                    </div>
+
                     <div class="modal-footer">
                         <button class="btn-guardar" (click)="guardarItem()">
                             Guardar

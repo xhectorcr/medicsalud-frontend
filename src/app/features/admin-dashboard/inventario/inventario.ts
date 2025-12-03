@@ -1,14 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Sidebaradmin } from '../../../layout/sidebar/admin/admin';
-
-interface ItemInventario {
-    id: number;
-    nombre: string;
-    sede: string;
-    stock: number;
-}
+import { InventarioService, InventarioItem, AgregarInventarioDTO } from './services/inventario.service';
+import { MedicamentoService, Medicamento } from '../medicamentos/services/medicamento.service';
 
 @Component({
     selector: 'app-inventario',
@@ -17,66 +12,68 @@ interface ItemInventario {
     templateUrl: './inventario.html',
     styleUrls: ['./inventario.scss']
 })
-export class Admininventario {
-    constructor() {
-        console.log('Admininventario initialized');
-    }
-
-    inventario: ItemInventario[] = [
-        { id: 1, nombre: 'Paracetamol 500mg', sede: 'Sede Central', stock: 150 },
-        { id: 2, nombre: 'Ibuprofeno 400mg', sede: 'Sede Norte', stock: 85 },
-        { id: 3, nombre: 'Amoxicilina 500mg', sede: 'Sede Central', stock: 45 },
-        { id: 4, nombre: 'Omeprazol 20mg', sede: 'Sede Sur', stock: 120 },
-        { id: 5, nombre: 'Losartán 50mg', sede: 'Sede Este', stock: 10 }
-    ];
-
-    sedes = ['Sede Central', 'Sede Norte', 'Sede Sur', 'Sede Este', 'Sede Oeste'];
+export class Admininventario implements OnInit {
+    inventario: InventarioItem[] = [];
+    medicamentos: Medicamento[] = [];
 
     mostrarModal = false;
-    modoEdicion = false;
+    loading = false;
 
     // Objeto para el formulario
-    itemActual: ItemInventario = {
-        id: 0,
-        nombre: '',
-        sede: '',
-        stock: 0
+    nuevoItem = {
+        medicamentoId: 0,
+        cantidad: 0
     };
 
     // Filtros
     filtroNombre = '';
     filtroSede = '';
 
+    constructor(
+        private inventarioService: InventarioService,
+        private medicamentoService: MedicamentoService
+    ) { }
+
+    ngOnInit(): void {
+        this.cargarDatos();
+    }
+
+    async cargarDatos() {
+        this.loading = true;
+        try {
+            const [inventarioData, medicamentosData] = await Promise.all([
+                this.inventarioService.getInventarioActivo(),
+                this.medicamentoService.getMedicamentosActivos()
+            ]);
+            this.inventario = inventarioData;
+            this.medicamentos = medicamentosData;
+        } catch (error) {
+            console.error('Error cargando datos:', error);
+            alert('Error al cargar los datos del inventario');
+        } finally {
+            this.loading = false;
+        }
+    }
+
     // Getter para filtrar la lista
-    get inventarioFiltrado(): ItemInventario[] {
+    get inventarioFiltrado(): InventarioItem[] {
         return this.inventario.filter(item => {
-            const coincideNombre = item.nombre.toLowerCase().includes(this.filtroNombre.toLowerCase());
-            const coincideSede = this.filtroSede === '' || item.sede === this.filtroSede;
+            const coincideNombre = item.medicamentoNombre.toLowerCase().includes(this.filtroNombre.toLowerCase());
+            const coincideSede = this.filtroSede === '' || item.sedeNombre === this.filtroSede;
             return coincideNombre && coincideSede;
         });
     }
 
-    // Getter para el stock total (simple suma)
-    get totalStock(): number {
-        return this.inventarioFiltrado.reduce((acc, item) => acc + item.stock, 0);
+    // Getter para obtener sedes únicas para el filtro
+    get sedes(): string[] {
+        return [...new Set(this.inventario.map(item => item.sedeNombre))];
     }
 
-    // Métodos del Modal
     abrirModalNuevo(): void {
-        this.itemActual = {
-            id: 0,
-            nombre: '',
-            sede: '',
-            stock: 0
+        this.nuevoItem = {
+            medicamentoId: 0,
+            cantidad: 0
         };
-        this.modoEdicion = false;
-        this.mostrarModal = true;
-    }
-
-    abrirModalEditar(item: ItemInventario): void {
-        // Copia del item para no modificar directamente la tabla hasta guardar
-        this.itemActual = { ...item };
-        this.modoEdicion = true;
         this.mostrarModal = true;
     }
 
@@ -84,33 +81,38 @@ export class Admininventario {
         this.mostrarModal = false;
     }
 
-    guardarItem(): void {
-        if (!this.itemActual.nombre || !this.itemActual.sede || this.itemActual.stock < 0) {
-            alert('Por favor complete todos los campos correctamente');
+    async guardarItem() {
+        if (!this.nuevoItem.medicamentoId || this.nuevoItem.cantidad <= 0) {
+            alert('Por favor seleccione un medicamento y una cantidad válida');
             return;
         }
 
-        if (this.modoEdicion) {
-            // Editar existente
-            const index = this.inventario.findIndex(i => i.id === this.itemActual.id);
-            if (index !== -1) {
-                this.inventario[index] = { ...this.itemActual };
-            }
-        } else {
-            // Crear nuevo
-            const nuevoId = this.inventario.length > 0
-                ? Math.max(...this.inventario.map(i => i.id)) + 1
-                : 1;
-            this.inventario.push({ ...this.itemActual, id: nuevoId });
+        const medicamentoSeleccionado = this.medicamentos.find(m => m.id == this.nuevoItem.medicamentoId);
+        if (!medicamentoSeleccionado) {
+            alert('Medicamento no válido');
+            return;
         }
 
-        this.cerrarModal();
+        const dto: AgregarInventarioDTO = {
+            sedeId: 1, // Hardcoded as requested
+            codigoBarras: medicamentoSeleccionado.codigoBarras,
+            cantidad: this.nuevoItem.cantidad
+        };
+
+        try {
+            await this.inventarioService.agregarInventario(dto);
+            alert('Stock agregado correctamente');
+            this.cerrarModal();
+            this.cargarDatos();
+        } catch (error) {
+            console.error('Error agregando stock:', error);
+            alert('Error al agregar stock al inventario');
+        }
     }
 
     eliminarItem(id: number): void {
-        if (confirm('¿Está seguro de eliminar este medicamento?')) {
-            this.inventario = this.inventario.filter(i => i.id !== id);
-        }
+        // Implementar si existe endpoint de eliminar inventario, por ahora solo alerta
+        alert('Funcionalidad de eliminar inventario no disponible en API por el momento');
     }
 
     limpiarFiltros(): void {

@@ -372,10 +372,6 @@ table {
     .header-title {
         flex-direction: column;
         text-align: center;
-
-        h1 {
-            font-size: 1.5rem;
-        }
     }
 
     .tabla-card {
@@ -398,4 +394,43 @@ table {
             width: 100%;
         }
     }
+}
+
+.checkbox-group {
+    label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+
+        input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+        }
+    }
+}
+
+.badge-receta {
+    background-color: #fee2e2;
+    color: #991b1b;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.badge-libre {
+    background-color: #dcfce7;
+    color: #166534;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.loading-state {
+    padding: 2rem;
+    text-align: center;
+    color: var(--color-muted);
+    font-size: 1.125rem;
 }

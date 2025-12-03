@@ -20,25 +20,35 @@
             </div>
 
             <div class="tabla-card">
-                <table>
+                <div *ngIf="loading" class="loading-state">
+                    Cargando medicamentos...
+                </div>
+                <table *ngIf="!loading">
                     <thead>
                         <tr>
                             <th>Nombre</th>
                             <th>Descripción</th>
                             <th>Precio</th>
                             <th>Código de Barras</th>
+                            <th>Requiere Receta</th>
                             <th class="text-center">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr *ngIf="medicamentos.length === 0">
-                            <td colspan="5" class="empty-state">No hay medicamentos registrados</td>
+                            <td colspan="6" class="empty-state">No hay medicamentos registrados</td>
                         </tr>
                         <tr *ngFor="let med of medicamentos; let i = index" [class.row-even]="i % 2 === 0">
                             <td class="font-medium">{{ med.nombre }}</td>
                             <td>{{ med.descripcion }}</td>
-                            <td class="precio">S/ {{ med.precio | number:'1.2-2' }}</td>
+                            <td class="precio">S/ {{ med.precioVenta | number:'1.2-2' }}</td>
                             <td class="codigo-barras">{{ med.codigoBarras }}</td>
+                            <td>
+                                <span [class.badge-receta]="med.requiereReceta"
+                                    [class.badge-libre]="!med.requiereReceta">
+                                    {{ med.requiereReceta ? 'Sí' : 'No' }}
+                                </span>
+                            </td>
                             <td>
                                 <div class="acciones">
                                     <button class="btn-editar" (click)="abrirModalEditar(med)" title="Editar">
@@ -76,7 +86,7 @@
 
                         <div class="form-group">
                             <label>Precio (S/) *</label>
-                            <input type="number" [(ngModel)]="medicamentoActual.precio" step="0.01" min="0"
+                            <input type="number" [(ngModel)]="medicamentoActual.precioVenta" step="0.01" min="0"
                                 placeholder="0.00" />
                         </div>
 
@@ -84,6 +94,13 @@
                             <label>Código de Barras</label>
                             <input type="text" [(ngModel)]="medicamentoActual.codigoBarras"
                                 placeholder="7501234567890" />
+                        </div>
+
+                        <div class="form-group checkbox-group">
+                            <label>
+                                <input type="checkbox" [(ngModel)]="medicamentoActual.requiereReceta">
+                                Requiere Receta Médica
+                            </label>
                         </div>
 
                         <div class="modal-footer">

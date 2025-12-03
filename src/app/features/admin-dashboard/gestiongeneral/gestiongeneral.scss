@@ -464,6 +464,16 @@
                 background: var(--color-surface-variant);
                 color: var(--color-primary-700);
               }
+
+              &.reprogramada {
+                background: #e0f2fe;
+                color: #0369a1;
+              }
+
+              &.rechazada {
+                background: #fee2e2;
+                color: #991b1b;
+              }
             }
           }
         }
